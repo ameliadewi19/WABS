@@ -1,0 +1,5 @@
+# Direktori dan file yang tidak perlu diikutsertakan dalam repositori Git
+
+node_modules/
+npm-debug.log
+.DS_Store
