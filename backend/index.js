@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const bodyParser = require('body-parser');
 // const loginRoute = require("./routes/UserRoute.js");
+const scheduleRoute = require("./routes/ScheduleMessageRoutes.js");
 const cors = require('cors');
 
 dotenv.config();
@@ -17,5 +18,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // app.use(loginRoute);
+app.use(scheduleRoute);
 
 app.listen(5005, () => console.log('Server Up and Running...'));
