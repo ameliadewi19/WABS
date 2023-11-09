@@ -1,24 +1,97 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+
+import Navbar from './components/Navbar.js';
+import Sidebar from './components/Sidebar.js';
+import Footer from './components/Footer.js';
+import Login from './components/Login.js';
+import Dashboard from './components/Dashboard.js';
+import Autentikasi from './components/Autentikasi.js';
+import Recipient from './components/Recipient.js';
+import DirectMessage from './components/DirectMessage.js';
+import ScheduleMessage from './components/ScheduleMessage.js';
+import Aktivitas from './components/Aktivitas.js';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <Login />
+            </>
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            <>
+              <Navbar />
+              <Sidebar />
+              <Dashboard />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/autentikasi-wbm"
+          element={
+            <>
+              <Navbar />
+              <Sidebar />
+              <Autentikasi />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/recipient"
+          element={
+            <>
+              <Navbar />
+              <Sidebar />
+              <Recipient />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/direct-message"
+          element={
+            <>
+              <Navbar />
+              <Sidebar />
+              <DirectMessage />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/schedule-message"
+          element={
+            <>
+              <Navbar />
+              <Sidebar />
+              <ScheduleMessage />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/aktivitas"
+          element={
+            <>
+              <Navbar />
+              <Sidebar />
+              <Aktivitas />
+              <Footer />
+            </>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
