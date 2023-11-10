@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import feather from 'feather-icons';
 import { DataTable } from 'simple-datatables'; 
+import AddScheduleModal from './AddScheduleModal';
 
 const ScheduleMessage = ({}) => {
     const location = useLocation();
     const [scheduleMessage, setScheduleMessage] = useState([]);
+    const [recipientList, setRecipientList] = useState([]);
     
     useEffect(() => {
-        feather.replace(); // Replace the icons after component mounts
         fetchSchedule();
     }, []);
 
@@ -32,6 +32,14 @@ const ScheduleMessage = ({}) => {
         }
     }, [scheduleMessage]);
 
+    function formatDate(dateString) {
+        const dateObject = new Date(dateString);
+        const day = dateObject.getDate().toString().padStart(2, '0'); // Tambahkan leading zero jika diperlukan
+        const month = (dateObject.getMonth() + 1).toString().padStart(2, '0'); // Tambah 1 karena bulan dimulai dari 0
+        const year = dateObject.getFullYear();
+        return `${day}-${month}-${year}`;
+    }
+
     return (
         <main id="main" className="main">
             <div className="pagetitle">
@@ -50,10 +58,17 @@ const ScheduleMessage = ({}) => {
 
                 <div className="card">
                     <div className="card-body">
-                    <h5 className="card-title">Schedule Message</h5>
-                    <div className='d-flex justify-content-end'>
-                        <button type="button" className="btn btn-primary mb-3" data-toggle="modal" data-target="#exampleModal">Tambah Schedule</button>
-                    </div>
+                        <div className='row'>
+                            <div className='col-md-6'>
+                                <h5 className="card-title">Schedule Message</h5>    
+                            </div>
+                            <div className='col-md-6'>
+                                <div className='d-flex justify-content-end'>
+                                    <button type="button" className="btn btn-primary mb-3 mt-3 me-2" data-bs-toggle="modal" data-bs-target="#addScheduleModal"><i className='bi-plus'></i>Tambah Schedule</button>
+                                    <AddScheduleModal reloadData={fetchSchedule} />
+                                </div>
+                            </div>
+                        </div>
 
                     <table className="table datatable">
                         <thead>
@@ -79,8 +94,8 @@ const ScheduleMessage = ({}) => {
                                     <td>{schedule.id_activity}</td>
                                     <td>Recipient</td>
                                     <td>{schedule.jenis_schedule}</td>
-                                    <td>{schedule.tanggal_mulai}</td>
-                                    <td>{schedule.tanggal_akhir}</td>
+                                    <td>{formatDate(schedule.tanggal_mulai)}</td>
+                                    <td>{formatDate(schedule.tanggal_akhir)}</td>
                                     <td>{schedule.waktu}</td>
                                     <td>
                                         <div>
