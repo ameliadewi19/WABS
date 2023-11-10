@@ -1,17 +1,16 @@
-const cron = require('node-cron');
-const axios = require('axios');
 const Schedule = require('../models/ScheduleModel.js');
 
 const createSchedule = async (req, res) => {
     try {
-        const { id_message, jenis_message, id_activity, jenis_schedule, tanggal_mulai, tanggal_akhir } = req.body;
+        const { id_message, jenis_message, id_activity, jenis_schedule, tanggal_mulai, tanggal_akhir, waktu } = req.body;
         const newSchedule = await Schedule.create({
             id_message,
             jenis_message,
             id_activity,
             jenis_schedule,
             tanggal_mulai,
-            tanggal_akhir
+            tanggal_akhir,
+            waktu
         });
         res.status(201).json(newSchedule);
     } catch (error) {
