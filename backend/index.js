@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 // const loginRoute = require("./routes/UserRoute.js");
 const scheduleRoute = require("./routes/ScheduleMessageRoutes.js");
 const cors = require('cors');
+require("./controllers/SchedulerController.js");
 
 dotenv.config();
 

@@ -31,6 +31,10 @@ const Schedule = sequelize.define('Schedule', {
         type: DataTypes.DATE,
         allowNull: false,
     },
+    waktu: {
+        type: DataTypes.TIME,
+        allowNull: false,
+    },
 }, {
     freezeTableName: true,
     timestamps: false,
