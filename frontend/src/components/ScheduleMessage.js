@@ -6,12 +6,31 @@ import { DataTable } from 'simple-datatables';
 
 const ScheduleMessage = ({}) => {
     const location = useLocation();
+    const [scheduleMessage, setScheduleMessage] = useState([]);
     
     useEffect(() => {
         feather.replace(); // Replace the icons after component mounts
-        // Initialize the datatable here
-        const table = new DataTable('.datatable');
+        fetchSchedule();
     }, []);
+
+    const fetchSchedule = () => {
+        axios.get('http://localhost:5005/schedule')
+            .then(response => {
+                setScheduleMessage(response.data);
+            })
+            .catch(err => console.log(err));
+    }
+
+    useEffect(() => {
+        // Initialize the datatable here
+        if (scheduleMessage.length > 0) {
+            const table = new DataTable('.datatable', {
+                columns : [
+                    { select : 9, sortable : false },
+                ]
+            });
+        }
+    }, [scheduleMessage]);
 
     return (
         <main id="main" className="main">
@@ -32,54 +51,45 @@ const ScheduleMessage = ({}) => {
                 <div className="card">
                     <div className="card-body">
                     <h5 className="card-title">Schedule Message</h5>
-                    <p>Add lightweight datatables to your project with using the <a href="https://github.com/fiduswriter/Simple-DataTables" target="_blank">Simple DataTables</a> library. Just add <code>.datatable</code> className name to any table you wish to conver to a datatable</p>
+                    <div className='d-flex justify-content-end'>
+                        <button type="button" className="btn btn-primary mb-3" data-toggle="modal" data-target="#exampleModal">Tambah Schedule</button>
+                    </div>
 
                     <table className="table datatable">
                         <thead>
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Position</th>
-                            <th scope="col">Age</th>
-                            <th scope="col">Start Date</th>
+                            <th scope="col">Id Message</th>
+                            <th scope="col">Jenis Message</th>
+                            <th scope="col">Aktivitas</th>
+                            <th scope="col">Recipient</th>
+                            <th scope="col">Jenis Schedule</th>
+                            <th scope="col">Tanggal Mulai</th>
+                            <th scope="col">Tanggal Akhir</th>
+                            <th scope="col">Waktu</th>
+                            <th scope="col">Aksi</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Brandon Jacob</td>
-                            <td>Designer</td>
-                            <td>28</td>
-                            <td>2016-05-25</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Bridie Kessler</td>
-                            <td>Developer</td>
-                            <td>35</td>
-                            <td>2014-12-05</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Ashleigh Langosh</td>
-                            <td>Finance</td>
-                            <td>45</td>
-                            <td>2011-08-12</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">4</th>
-                            <td>Angus Grady</td>
-                            <td>HR</td>
-                            <td>34</td>
-                            <td>2012-06-11</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">5</th>
-                            <td>Raheem Lehner</td>
-                            <td>Dynamic Division Officer</td>
-                            <td>47</td>
-                            <td>2011-04-19</td>
-                        </tr>
+                            {scheduleMessage.map((schedule, index) => (
+                                <tr key={schedule.id}>
+                                    <td>{index + 1}</td>
+                                    <td>{schedule.id_message}</td>
+                                    <td>{schedule.jenis_message}</td>
+                                    <td>{schedule.id_activity}</td>
+                                    <td>Recipient</td>
+                                    <td>{schedule.jenis_schedule}</td>
+                                    <td>{schedule.tanggal_mulai}</td>
+                                    <td>{schedule.tanggal_akhir}</td>
+                                    <td>{schedule.waktu}</td>
+                                    <td>
+                                        <div>
+                                            <button type="button" className="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Edit</button>
+                                            <button type="button" className="btn btn-danger btn-sm">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
 
