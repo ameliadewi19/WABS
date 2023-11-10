@@ -27,42 +27,64 @@ const getRecipientById = async(req, res) =>{
     }
 }
 
-const createBulkRecipient = async(req, res) =>{
-    try {
-      if (!req.file || !req.file.buffer) {
-        return res.status(400).json({ error: 'No Excel file uploaded.' });
-      }
-      // Read the Excel file using xlsx
+const createBulkRecipient = async (req, res) => {
+  try {
+    if (!req.file || !req.file.buffer) {
+      return res.status(400).json({ error: 'No Excel file uploaded.' });
+    }
+
+    // Read the Excel file using xlsx
     const workbook = xlsx.read(req.file.buffer, { type: 'buffer' });
 
     // Assuming your Excel file has a single worksheet, use the first one
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
+    // Validate that the required columns are present in the Excel file
+    const requiredColumns = ["Nama", "No Whatsapp"];
+    for (const col of requiredColumns) {
+      if (!worksheet[col]) {
+        return res.status(400).json({ error: `Missing required column: ${col}` });
+      }
+    }
+
     // Convert the worksheet data to an array of objects
     const data = xlsx.utils.sheet_to_json(worksheet);
+
     const columnMappings = {
       "Nama": "nama",
       "No Whatsapp": "no_whatsapp",
     };
+
     const recipientDataArray = [];
+
+    // Validate and transform each row of data
     for (const row of data) {
+      if (!row["Nama"] || !row["No Whatsapp"]) {
+        console.error('Invalid data in Excel row:', row);
+        continue; // Skip invalid rows
+      }
 
       const recipientData = {
         // Map the Excel column name to the database field name
         [columnMappings["Nama"]]: row["Nama"],
         [columnMappings["No Whatsapp"]]: row["No Whatsapp"],
       };
-      recipientDataArray.push(dosenData);
+      recipientDataArray.push(recipientData);
     }
+
+    // Log the processed data for debugging
     console.log(recipientDataArray);
-    // Create JadwalUjian records from the Excel data
+
+    // Create Recipient records from the Excel data
     await Dosen.bulkCreate(recipientDataArray);
-    res.status(201).json({ message: 'Dosen records created from Excel.' });
+
+    res.status(201).json({ message: 'Recipient records created from Excel.' });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ error: 'Failed to create Dosen records from Excel.' });
+    console.error('Error processing Excel file:', error.message);
+    res.status(500).json({ error: 'Failed to create Recipient records from Excel.' });
   }
 };
+
 
 const createRecipient = async (req, res) => {
     try {
