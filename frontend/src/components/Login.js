@@ -4,11 +4,42 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import feather from 'feather-icons';
 
 const Login = ({}) => {
-    const location = useLocation();
-    
-    useEffect(() => {
-        feather.replace(); // Replace the icons after component mounts
-    }, []);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+  
+    const handleUsernameChange = (e) => {
+      setUsername(e.target.value);
+    };
+  
+    const handlePasswordChange = (e) => {
+      setPassword(e.target.value);
+    };
+    const [message, setMessage] = useState('');
+    const navigate = useNavigate();
+  
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        const response = await axios.post('http://localhost:5005/login', {
+          username,
+          password,
+        });
+        
+        const token = response.data.accessToken;
+        
+        localStorage.setItem('token', token);
+  
+        console.log("token:", token);
+  
+        // If login is successful, redirect to the dashboard
+        console.log('Login berhasil', response.data);
+        navigate('/dashboard');
+         // Use navigate to redirect to the dashboard route
+      } catch (err) {
+        setError('Login gagal. Username atau password salah.');
+      }
+    };
 
     return (
         <main>
@@ -22,7 +53,7 @@ const Login = ({}) => {
                     <div class="d-flex justify-content-center py-4">
                         <a href="index.html" class="logo d-flex align-items-center w-auto">
                         <img src="assets/img/logo.png" alt=""/>
-                        <span class="d-none d-lg-block">NiceAdmin</span>
+                        <span class="d-none d-lg-block">WABS</span>
                         </a>
                     </div>
 
@@ -35,20 +66,28 @@ const Login = ({}) => {
                             <p class="text-center small">Enter your email & password to login</p>
                         </div>
 
-                        <form class="row g-3 needs-validation" novalidate>
+                        <form onSubmit={handleSubmit} class="row g-3 needs-validation" novalidate>
 
                             <div class="col-12">
-                            <label for="yourUsername" class="form-label">Email</label>
-                            <div class="input-group has-validation">
-                                {/* <span class="input-group-text" id="inputGroupPrepend">@</span> */}
-                                <input type="text" name="username" class="form-control" id="yourUsername" required/>
-                                <div class="invalid-feedback">Please enter your username.</div>
-                            </div>
+                                <label for="yourUsername" class="form-label">Username</label>
+                                    <div class="input-group has-validation">
+                                        {/* <span class="input-group-text" id="inputGroupPrepend">@</span> */}
+                                        <input className="form-control form-control-lg" 
+                                            type="text"
+                                            placeholder="Masukkan username Anda"
+                                            value={username}
+                                            onChange={handleUsernameChange}/>
+                                        <div class="invalid-feedback">Please enter your username.</div>
+                                    </div>
                             </div>
 
                             <div class="col-12">
-                            <label for="yourPassword" class="form-label">Password</label>
-                            <input type="password" name="password" class="form-control" id="yourPassword" required/>
+                                <label for="yourPassword" class="form-label">Password</label>
+                                <input className="form-control form-control-lg"
+                                    type="password"
+                                    placeholder="Masukkan password Anda"
+                                    value={password}
+                                    onChange={handlePasswordChange}/>
                             <div class="invalid-feedback">Please enter your password!</div>
                             </div>
 
