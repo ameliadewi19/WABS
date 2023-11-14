@@ -39,6 +39,22 @@ const getTemplateMessageById = async (req, res) => {
   }
 };
 
+const getTemplateMessagesByJenisTemplate = async (req, res) => {
+    try {
+      const { jenis_template } = req.params;
+      const templateMessages = await TemplateMessage.findAll({ where: { jenis_template } });
+  
+      if (templateMessages.length > 0) {
+        res.status(200).json(templateMessages);
+      } else {
+        res.status(404).json({ error: 'No TemplateMessages found for the specified jenis_template' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };  
+
 // Update a TemplateMessage by ID
 const updateTemplateMessageById = async (req, res) => {
   try {
@@ -78,4 +94,5 @@ module.exports = {
   getTemplateMessageById,
   updateTemplateMessageById,
   deleteTemplateMessageById,
+  getTemplateMessagesByJenisTemplate
 };

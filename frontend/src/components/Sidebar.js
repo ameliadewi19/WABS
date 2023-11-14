@@ -36,6 +36,13 @@ const Sidebar = ({}) => {
                 </li>
 
                 <li className="nav-item">
+                <a className={`nav-link ${location.pathname === '/group-recipient' ? '' : 'collapsed'}`} href="/group-recipient">
+                    <i className="bi bi-people"></i>
+                    <span>Group Recipient</span>
+                    </a>
+                </li>
+
+                <li className="nav-item">
                 <a className={`nav-link ${location.pathname === '/direct-message' ? '' : 'collapsed'}`} href="/direct-message">
                     <i className="bi bi-grid"></i>
                     <span>Direct Message</span>
@@ -57,7 +64,7 @@ const Sidebar = ({}) => {
                 </li>
                 <li className="nav-item">
                 <a className={`nav-link ${location.pathname === '/template' ? '' : 'collapsed'}`} href="/template">
-                    <i className="bi bi-layout-text-window-reverse"></i>
+                    <i className="bi bi-chat-text"></i>
                     <span>Template Message</span>
                     </a>
                 </li>
