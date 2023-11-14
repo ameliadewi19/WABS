@@ -55,6 +55,12 @@ const Sidebar = ({}) => {
                     <span>List Aktivitas</span>
                     </a>
                 </li>
+                <li className="nav-item">
+                <a className={`nav-link ${location.pathname === '/template' ? '' : 'collapsed'}`} href="/template">
+                    <i className="bi bi-layout-text-window-reverse"></i>
+                    <span>Template Message</span>
+                    </a>
+                </li>
             </ul>
 
         </aside>

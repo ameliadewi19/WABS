@@ -11,6 +11,7 @@ import Recipient from './components/Recipient.js';
 import DirectMessage from './components/DirectMessage.js';
 import ScheduleMessage from './components/ScheduleMessage.js';
 import Aktivitas from './components/Aktivitas.js';
+import TemplateMessage from './components/TemplateMessage.js';
 
 function App() {
   return (
@@ -86,6 +87,17 @@ function App() {
               <Navbar />
               <Sidebar />
               <Aktivitas />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/template"
+          element={
+            <>
+              <Navbar />
+              <Sidebar />
+              <TemplateMessage />
               <Footer />
             </>
           }

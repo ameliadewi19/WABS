@@ -4,9 +4,12 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require('body-parser');
 const loginRoute = require("./routes/UserRoute.js");
 const scheduleRoute = require("./routes/ScheduleMessageRoutes.js");
+const whatsappRoute = require("./routes/WhatsappAuthRoute.js");
 const recipientRoute = require("./routes/RecipientRoute.js");
+const templateMessage = require("./routes/TemplateMessageRoutes.js");
+
 const cors = require('cors');
-require("./controllers/SchedulerController.js");
+// require("./controllers/SchedulerController.js");
 
 dotenv.config();
 
@@ -22,5 +25,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(loginRoute);
 app.use(recipientRoute);
 app.use(scheduleRoute);
+app.use(whatsappRoute);
+app.use(templateMessage);
 
 app.listen(5005, () => console.log('Server Up and Running...'));
