@@ -2,6 +2,11 @@ const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/Database.js");
 
 const RecipientList = sequelize.define("RecipientList", {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   id_schedule: {
     type: DataTypes.INTEGER,
     allowNull: false,

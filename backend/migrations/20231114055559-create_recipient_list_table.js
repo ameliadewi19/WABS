@@ -3,7 +3,11 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('RecipientList', {
-      id_schedule: {
+      id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },id_schedule: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
