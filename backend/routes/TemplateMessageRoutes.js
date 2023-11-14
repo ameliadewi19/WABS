@@ -6,6 +6,7 @@ const {
   getTemplateMessageById,
   updateTemplateMessageById,
   deleteTemplateMessageById,
+  getTemplateMessagesByJenisTemplate
 } = require('../controllers/TemplateMessageController'); // Update the path accordingly
 
 // Create a new TemplateMessage
@@ -16,6 +17,9 @@ router.get('/template-messages', getAllTemplateMessages);
 
 // Get a specific TemplateMessage by ID
 router.get('/template-messages/:id', getTemplateMessageById);
+
+// Get a specific TemplateMessage by Jenis Template
+router.get('/template-messages/jenis/:jenis_template', getTemplateMessagesByJenisTemplate);
 
 // Update a TemplateMessage by ID
 router.put('/template-messages/:id', updateTemplateMessageById);
