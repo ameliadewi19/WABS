@@ -4,8 +4,8 @@ const multer = require('multer');
 const {
     getRecipient, 
     getRecipientById,
+    createRecipient1,
     createRecipient,
-    createBulkRecipient,
     updateRecipient,
     // deleteRecipient,
     downloadExcelTemplate
@@ -17,11 +17,11 @@ const router = express.Router();
 const storage = multer.memoryStorage(); // Store the uploaded file in memory
 const upload = multer({ storage });
 
-router.get('/recipient',getRecipient);
+router.get('/recipient',verifyToken,getRecipient);
 router.get('/recipient/:id', getRecipientById);
 router.get('/recipient/download-template', downloadExcelTemplate)
-router.post('/recipient', upload.single('excelFile'),createBulkRecipient);
-router.post('/recipient1', createRecipient);
+router.post('/recipient', upload.single('excelFile'),createRecipient);
+router.post('/recipient1', createRecipient1);
 //router.post('/recipient', createBulkRecipient);
 router.patch('/recipient/:id', updateRecipient);
 // router.delete('/recipient/:id', deleteRecipient);

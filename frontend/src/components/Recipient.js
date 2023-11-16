@@ -15,9 +15,23 @@ const Recipient = ({}) => {
     });
     const location = useLocation();
     
+
     useEffect(() => {
+        feather.replace(); // Replace the icons after component mounts
+
         fetchRecipientData();
-      }, []);
+    }, []);
+
+    useEffect(() => {
+      // Initialize the datatable here
+      if (recipientData.length > 0) {
+          const table = new DataTable('.datatable', {
+              columns : [
+                  { select : 3, sortable : false },
+              ]
+          });
+      }
+  }, [recipientData]);
 
     const fetchRecipientData = async () => {
         try {
@@ -28,6 +42,41 @@ const Recipient = ({}) => {
         }
     };
     
+        // const fetchRecipientData = async (username, password) => {
+    //     try {
+    //         // Mendapatkan token dari credential login
+    //         const credentials = { username, password };  // Assuming you have a method to fetch credentials based on the username and password
+    //         const token = await getAccessToken(credentials);
+    
+    //         // Menambahkan token ke header Authorization
+    //         const headers = {
+    //             Authorization: `Bearer ${token}`,
+    //         };
+    
+    //         // Melakukan panggilan API dengan menyertakan header
+    //         const response = await axios.get('http://localhost:5005/recipient', { headers });
+    
+    //         // Menggunakan data yang diterima
+    //         setRecipientData(response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching data:', error);
+    //     }
+    // };
+    
+    // const getAccessToken = async (credentials) => {
+    //     try {
+    //         // Perform the logic to obtain the access token based on the provided credentials
+    //         // This could involve making a request to your authentication server or fetching it from a database
+    //         // For example:
+    //         const authenticationResponse = await axios.post('http://localhost:5005/authenticate', credentials);
+    //         const token = authenticationResponse.data.accessToken;
+    //         return token;
+    //     } catch (error) {
+    //         console.error('Error obtaining access token:', error);
+    //         throw error; // You may want to handle this error more gracefully in your application
+    //     }
+    // };
+
     const deleteRecipient = async (id) => {
         console.log('ID yang akan dihapus:', id);
         try {
@@ -174,28 +223,30 @@ const Recipient = ({}) => {
 
     return (
         <main id="main" className="main">
-            <div className="pagetitle">
-            <h1>Recipient</h1>
-            <nav>
-                <ol className="breadcrumb">
-                <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
-                <li className="breadcrumb-item active">Recipient</li>
-                </ol>
-            </nav>
-            </div>
-
-            <section className="section">
-            <div className="row">
-                <div className="col-lg-12">
-                <div className="card-header">
-                <h5 className="card-title">Tambah 1 Data Dosen</h5>
-                <button className="btn btn-primary mt-2 mb-5" onClick={handleShowModal}>
+          <div className="row">
+                <div className="col-lg-4">
+                      <div className="pagetitle">
+                      <h2>Recipient</h2>
+                      <nav>
+                          <ol className="breadcrumb">
+                          <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
+                          <li className="breadcrumb-item active">Recipient</li>
+                          </ol>
+                      </nav>
+                      </div>
+                </div>
+                <div className="col-lg-4">
+                <h5 className="card-title">Tambah Dosen</h5>
+                <button className="btn btn-primary mt-2 mb-2" onClick={handleShowModal}>
                   Tambah Dosen
                 </button>
+                </div>
+                <div className="col-lg-4">
                 <h5 className="card-title">Tambah Data Dosen Excel</h5>
                 <div className="upload-section">
-                  <label htmlFor="fileInput" className="btn btn-secondary upload-button" >
-                    Unggah Excel
+                  <label htmlFor="fileInput" className="btn btn-secondary upload-button">
+                    <span dangerouslySetInnerHTML={{ __html: feather.icons.upload.toSvg() }} className="mr-2" />
+                        Unggah Excel
                   </label>
                   <input type="file" id="fileInput" accept=".xlsx" onChange={handleFileUpload} />
                   <a className="btn btn-primary download-template" href="/template/excel-template.xlsx" download>
@@ -203,13 +254,16 @@ const Recipient = ({}) => {
                     <span>Download Template</span>
                   </a>
                 </div>
-              </div>
-                <div className="card">
+                </div>
+            </div>
+            <section className="section">
+            <div className="row">
+                <div className="card mt-5">
                     <div className="card-body">
                     <h5 className="card-title">Recipient</h5>
                     <p>Berikut ini merupakan list recipient yang bisa menerima pesan broadcast</p>
 
-                    <table className="table table-striped">
+                    <table className="table datatable">
                     <thead>
                       <tr>
                         <th>No</th>
@@ -244,8 +298,7 @@ const Recipient = ({}) => {
                     </div>
                 </div>
 
-                </div>
-            </div>
+              </div>
             </section>
               {/* Render the modal if showModal is true */}
       {showModal && (
