@@ -1,6 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/Database.js");
 const Recipient = require('./RecipientModel.js');
+
 const RecipientList = sequelize.define("RecipientList", {
   id: {
     type: DataTypes.INTEGER,
