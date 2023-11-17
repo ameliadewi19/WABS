@@ -7,7 +7,7 @@ const {
     createRecipient1,
     createRecipient,
     updateRecipient,
-    // deleteRecipient,
+    deleteRecipient,
     downloadExcelTemplate
 } = require("../controllers/RecipientController.js");
 
@@ -23,7 +23,7 @@ router.get('/recipient/download-template', downloadExcelTemplate)
 router.post('/recipient', upload.single('excelFile'), createRecipient);
 router.post('/recipient1', createRecipient1);
 //router.post('/recipient', createBulkRecipient);
-router.patch('/recipient/:id', updateRecipient);
-// router.delete('/recipient/:id', deleteRecipient);
+router.patch('/recipient/:id', verifyToken,updateRecipient);
+router.delete('/recipient/:id', deleteRecipient);
 
 module.exports = router;
