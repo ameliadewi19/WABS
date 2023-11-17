@@ -98,7 +98,7 @@ function App() {
                   <Footer />
               </div>  
             </div>
-          </ProtectedRoute>
+        </ProtectedRoute>
           }
         />
         <Route
