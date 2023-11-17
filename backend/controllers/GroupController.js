@@ -134,10 +134,19 @@ const updateGroup = async (req, res) => {
 
 const deleteGroup = async (req, res) => {
   const { id } = req.params;
+
   try {
     const group = await Group.findByPk(id);
+
     if (group) {
+      // Find and delete associated GroupRecipients
+      await GroupRecipient.destroy({
+        where: { id_grup: group.id },
+      });
+
+      // Delete the group itself
       await group.destroy();
+      
       res.json({ message: 'Group deleted successfully' });
     } else {
       res.status(404).json({ error: 'Group not found' });
