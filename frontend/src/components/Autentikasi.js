@@ -3,21 +3,21 @@ import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import feather from 'feather-icons';
 import QRCode from "qrcode.react";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const Autentikasi = ({}) => {
     const [loading, setLoading] = useState(false);
+    const [loadingLogin, setLoadingLogin] = useState(false);
     const [phone, setPhone] = useState("");
     const [msg, setMessage] = useState("");
     const [qrcode, setQRCode] = useState(false);
-
-    // setPhone("+6283150955902");
-    // setMessage("Auth WA");
+    const [loginStatus, setLoginStatus] = useState("-");
 
     const getQRCode = async () => {
         setLoading(true);
         try {
           console.log("kontak", phone, msg);
-          const res = await axios.post("http://localhost:5005/authenticate", { phone, msg });
+          const res = await axios.get("http://localhost:5005/authenticate");
           console.log(res.data);
           setQRCode(res.data);
           setLoading(false);
@@ -28,19 +28,38 @@ const Autentikasi = ({}) => {
         }
       };      
     
+    const getLoginStatus = async () => {
+        setLoginStatus("Loading");
+        try {
+          console.log("kontak", phone, msg);
+          const res = await axios.get("http://localhost:5005/authenticate-status");
+          console.log(res.data);
+          setLoginStatus(res.data);
+        } catch (error) {
+          console.error(error);
+        }
+    };  
+
+    const testClient = async () => {
+        try {
+            console.log("kontak", phone, msg);
+            const res = await axios.post("http://localhost:5005/test-client", {
+                phone,
+                msg,
+            });
+            console.log(res.data);
+            // setLoginStatus(res.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };    
+    
+    
     useEffect(() => {
         feather.replace(); // Replace the icons after component mount
 
-        // setPhone("+6283150955902");
-        // setMessage("Halo");
-
         console.log(phone, msg);
-        // setQRCode("2@CtIk+UF+ASdbKNLR9qz0IRQjD0YkE2i1TWp6sUpyBl/2SvszMTWXZ8XGmrytoy7FVjZQfk5680RUgg==,F4FGmjAhRpF6IGl8/FcMWFSNQq325YedXwT44Y+diVE=,gjzN6CHbj06ASNlP0oOx5DZYD7t1U6adPL4J85T72VI=,NgDAe2Mg72M9+gwaY1PIkyBIELIeyL8od6Sh3+9SAKI=,1");
-        // Panggil getQRCode jika phone dan msg sudah terisi
-        // if (phone && msg) {
-        //     console.log("tes");
-        //     getQRCode();
-        // }
+
     }, [phone, msg]);
 
 
@@ -62,7 +81,6 @@ const Autentikasi = ({}) => {
                 <div class="col-lg-12">
                 <div class="row">
 
-                    {/* <div class="col-xxl-4 col-xl-12"> */}
 
                     <div class="card info-card customers-card">
                         <div class="card-body">
@@ -75,7 +93,10 @@ const Autentikasi = ({}) => {
                                     <p>3. Ketuk <span style={{fontWeight: "bold"}}>Perangkat tertaut</span>, lalu <span style={{fontWeight: "bold"}}>Tautkan perangkat</span></p>
                                     <p>4. Isi form dibawah untuk test apakah pesan terkirim</p>
                                     <p>5. Arahkan telepon Anda ke layar ini untuk memindai kode QR</p>
-                                    <h3 className='mt-5'>Isi Form Berikut</h3>
+                                    <button type="button" class="btn btn-primary me-2" onClick={getLoginStatus}>Check Login Status</button>
+                                    <button type="button" class="btn btn-primary" onClick={getQRCode}>Get QR Code</button>
+
+                                    <h3 className='mt-5'>Tes Client</h3>
                                     <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">No Telepon</label>
                                         <div class="col-sm-10">
@@ -88,20 +109,28 @@ const Autentikasi = ({}) => {
                                         <textarea className="form-control" style={{ height: '70px' }} value={msg} onChange={(e) => setMessage(e.target.value)} placeholder="Isi pesan"></textarea>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn btn-primary" onClick={getQRCode}>Get QR Code</button>
-                                    {/* <p>Phone Number:</p>
-                                    <input value={phone} onChange={(e) => setPhone(e.target.value)} />
-                                    <p class="mt-4">Message:</p>
-                                    <input  value={msg} onChange={(e) => setMessage(e.target.value)} /><br/>
-                                    <button onClick={getQRCode}>Get QRCode</button> */}
+                                    <button type="button" class="btn btn-primary" onClick={testClient}>Send</button>
                                 </div>
                                 <div class="col-lg-4">
+                                    {loginStatus && (
+                                    <div className="d-flex align-items-center">
+                                        <h5 className="me-2">STATUS: </h5>
+                                        <div className={`alert ${loginStatus === '-' ? 'alert-light' : (loginStatus === 'Authenticated' ? 'alert-success' : (loginStatus === 'Loading' ? 'alert-warning' : 'alert-danger'))}`} style={{ paddingBottom: '0px', paddingTop: '10px' }}>
+                                            <p>{loginStatus}</p>
+                                        </div>
+                                    </div>
+                                    )}
+
                                     {!loading && qrcode && (
                                         // <div style={{ margin: "100px" }}>
-                                        <QRCode value={qrcode} size={256} style={{ marginBottom: '30px' }} />
+                                        <QRCode value={qrcode} size={256} style={{ marginBottom: '30px', marginTop: '5px'}} />
                                         // </div>
                                     )}
-                                    {loading && "Waiting for QRCode..."}
+                                    {loading && 
+                                        <div className="text-center mt-4">
+                                            <i className="fas fa-spinner fa-spin fa-2x"></i>
+                                        </div>
+                                    }
                                 </div>
                             </div>
 
