@@ -27,7 +27,7 @@ const getRecipientById = async(req, res) =>{
     }
 }
 
-const createBulkRecipient = async (req, res) => {
+const createRecipient = async (req, res) => {
   try {
     if (!req.file || !req.file.buffer) {
       return res.status(400).json({ error: 'No Excel file uploaded.' });
@@ -40,12 +40,12 @@ const createBulkRecipient = async (req, res) => {
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
     // Validate that the required columns are present in the Excel file
-    const requiredColumns = ["Nama", "No Whatsapp"];
-    for (const col of requiredColumns) {
-      if (!worksheet[col]) {
-        return res.status(400).json({ error: `Missing required column: ${col}` });
-      }
-    }
+    // const requiredColumns = ["Nama", "No Whatsapp"];
+    // for (const col of requiredColumns) {
+    //   if (!worksheet[col]) {
+    //     return res.status(400).json({ error: `Missing required column: ${col}` });
+    //   }
+    // }
 
     // Convert the worksheet data to an array of objects
     const data = xlsx.utils.sheet_to_json(worksheet);
@@ -76,7 +76,7 @@ const createBulkRecipient = async (req, res) => {
     console.log(recipientDataArray);
 
     // Create Recipient records from the Excel data
-    await Dosen.bulkCreate(recipientDataArray);
+    await Recipient.bulkCreate(recipientDataArray);
 
     res.status(201).json({ message: 'Recipient records created from Excel.' });
   } catch (error) {
@@ -86,7 +86,7 @@ const createBulkRecipient = async (req, res) => {
 };
 
 
-const createRecipient = async (req, res) => {
+const createRecipient1 = async (req, res) => {
     try {
         // Dapatkan data dosen dari body request
         const { nama,no_whatsapp} = req.body;
@@ -180,8 +180,8 @@ async function updateRecipient(req, res) {
 module.exports={
     getRecipient, 
     getRecipientById,
-    createBulkRecipient,
+    createRecipient,
     updateRecipient,
     downloadExcelTemplate,
-    createRecipient
+    createRecipient1
 }

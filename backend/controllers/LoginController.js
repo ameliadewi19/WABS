@@ -13,7 +13,7 @@ const getUser = async(req, res) =>{
 
 const login = async (req, res) => {
   console.log("Username yang dicari:", req.body.username);
-//   try {
+ try {
       const user = await User.findOne({
           where: {
               username: req.body.username
@@ -24,7 +24,7 @@ const login = async (req, res) => {
       const userID = user.id;
       const username = user.username;
       const accessToken = jwt.sign({ userID, username }, process.env.ACCESS_TOKEN_SECRET, {
-          expiresIn: '1h'
+          expiresIn: '1d'
       });
 
       const refreshToken = jwt.sign({ userID, username }, process.env.REFRESH_TOKEN_SECRET, {
@@ -43,9 +43,9 @@ const login = async (req, res) => {
       });
 
       res.json({ accessToken });
-//   } catch (error) {
-//       res.status(500).json({ error: error.message });
-//   }
+  } catch (error) {
+      res.status(500).json({ error: error.message });
+  }
 }
 
 const logout = async (req, res) => {
