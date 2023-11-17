@@ -2,97 +2,155 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import feather from 'feather-icons';
-import { DataTable } from 'simple-datatables'; 
+import { DataTable } from 'simple-datatables';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import EditGroupModal from './Modals/EditGroupModal';
+import AddGroupModal from './Modals/AddGroupModal';
 
-const GroupRecipient = ({}) => {
-    const location = useLocation();
-    
-    useEffect(() => {
-        feather.replace(); // Replace the icons after component mounts
-        // Initialize the datatable here
-        const table = new DataTable('.datatable');
-    }, []);
+const GroupRecipient = ({ }) => {
+  const location = useLocation();
+  const [groups, setGroups] = useState([]);
+  const MySwal = withReactContent(Swal);
+  const [selectedGroup, setSelectedGroup] = useState(null);
 
-    return (
-        <main id="main" className="main">
-            <div className="pagetitle">
-            <h1>Group Recipient</h1>
-            <nav>
-                <ol className="breadcrumb">
-                <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
-                <li className="breadcrumb-item">Group Recipient</li>
-                </ol>
-            </nav>
-            </div>
+  useEffect(() => {
+    feather.replace();
+    fetchData();
+  }, []);
 
-            <section className="section">
-            <div className="row">
-                <div className="col-lg-12">
+  useEffect(() => {
+    // Initialize the datatable here
+    if (groups.length > 0) {
+      const table = new DataTable('.datatable');
+    }
+  }, [groups]);
 
-                <div className="card">
-                    <div className="card-body">
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5005/groups');
+      setGroups(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const handleDelete = (id) => {
+    MySwal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this group!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // User clicked Yes, proceed with deletion
+        deleteGroup(id);
+      }
+    });
+  };
+
+  const deleteGroup = async (id) => {
+    try {
+      // Call your delete API endpoint
+      await axios.delete(`http://localhost:5005/groups/${id}`);
+
+      // Reload the data after deleting
+      fetchData();
+
+      MySwal.fire('Deleted!', 'Your group has been deleted.', 'success');
+    } catch (error) {
+      console.error('Error deleting group:', error);
+      MySwal.fire('Error!', 'An error occurred while deleting the group.', 'error');
+    }
+  };
+
+  const handleEdit = (group) => {
+    setSelectedGroup(group);
+    console.log("group: ", group);
+  };
+
+  return (
+    <main id="main" className="main">
+      <div className="pagetitle">
+        <h1>Group Recipient</h1>
+        <nav>
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
+            <li className="breadcrumb-item active">Group Recipient</li>
+          </ol>
+        </nav>
+      </div>
+
+      <section className="section">
+        <div className="row">
+          <div className="col-lg-12">
+
+            <div className="card">
+              <div className="card-body">
+                <div className='row'>
+                  <div className='col-md-6'>
                     <h5 className="card-title">Group Recipient</h5>
-                    <p>Add lightweight datatables to your project with using the <a href="https://github.com/fiduswriter/Simple-DataTables" target="_blank">Simple DataTables</a> library. Just add <code>.datatable</code> className name to any table you wish to conver to a datatable</p>
-
-                    <table className="table datatable">
-                        <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Position</th>
-                            <th scope="col">Age</th>
-                            <th scope="col">Start Date</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Brandon Jacob</td>
-                            <td>Designer</td>
-                            <td>28</td>
-                            <td>2016-05-25</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Bridie Kessler</td>
-                            <td>Developer</td>
-                            <td>35</td>
-                            <td>2014-12-05</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td>Ashleigh Langosh</td>
-                            <td>Finance</td>
-                            <td>45</td>
-                            <td>2011-08-12</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">4</th>
-                            <td>Angus Grady</td>
-                            <td>HR</td>
-                            <td>34</td>
-                            <td>2012-06-11</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">5</th>
-                            <td>Raheem Lehner</td>
-                            <td>Dynamic Division Officer</td>
-                            <td>47</td>
-                            <td>2011-04-19</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
+                    <p>Group yang berisikan list recipient</p>
+                  </div>
+                  <div className='col-md-6'>
+                    <div className='d-flex justify-content-end'>
+                      <button type="button" className="btn btn-primary me-2 mt-3" data-bs-toggle="modal" data-bs-target="#addGroupModal"><i className='bi bi-plus'></i>Tambah Group</button>
+                      <AddGroupModal reloadData={fetchData} />
                     </div>
+                  </div>
                 </div>
 
-                </div>
+
+                <table className="table datatable">
+                  <thead>
+                    <tr>
+                      <th >No</th>
+                      <th >Nama Grup</th>
+                      <th >Deskripsi</th>
+                      <th >Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {groups.map((group, index) => (
+                      <tr key={index}>
+                        <th scope="row">{index + 1}</th>
+                        <td>{group.nama_grup}</td>
+                        <td>{group.deskripsi}</td>
+                        <td>
+                          <div style={{ display: 'flex', gap: '5px' }}>
+                            <button
+                              type="button"
+                              className="btn btn-primary"
+                              onClick={() => handleEdit(group.id)}
+                              data-bs-toggle="modal"
+                              data-bs-target="#editGroupModal"
+                            >
+                              <i className="bi bi-pencil-fill"></i>
+                            </button>
+                            <EditGroupModal
+                              reloadData={fetchData}
+                              groupId={selectedGroup}
+                            />
+                            <button type="button" className="btn btn-danger" onClick={() => handleDelete(group.id)}>
+                              <i className="bi bi-trash-fill"></i>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+              </div>
             </div>
-            </section>
 
-        </main>
-
-    );
+          </div>
+        </div>
+      </section>
+    </main>
+  );
 };
 
 export default GroupRecipient;

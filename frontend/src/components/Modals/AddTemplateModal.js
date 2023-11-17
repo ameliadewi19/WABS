@@ -36,7 +36,7 @@ const AddTemplateModal = ({ reloadData, reloadDataActivity }) => {
   };
 
   return (
-    <div className={`modal fade ${showModal ? 'show' : ''}`} id="addTemplateModal" tabIndex="-1" aria-labelledby="addTemplateModalLabel" aria-hidden={!showModal}>
+    <div className={`modal fade`} id="addTemplateModal" tabIndex="-1" aria-labelledby="addTemplateModalLabel" aria-hidden={!showModal}>
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
