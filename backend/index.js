@@ -31,6 +31,5 @@ app.use(scheduleRoute);
 app.use(whatsappRoute);
 app.use(TemplateMessageRoute);
 app.use(groupRoute);
-app.use(activityRoute);
 
 app.listen(5005, () => console.log('Server Up and Running...'));
