@@ -1,5 +1,6 @@
 const Schedule = require('../models/ScheduleModel.js');
 const RecipientList = require('../models/RecipientListModel.js');
+const Recipient = require('../models/RecipientModel.js');
 const sequelize = require('../config/Database.js');
 const Sequelize = require('sequelize');
 
@@ -7,7 +8,7 @@ const createSchedule = async (req, res) => {
     const transaction = await sequelize.transaction();
 
     try {
-        const { id_message, jenis_message, id_activity, jenis_schedule, tanggal_mulai, tanggal_akhir, waktu, 'recipient-list': recipientList } = req.body;
+        const { id_message, jenis_message, id_activity, jenis_schedule, tanggal_mulai, tanggal_akhir, waktu, 'recipient_list': recipientList } = req.body;
 
         // Create a new schedule
         const newSchedule = await Schedule.create({
@@ -45,15 +46,20 @@ const createSchedule = async (req, res) => {
 
 const getSchedule = async (req, res) => {
     try {
-        const schedules = await sequelize.query(
-            'SELECT * FROM Schedule LEFT JOIN RecipientList ON Schedule.id = RecipientList.id_schedule',
-            { type: Sequelize.QueryTypes.SELECT }
-        );
-
+        const schedules = await Schedule.findAll({
+            include: [{
+              model: RecipientList,
+              as: 'recipient_list', // Specify the alias here
+              include: [{
+                model: Recipient,
+                as: 'recipients', // Specify the alias for Recipient
+              }],
+            }],
+          });
         res.status(200).json(schedules);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal server error' });
+     } catch (error) {
+        console.error('Error fetching schedule:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
 
