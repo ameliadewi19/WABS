@@ -9,10 +9,9 @@ const whatsappRoute = require("./routes/WhatsappAuthRoute.js");
 const recipientRoute = require("./routes/RecipientRoute.js");
 const TemplateMessageRoute = require("./routes/TemplateMessageRoutes.js");
 const groupRoute = require("./routes/GroupRoutes.js");
-const activityRoute = require("./routes/ActivityRoutes.js");
 
 const cors = require('cors');
-require("./controllers/SchedulerController.js");
+// require("./controllers/SchedulerController.js");
 
 dotenv.config();
 

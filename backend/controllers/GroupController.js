@@ -89,35 +89,60 @@ const createGroup = async (req, res) => {
   }
 };
 
-  
-
 const updateGroup = async (req, res) => {
   const { id } = req.params;
   const { nama_grup, deskripsi, recipients } = req.body;
-  
+
   try {
-    const group = await Group.findByPk(id);
+    const group = await Group.findByPk(id, {
+      include: [
+        {
+          model: GroupRecipient,
+          as: 'recipients',
+        },
+      ],
+    });
+
     if (group) {
       // Update the group details
       await group.update({ nama_grup, deskripsi });
 
-      // Update recipients associated with the group
-      await Promise.all(
-        recipients.map(async (recipient) => {
-          const { id_recipient } = recipient;
-          // Ensure id_recipient is not null or undefined before updating
-          if (id_recipient != null) {
-            // Check if the recipient already exists for the group
-            const existingRecipient = await GroupRecipient.findOne({
-              where: { id_grup: group.id, id_recipient },
-            });
+      // Get the existing recipients for the group
+      const existingRecipients = group.recipients.map((recipient) => recipient.id_recipient);
 
-            // If the recipient exists, update it; otherwise, create a new one
-            if (existingRecipient) {
-              await existingRecipient.update({ id_recipient });
-            } else {
-              await GroupRecipient.create({ id_grup: group.id, id_recipient });
-            }
+      // Identify recipients to be removed
+      const recipientsToRemove = existingRecipients.filter((existingRecipient) =>
+        recipients.every((updatedRecipient) => updatedRecipient.id_recipient !== existingRecipient)
+      );
+
+      // Identify recipients to be added or updated
+      const recipientsToAddOrUpdate = recipients.filter(
+        (updatedRecipient) => !existingRecipients.includes(updatedRecipient.id_recipient)
+      );
+
+      // Remove recipients
+      await GroupRecipient.destroy({
+        where: {
+          id_grup: group.id,
+          id_recipient: recipientsToRemove,
+        },
+      });
+
+      // Add or update recipients
+      await Promise.all(
+        recipientsToAddOrUpdate.map(async (updatedRecipient) => {
+          const { id_recipient } = updatedRecipient;
+
+          // Check if the recipient already exists for the group
+          const existingRecipient = await GroupRecipient.findOne({
+            where: { id_grup: group.id, id_recipient },
+          });
+
+          // If the recipient exists, update it; otherwise, create a new one
+          if (existingRecipient) {
+            await existingRecipient.update({ id_recipient });
+          } else {
+            await GroupRecipient.create({ id_grup: group.id, id_recipient });
           }
         })
       );

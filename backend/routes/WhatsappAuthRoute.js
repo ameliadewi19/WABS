@@ -7,6 +7,12 @@ const {
 } = require('../controllers/WhatsappAuthController.js');
 
 router.post("/authenticate", async (req, res) => {
+  // try {
+  //   await wbm.start({ showBrowser: true, qrCodeData: true, session: true});
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).json({ error: 'Internal Server Error' });
+  // }
   const { phone, msg } = req.body;
 
   console.log(phone, msg);
