@@ -1,8 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/Database.js");
-const Recipient = require('./RecipientModel');
-const Schedule = require('./ScheduleModel');
-
+const Recipient = require('./RecipientModel.js');
 const RecipientList = sequelize.define("RecipientList", {
   id: {
     type: DataTypes.INTEGER,
@@ -27,6 +25,6 @@ const RecipientList = sequelize.define("RecipientList", {
   await RecipientList.sync();
 })();
 
-RecipientList.hasMany(Schedule, { foreignKey: 'id_schedule', as: 'schedule' });
+RecipientList.belongsTo(Recipient, { foreignKey: 'id_recipient', as: 'recipients' });
 
 module.exports = RecipientList;
