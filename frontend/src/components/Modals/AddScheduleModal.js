@@ -4,7 +4,9 @@ import { DataTable } from 'simple-datatables';
 
 const AddScheduleModal = ({ reloadData }) => {
     const [selectedRecipient, setSelectedRecipient] = useState([]);
-    const [recipientData, setRecipientData] = useState([]);
+    const [recipientData, setRecipientData] = useState([{
+      id_recipient: '',
+    }]);
     const [templateMessages, setTemplateMessage] = useState([]);
     const [activityData, setActivityData] = useState([]);
 
@@ -13,7 +15,7 @@ const AddScheduleModal = ({ reloadData }) => {
     const [formData, setFormData] = useState({
       id_message: '',
       jenis_message: '',
-      id_activity: '',
+      id_activity: null,
       jenis_schedule: '',
       tanggal_mulai: '',
       tanggal_akhir: '',
@@ -30,16 +32,6 @@ const AddScheduleModal = ({ reloadData }) => {
       fetchActivityData();
       fetchGroupData();
     }, []);
-
-    const fetchRecipientData = async () => {
-      try {
-        const response = await axios.get('http://localhost:5005/recipient');
-        setRecipientData(response.data);
-      } catch (error) {
-        console.error('Error fetching data recipient:', error);
-      }
-    };
-
     const fetchtTemplateMessage = async () => {
       try {
         const response = await axios.get('http://localhost:5005/template-messages');
@@ -103,7 +95,7 @@ const AddScheduleModal = ({ reloadData }) => {
       if(name === 'id_grup') {
         const selectedGroup = groupData.find((group) => group.id === parseInt(value, 10));
         setFormData(prevFormData => ({ ...prevFormData, [name]: value, recipient_list: selectedGroup.recipients }));
-        setRecipientData(selectedGroup.recipients);
+        setRecipientData(selectedGroup.recipients.map((recipient) => ({ id_recipient: recipient.id_recipient })));
         console.log('selectedGroup', selectedGroup)
       }
       // Filter and set recipientData based on the selected group
@@ -115,8 +107,9 @@ const AddScheduleModal = ({ reloadData }) => {
       // Initialize selectedRecipient with all recipient ids
       const allRecipientIds = formData.recipient_list.map((recipient) => recipient.id);
       setSelectedRecipient(allRecipientIds);
-      const allRecipientDataId = formData.recipient_list.map((recipient) => recipient.id_recipient);
-      setRecipientData(allRecipientDataId);
+
+      const updatedRecipientData = formData.recipient_list.map((recipient) => ({ id_recipient: recipient.id_recipient }));
+      setRecipientData(updatedRecipientData);
     }, [formData.recipient_list]);
 
     const handleCheckboxChange = (id, id_recipient) => {
@@ -126,13 +119,12 @@ const AddScheduleModal = ({ reloadData }) => {
         setSelectedRecipient((prevSelected) =>
           prevSelected.filter((rowId) => rowId !== id)
         );
-        setRecipientData((prevSelected) =>
-          prevSelected.filter((rowId) => rowId !== id_recipient)
-        );
+
+        setRecipientData((prevRecipientData) => prevRecipientData.filter((recipient) => recipient.id_recipient !== id_recipient));
       } else {
         // Jika belum ada, tambahkan ke array
         setSelectedRecipient([...selectedRecipient, id]);
-        setRecipientData([...recipientData, id_recipient]);
+        setRecipientData([...recipientData, { id_recipient }]);
       }
 
       console.log('selectedRecipient', selectedRecipient);
@@ -156,7 +148,7 @@ const AddScheduleModal = ({ reloadData }) => {
           tanggal_mulai: formData.tanggal_mulai,
           tanggal_akhir: formData.tanggal_akhir || formData.tanggal_mulai,
           waktu: formData.waktu,
-          recipientList: recipientData,
+          recipient_list: recipientData,
         });
         console.log('response', response);
         reloadData();
