@@ -27,7 +27,8 @@ const ScheduleMessage = ({}) => {
             const table = new DataTable('.datatable', {
                 columns : [
                     { select : 9, sortable : false },
-                ]
+                ],
+                responsive: true,
             });
         }
     }, [scheduleMessage]);
@@ -69,45 +70,45 @@ const ScheduleMessage = ({}) => {
                                 </div>
                             </div>
                         </div>
-
-                    <table className="table datatable">
-                        <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Id Message</th>
-                            <th scope="col">Jenis Message</th>
-                            <th scope="col">Aktivitas</th>
-                            <th scope="col">Recipient</th>
-                            <th scope="col">Jenis Schedule</th>
-                            <th scope="col">Tanggal Mulai</th>
-                            <th scope="col">Tanggal Akhir</th>
-                            <th scope="col">Waktu</th>
-                            <th scope="col">Aksi</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            {scheduleMessage.map((schedule, index) => (
-                                <tr key={schedule.id}>
-                                    <td>{index + 1}</td>
-                                    <td>{schedule.id_message}</td>
-                                    <td>{schedule.jenis_message}</td>
-                                    <td>{schedule.id_activity}</td>
-                                    <td>Recipient</td>
-                                    <td>{schedule.jenis_schedule}</td>
-                                    <td>{formatDate(schedule.tanggal_mulai)}</td>
-                                    <td>{formatDate(schedule.tanggal_akhir)}</td>
-                                    <td>{schedule.waktu}</td>
-                                    <td>
-                                        <div>
-                                            <button type="button" className="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Edit</button>
-                                            <button type="button" className="btn btn-danger btn-sm">Delete</button>
-                                        </div>
-                                    </td>
+                        <div className="table-responsive">
+                            <table className="table datatable">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Id Message</th>
+                                    <th scope="col">Jenis Message</th>
+                                    <th scope="col">Aktivitas</th>
+                                    <th scope="col">Recipient</th>
+                                    <th scope="col">Jenis Schedule</th>
+                                    <th scope="col">Tanggal Mulai</th>
+                                    <th scope="col">Tanggal Akhir</th>
+                                    <th scope="col">Waktu</th>
+                                    <th scope="col">Aksi</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
+                                </thead>
+                                <tbody>
+                                    {scheduleMessage.map((schedule, index) => (
+                                        <tr key={schedule.id}>
+                                            <td>{index + 1}</td>
+                                            <td>{schedule.id_message}</td>
+                                            <td>{schedule.jenis_message}</td>
+                                            <td>{schedule.id_activity}</td>
+                                            <td>Recipient</td>
+                                            <td>{schedule.jenis_schedule}</td>
+                                            <td>{formatDate(schedule.tanggal_mulai)}</td>
+                                            <td>{formatDate(schedule.tanggal_akhir)}</td>
+                                            <td>{schedule.waktu}</td>
+                                            <td>
+                                                <div className='d-flex flex-column flex-sm-row'>
+                                                    <button type="button" className="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal"><i className='bi-pencil-fill'></i></button>
+                                                    <button type="button" className="btn btn-danger btn-sm ms-1"><i className='bi-trash-fill'></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
