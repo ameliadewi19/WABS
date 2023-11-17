@@ -19,17 +19,17 @@ const AddScheduleModal = ({ reloadData }) => {
       tanggal_mulai: '',
       tanggal_akhir: '',
       waktu: '',
-    
+      id_grup: '',
+      recipient_list: [],
     });
+
     const [showModal, setShowModal] = useState(false);
     const modalRef = useRef()
 
     useEffect(() => {
-      fetchRecipientData();
       fetchtTemplateMessage();
       fetchActivityData();
-      console.log('templet', templateMessages);
-      console.log('activity', activityData);
+      fetchGroupData();
     }, []);
 
     const fetchRecipientData = async () => {
@@ -37,7 +37,7 @@ const AddScheduleModal = ({ reloadData }) => {
         const response = await axios.get('http://localhost:5005/recipient');
         setRecipientData(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data recipient:', error);
       }
     };
 
@@ -46,7 +46,7 @@ const AddScheduleModal = ({ reloadData }) => {
         const response = await axios.get('http://localhost:5005/template-messages');
         setTemplateMessage(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data template:', error);
       }
     };
 
@@ -55,21 +55,51 @@ const AddScheduleModal = ({ reloadData }) => {
         const response = await axios.get('http://localhost:5005/activity');
         setActivityData(response.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data activity:', error);
+      }
+    };
+
+    const fetchGroupData = async () => { 
+      try {
+        const response = await axios.get('http://localhost:5005/groups/');
+        setGroupData(response.data);
+      } catch (error) {
+        console.error('Error fetching data groups:', error);
       }
     };
 
     useEffect(() => {
       // Initialize the datatable here
-      if (recipientData.length > 0) {
+      if (formData.recipient_list.length > 0) {
           const table = new DataTable('.datatable-recipient', {
-            perPage: 5,
+            paging: false,
             columns : [
               { select : 0, sortable : false }
             ],
           });
+
+          // Handle the page change event to restore the checked state
+          table.on('datatable-recipient.draw', function () {
+            updateCheckboxState();
+          });
+
+          // Clean up the DataTable when the component unmounts
+          return () => {
+            table.destroy();
+          };
       }
-    }, [recipientData]);
+
+      
+    }, [formData.recipient_list]);
+
+    // Update the checked state based on the current page
+  const updateCheckboxState = () => {
+    const checkboxes = document.querySelectorAll('.datatable-recipient input[type="checkbox"]');
+    checkboxes.forEach((checkbox) => {
+      const recipientId = parseInt(checkbox.dataset.recipientId, 10);
+      checkbox.checked = selectedRecipient.includes(recipientId);
+    });
+  };
 
     const handleInputChange = (e) => {
       const { name, value } = e.target;
@@ -90,14 +120,31 @@ const AddScheduleModal = ({ reloadData }) => {
       } else {
         setFormData(prevFormData => ({ ...prevFormData, [name]: value }));
       }
+
+      if(name === 'id_grup') {
+        const selectedGroup = groupData.find((group) => group.id === parseInt(value, 10));
+        setFormData(prevFormData => ({ ...prevFormData, [name]: value, recipient_list: selectedGroup.recipients }));
+        console.log('selectedGroup', selectedGroup)
+      }
+      // Filter and set recipientData based on the selected group
+      
+      console.log('recipientData', recipientData)
       console.log('formdata', formData);
     };
+
+    useEffect(() => {
+      // Initialize selectedRecipient with all recipient ids
+      const allRecipientIds = formData.recipient_list.map((recipient) => recipient.id);
+      setSelectedRecipient(allRecipientIds);
+    }, [formData.recipient_list]);
 
     const handleCheckboxChange = (id) => {
       // Mengecek apakah id sudah ada di dalam array selectedRows
       if (selectedRecipient.includes(id)) {
         // Jika sudah ada, maka hapus dari array
-        setSelectedRecipient(selectedRecipient.filter(rowId => rowId !== id));
+        setSelectedRecipient((prevSelected) =>
+          prevSelected.filter((rowId) => rowId !== id)
+        );
       } else {
         // Jika belum ada, tambahkan ke array
         setSelectedRecipient([...selectedRecipient, id]);
@@ -239,6 +286,23 @@ const AddScheduleModal = ({ reloadData }) => {
                         />
                       </div>
                     </div>
+                    <div className="mb-3">
+                      <label htmlFor="message" className="form-label">Recipient Group</label>
+                      <select
+                        className="form-select"
+                        name="id_grup"
+                        onChange={(e) => handleInputChange(e)}
+                        value={formData.id_grup}
+                        required
+                      >
+                        <option value="">Pilih Group</option>
+                        {groupData.map((group, index) => (
+                            <option key={index} value={group.id}>
+                              {group.nama_grup}
+                            </option>
+                        ))}
+                      </select>
+                    </div>
                     <div className='mb-3'>
                     <label className="form-label">Recipient List</label>
                     <table className="table datatable-recipient table-striped">
@@ -251,18 +315,19 @@ const AddScheduleModal = ({ reloadData }) => {
                         </tr>
                       </thead>
                       <tbody>
-                      {recipientData.map((recipient, index) => (
+                      {formData.recipient_list.map((recipient, index) => (
                         <tr key={recipient.id}>
                           <td>
                             <input
                               type="checkbox"
                               checked={selectedRecipient.includes(recipient.id)}
                               onChange={() => handleCheckboxChange(recipient.id)}
+                              data-recipient-id={recipient.id}
                             />
                           </td>
                           <td>{index + 1}</td>
-                          <td>{recipient.nama}</td>
-                          <td>{recipient.no_whatsapp}</td>
+                          <td>{recipient.recipients.nama}</td>
+                          <td>{recipient.recipients.no_whatsapp}</td>
                         </tr>
                       ))}
                       </tbody>
