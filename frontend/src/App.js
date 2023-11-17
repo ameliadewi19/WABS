@@ -11,6 +11,8 @@ import Recipient from './components/Recipient.js';
 import DirectMessage from './components/DirectMessage.js';
 import ScheduleMessage from './components/ScheduleMessage.js';
 import Aktivitas from './components/Aktivitas.js';
+import TemplateMessage from './components/TemplateMessage.js';
+import GroupRecipient from './components/GroupRecipient.js';
 
 
 function checkAuthorization() {
@@ -142,6 +144,28 @@ function App() {
               </div>  
             </div>
           </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/template"
+          element={
+            <>
+              <Navbar />
+              <Sidebar />
+              <TemplateMessage />
+              <Footer />
+            </>
+          }
+        />
+        <Route
+          path="/group-recipient"
+          element={
+            <>
+              <Navbar />
+              <Sidebar />
+              <GroupRecipient />
+              <Footer />
+            </>
           }
         />
       </Routes>

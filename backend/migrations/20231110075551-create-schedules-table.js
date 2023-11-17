@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Schedules', {
+    return queryInterface.createTable('Schedule', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -37,18 +37,10 @@ module.exports = {
         type: Sequelize.TIME,
         allowNull: false,
       },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Schedules');
+    return queryInterface.dropTable('Schedule');
   }
 };

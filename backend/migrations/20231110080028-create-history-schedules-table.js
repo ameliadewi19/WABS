@@ -2,7 +2,7 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.createTable('HistorySchedules', {
+    return queryInterface.createTable('HistorySchedule', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -29,18 +29,10 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
     });
   },
 
   down: async (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('HistorySchedules');
+    return queryInterface.dropTable('HistorySchedule');
   }
 };

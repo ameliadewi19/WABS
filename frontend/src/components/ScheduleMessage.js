@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { DataTable } from 'simple-datatables'; 
-import AddScheduleModal from './AddScheduleModal';
+import AddScheduleModal from './Modals/AddScheduleModal';
 
 const ScheduleMessage = ({}) => {
     const location = useLocation();
