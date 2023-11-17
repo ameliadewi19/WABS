@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { DataTable } from 'simple-datatables';
 
-const AddScheduleModal = ({ reloadData }) => {
+const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
     const [selectedRecipient, setSelectedRecipient] = useState([]);
     const [recipientData, setRecipientData] = useState([]);
     const [templateMessages, setTemplateMessage] = useState([]);
@@ -11,13 +11,7 @@ const AddScheduleModal = ({ reloadData }) => {
     const [groupData, setGroupData] = useState([]);
 
     const [formData, setFormData] = useState({
-      id_message: '',
-      jenis_message: '',
-      id_activity: null,
-      jenis_schedule: '',
-      tanggal_mulai: '',
-      tanggal_akhir: '',
-      waktu: '',
+      idTemplate: idTemplate,
       id_grup: '',
       recipient_list: [],
     });
@@ -27,7 +21,6 @@ const AddScheduleModal = ({ reloadData }) => {
 
     useEffect(() => {
       fetchtTemplateMessage();
-      fetchActivityData();
       fetchGroupData();
     }, []);
 
@@ -46,15 +39,6 @@ const AddScheduleModal = ({ reloadData }) => {
         setTemplateMessage(response.data);
       } catch (error) {
         console.error('Error fetching data template:', error);
-      }
-    };
-
-    const fetchActivityData = async () => {
-      try {
-        const response = await axios.get('http://localhost:5005/activity');
-        setActivityData(response.data);
-      } catch (error) {
-        console.error('Error fetching data activity:', error);
       }
     };
 
@@ -145,17 +129,11 @@ const AddScheduleModal = ({ reloadData }) => {
     };
 
     const handleSubmit = async () => {
-      console.log('formData', formData);
+      console.log("id template: ", idTemplate);
       console.log('selectedRecipient', recipientData);
       try {
-        const response = await axios.post('http://localhost:5005/schedule', {
-          id_message: formData.id_message,
-          jenis_message: formData.jenis_message,
-          id_activity: formData.id_activity,
-          jenis_schedule: formData.jenis_schedule,
-          tanggal_mulai: formData.tanggal_mulai,
-          tanggal_akhir: formData.tanggal_akhir || formData.tanggal_mulai,
-          waktu: formData.waktu,
+        const response = await axios.post('http://localhost:5005/direct-message', {
+          id_template: idTemplate,
           recipientList: recipientData,
         });
         console.log('response', response);
@@ -167,110 +145,15 @@ const AddScheduleModal = ({ reloadData }) => {
     }
 
     return (
-        <div className={`modal fade ${showModal ? 'show' : ''}`} id="addScheduleModal" tabIndex="-1" aria-labelledby="addScheduleModalLabel" aria-hidden={!showModal}>
+        <div className={`modal fade ${showModal ? 'show' : ''}`} id="addDirectMessageModal" tabIndex="-1" aria-labelledby="addDirectMessageModalLabel" aria-hidden={!showModal}>
           <div className="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="addScheduleModalLabel">Tambah Data Konfirmasi</h5>
+                <h5 className="modal-title" id="addDirectMessageModalLabel">Tambah Data Konfirmasi</h5>
                 <button type="button" className="d-none" ref={modalRef} data-bs-dismiss="modal"></button>
               </div>
               <div className="modal-body">
                   <form onSubmit={submit}>
-                    <div className="mb-3">
-                        <label htmlFor="pembuka" className="form-label">Template Pesan</label>
-                        {/* nanti harus retrieve dulu dari db  */}
-                        <select
-                          className="form-select"
-                          name="id_message"
-                          onChange={(e) => handleInputChange(e)}
-                          value={formData.id_message}
-                          required
-                        >
-                          <option value="">Pilih Template Message</option>
-                            {templateMessages.map((template, index) => (
-                              <option key={index} value={template.id}>
-                                {template.message}
-                              </option>
-                            ))}
-                        </select>
-                    </div>
-                    {formData.jenis_message === 'activity' && (
-                      <div className="mb-3">
-                        <label htmlFor="message" className="form-label">Activity</label>
-                        {/* nanti harus retrieve dulu dari db  */}
-                        <select
-                          className="form-select"
-                          name="id_activity"
-                          onChange={(e) => handleInputChange(e)}
-                          value={formData.id_activity}
-                          required
-                        >
-                          <option value="">Activity</option>
-                          {activityData.map((activity, index) => (
-                              <option key={index} value={activity.id_activity}>
-                                {activity.activity_name} - {activity.activity_date}
-                              </option>
-                          ))}
-                        </select>
-                    </div>
-                    )}
-                    
-                    <div className="mb-3">
-                      <label htmlFor="message" className="form-label">Jenis Schedule</label>
-                      <select
-                        className="form-select"
-                        name="jenis_schedule"
-                        onChange={(e) => handleInputChange(e)}
-                        value={formData.jenis_schedule}
-                        required
-                      >
-                        <option value="">Pilih Jenis Schedule</option>
-                        <option value="once">Once</option>
-                        <option value="daily">Daily</option>
-                        <option value="weekly">Weekly</option>
-                        <option value="monthly">Monthly</option>
-                      </select>
-                    </div>
-                    <div className="mb-3 row">
-                      <div className='col-md-4'>
-                        <label htmlFor="message" className="form-label">Tanggal Mulai</label>
-                        <input
-                          type="date"
-                          className="form-control"
-                          name="tanggal_mulai"
-                          onChange={(e) => handleInputChange(e)}
-                          value={formData.message}
-                          required
-                        />
-                      </div>
-                      {formData.jenis_schedule != 'once' && (
-                        <div className='col-md-4'>
-                          <label htmlFor="message" className="form-label">Tanggal Akhir</label>
-                          <input
-                            type="date"
-                            className="form-control"
-                            name="tanggal_akhir"
-                            onChange={(e) => handleInputChange(e)}
-                            value={formData.message}
-                            required
-                          />
-                        </div>
-                      )}
-                      
-                      <div className='col-md-4'>
-                        <label htmlFor="message" className="form-label">Waktu</label>
-                        <input
-                          type="time"
-                          className="form-control"
-                          name="waktu"
-                          onChange={(e) => handleInputChange(e)}
-                          value={formData.message}
-                          min="00:00"
-                          max="23:59"
-                          required
-                        />
-                      </div>
-                    </div>
                     <div className="mb-3">
                       <label htmlFor="message" className="form-label">Recipient Group</label>
                       <select
@@ -330,4 +213,4 @@ const AddScheduleModal = ({ reloadData }) => {
     );
 }
 
-export default AddScheduleModal;
+export default AddDirectMessageModal;

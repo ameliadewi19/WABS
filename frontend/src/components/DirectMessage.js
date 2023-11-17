@@ -5,8 +5,7 @@ import feather from 'feather-icons';
 import { DataTable } from 'simple-datatables'; 
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-import AddTemplateModal from './Modals/AddTemplateModal';
-import EditTemplateModal from './Modals/EditTemplateModal';
+import AddDirectMessageModal from './Modals/AddDirectMessageModal';
 
 const DirectMessage = ({}) => {
     const location = useLocation();
@@ -86,8 +85,8 @@ const DirectMessage = ({}) => {
         }
     };
 
-    const handleEdit = (template) => {
-        setSelectedTemplate(template);
+    const handleSend = (id) => {
+        setSelectedTemplate(id);
         // Open the edit modal here if you are using a modal library
         // You can trigger the modal opening logic from here
     };
@@ -138,18 +137,13 @@ const DirectMessage = ({}) => {
                                 <button
                                     type="button"
                                     className="btn btn-success"
-                                    onClick={() => handleEdit(template)}
                                     data-bs-toggle="modal"
-                                    data-bs-target="#editTemplateModal"
+                                    data-bs-target="#addDirectMessageModal"
+                                    onClick={() => handleSend(template.id)}
                                 >
                                     <i className="bi bi-send-fill"></i>
                                 </button>
-                                <EditTemplateModal
-                                template={selectedTemplate}
-                                handleClose={() => setSelectedTemplate(null)}
-                                reloadData={fetchData}
-                                reloadDataActivity={fetchDataActivity}
-                                />
+                                <AddDirectMessageModal reloadData={fetchData} idTemplate={selectedTemplate}/>
                             </div>
                             </td>
                         </tr>
@@ -192,18 +186,13 @@ const DirectMessage = ({}) => {
                                 <button
                                     type="button"
                                     className="btn btn-success"
-                                    onClick={() => handleEdit(templateActivity)}
                                     data-bs-toggle="modal"
-                                    data-bs-target="#editTemplateModal"
+                                    data-bs-target="#addDirectMessageModal"
+                                    onClick={() => handleSend(templateActivity.id)}
                                 >
                                     <i className="bi bi-send-fill"></i>
                                 </button>
-                                <EditTemplateModal
-                                template={selectedTemplate}
-                                handleClose={() => setSelectedTemplate(null)}
-                                reloadData={fetchData}
-                                reloadDataActivity={fetchDataActivity}
-                                />
+                                <AddDirectMessageModal reloadData={fetchData} />                                
                             </div>
                             </td>
                         </tr>

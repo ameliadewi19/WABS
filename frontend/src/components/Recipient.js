@@ -35,7 +35,7 @@ const Recipient = ({}) => {
 
     const fetchRecipientData = async () => {
         try {
-          const response = await axios.get('http://localhost:5005/recipient');
+          const response = await axios.get('/recipient');
           setRecipientData(response.data);
         } catch (error) {
           console.error('Error fetching data:', error);

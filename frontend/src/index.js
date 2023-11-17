@@ -6,9 +6,9 @@ import reportWebVitals from './reportWebVitals';
 import axios from 'axios';
 
 
-axios.defaults.baseURL = 'http://localhost:8000'; // Ganti dengan URL backend Anda
+axios.defaults.baseURL = 'http://localhost:5005'; // Ganti dengan URL backend Anda
 
-const yourAuthToken = localStorage.getItem('token'); // Ambil token dari penyimpanan lokal
+const yourAuthToken = localStorage.getItem('jwt_token'); // Ambil token dari penyimpanan lokal
 
 if (yourAuthToken) {
   axios.defaults.headers.common['Authorization'] = `Bearer ${yourAuthToken}`;

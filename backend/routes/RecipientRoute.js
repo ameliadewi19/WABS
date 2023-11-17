@@ -17,7 +17,7 @@ const router = express.Router();
 const storage = multer.memoryStorage(); // Store the uploaded file in memory
 const upload = multer({ storage });
 
-router.get('/recipient', getRecipient);
+router.get('/recipient', verifyToken, getRecipient);
 router.get('/recipient/:id', getRecipientById);
 router.get('/recipient/download-template', downloadExcelTemplate)
 router.post('/recipient', upload.single('excelFile'), createRecipient);

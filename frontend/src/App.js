@@ -89,7 +89,7 @@ function App() {
         <Route
           path="/recipient"
           element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
             <div className="wrapper">
                 <Sidebar />
               <div className="main">
@@ -98,7 +98,7 @@ function App() {
                   <Footer />
               </div>  
             </div>
-          </ProtectedRoute>
+          // </ProtectedRoute>
           }
         />
         <Route
