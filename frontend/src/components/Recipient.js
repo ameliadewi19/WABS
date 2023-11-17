@@ -223,46 +223,42 @@ const Recipient = ({}) => {
 
     return (
         <main id="main" className="main">
-          <div className="row">
-                <div className="col-lg-4">
-                      <div className="pagetitle">
-                      <h2>Recipient</h2>
-                      <nav>
-                          <ol className="breadcrumb">
-                          <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
-                          <li className="breadcrumb-item active">Recipient</li>
-                          </ol>
-                      </nav>
-                      </div>
-                </div>
-                <div className="col-lg-4">
-                <h5 className="card-title">Tambah Dosen</h5>
-                <button className="btn btn-primary mt-2 mb-2" onClick={handleShowModal}>
-                  Tambah Dosen
-                </button>
-                </div>
-                <div className="col-lg-4">
-                <h5 className="card-title">Tambah Data Dosen Excel</h5>
-                <div className="upload-section">
-                  <label htmlFor="fileInput" className="btn btn-secondary upload-button">
-                    <span dangerouslySetInnerHTML={{ __html: feather.icons.upload.toSvg() }} className="mr-2" />
-                        Unggah Excel
-                  </label>
-                  <input type="file" id="fileInput" accept=".xlsx" onChange={handleFileUpload} />
-                  <a className="btn btn-primary download-template" href="/template/excel-template.xlsx" download>
-                    <i className="icon" data-feather="download"></i>
-                    <span>Download Template</span>
-                  </a>
-                </div>
-                </div>
+            
+            <div className="pagetitle">
+            <h1>Recipient</h1>
+            <nav>
+                <ol className="breadcrumb">
+                <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
+                <li className="breadcrumb-item active">Recipient</li>
+                </ol>
+            </nav>
             </div>
+              
             <section className="section">
             <div className="row">
                 <div className="card mt-5">
                     <div className="card-body">
-                    <h5 className="card-title">Recipient</h5>
-                    <p>Berikut ini merupakan list recipient yang bisa menerima pesan broadcast</p>
+                    <div className="row">
+                        <div className="col-lg-6">
+                          <h5 className="card-title">Recipient</h5>
+                          <p>Berikut ini merupakan list recipient yang bisa menerima pesan broadcast</p>
+                        </div>
+                        <div className="col-lg-6">
+                        <div className="upload-section">
+                          <button className="btn btn-primary" onClick={handleShowModal}><i className='bi bi-plus'></i>
+                            Tambah Dosen
+                          </button>
+                          <label htmlFor="fileInput" className="btn btn-secondary upload-button">
+                            <span dangerouslySetInnerHTML={{ __html: feather.icons.upload.toSvg() }} className="mr-2" />
+                          </label>
+                          <input type="file" id="fileInput" accept=".xlsx" onChange={handleFileUpload} />
+                          <a className="btn btn-primary download-template" href="/template/excel-template.xlsx" download>
+                            <i className="icon" data-feather="download"></i>
+                          </a>
+                        </div>
+                        </div>
 
+                    </div>
                     <table className="table datatable">
                     <thead>
                       <tr>
@@ -280,14 +276,15 @@ const Recipient = ({}) => {
                         <td>{recipient.no_whatsapp}</td>
                         <td>
                           <button
+                            type="button"
+                            className="btn btn-primary"
                             onClick={() => handleEdit(recipient)}
-                            className="btn btn-primary mt-2 border"
                             style={{ marginRight: '5px' }}
                           >
-                            Edit
+                          <i className="bi bi-pencil-fill"></i>
                           </button>
-                          <button onClick={() => confirmDelete(recipient.id)} className="btn btn-danger mt-2 border">
-                            Delete
+                          <button type="button" className="btn btn-danger" onClick={() => confirmDelete(recipient.id)}>
+                          <i className="bi bi-trash-fill"></i>
                           </button>
                         </td>
                       </tr>

@@ -3,7 +3,7 @@ const Recipient = require("../models/RecipientModel.js");
 const {Sequelize} = require("sequelize");
 const xlsx = require("xlsx");
 const path = require('path');
-
+const GroupRecipient = require('../models/GroupRecipientModel');
 
 const getRecipient = async(req, res) =>{
     try {
@@ -123,6 +123,33 @@ async function updateRecipient(req, res) {
     }
 }
 
+const deleteRecipient = async (req, res) => {
+  try {
+      const recipientId = req.params.id;
+
+      // Hapus terlebih dahulu record terkait di GroupRecipient
+      await GroupRecipient.destroy({
+          where: {
+            id_recipient: recipientId,
+          },
+      });
+
+      // Hapus Recipient setelah GroupRecipient terkait dihapus
+      await Recipient.destroy({
+          where: {
+              id: recipientId, // Fix the variable name here
+          },
+      });
+
+      res.status(200).json({ message: "Recipient berhasil dihapus beserta GroupRecipient yang terhubung" });
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ error: "Gagal menghapus Recipient beserta GroupRecipient yang terhubung" });
+  }
+};
+
+
+
 // const deleteRecipient = async (req, res) => {
 //     try {
 //       const downloadExcelTemplate = (req, res) => {
@@ -183,5 +210,6 @@ module.exports={
     createRecipient,
     updateRecipient,
     downloadExcelTemplate,
-    createRecipient1
+    createRecipient1,
+    deleteRecipient
 }
