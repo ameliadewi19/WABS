@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
 const EditTemplateModal = ({ template, handleClose, reloadData, reloadDataActivity }) => {
   const [message, setMessage] = useState('');
   const [jenisTemplate, setJenisTemplate] = useState('general');
   const [showModal, setShowModal] = useState(false);
+  const modalRef = useRef();  
 
   useEffect(() => {
     // Set the initial values when the template prop changes
@@ -32,16 +33,16 @@ const EditTemplateModal = ({ template, handleClose, reloadData, reloadDataActivi
         message: message,
       });
 
+      modalRef.current.click();
+
       // Reload the data after saving
       reloadData();
       reloadDataActivity();
 
-      // Close the modal
-      setShowModal(false);
-      var elementsToRemove = document.querySelectorAll('.modal-backdrop');
-        elementsToRemove.forEach(function (element) {
-        element.parentNode.removeChild(element);
-      });
+      // var elementsToRemove = document.querySelectorAll('.modal-backdrop');
+      //   elementsToRemove.forEach(function (element) {
+      //   element.parentNode.removeChild(element);
+      // });
       
     } catch (error) {
       console.error('Error saving edited template:', error);
@@ -49,12 +50,12 @@ const EditTemplateModal = ({ template, handleClose, reloadData, reloadDataActivi
   };
 
   return (
-    <div className={`modal fade ${showModal ? 'show' : ''}`} id="editTemplateModal" tabIndex="-1" aria-labelledby="editTemplateModalLabel" aria-hidden={!showModal}>
+    <div className={`modal fade`} id="editTemplateModal" tabIndex="-1" aria-labelledby="editTemplateModalLabel" aria-hidden={!showModal}>
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title" id="editTemplateModalLabel">Edit Template Message</h5>
-            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowModal(false)}></button>
+            <button type="button" className="btn-close" ref={modalRef} data-bs-dismiss="modal" aria-label="Close" onClick={() => setShowModal(false)}></button>
           </div>
           <div className="modal-body">
             <form>
