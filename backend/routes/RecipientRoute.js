@@ -18,12 +18,12 @@ const storage = multer.memoryStorage(); // Store the uploaded file in memory
 const upload = multer({ storage });
 
 router.get('/recipient',verifyToken,getRecipient);
-router.get('/recipient/:id', getRecipientById);
-router.get('/recipient/download-template', downloadExcelTemplate)
-router.post('/recipient', upload.single('excelFile'),createRecipient);
-router.post('/recipient1', createRecipient1);
+router.get('/recipient/:id',verifyToken, getRecipientById);
+router.get('/recipient/download-template', verifyToken,downloadExcelTemplate)
+router.post('/recipient', upload.single('excelFile'),verifyToken,createRecipient);
+router.post('/recipient1',verifyToken, createRecipient1);
 //router.post('/recipient', createBulkRecipient);
-router.patch('/recipient/:id', updateRecipient);
+router.patch('/recipient/:id', verifyToken,updateRecipient);
 // router.delete('/recipient/:id', deleteRecipient);
 
 module.exports = router;
