@@ -8,13 +8,12 @@ const Activity = ({}) => {
   const [activityData, setActivityData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
-    id: '',
+    id_activity: '',
     activity_name: '',
     activity_date: '',
     activity_description: '',
   });
-  const [entriesPerPage, setEntriesPerPage] = useState(10); // Default entries per page
-
+  
   useEffect(() => {
     feather.replace(); // Replace the icons after component mounts
     fetchActivityData();
@@ -31,9 +30,14 @@ const Activity = ({}) => {
     }
   }, [activityData]);
 
+  const formatDate = (dateString) => {
+    const dateObject = new Date(dateString);
+    const formattedDate = dateObject.toISOString().split('T')[0];
+    return formattedDate;
+  };
   const fetchActivityData = async () => {
     try {
-      const response = await axios.get(`http://localhost:5005/activity?limit=${entriesPerPage}`);
+      const response = await axios.get(`http://localhost:5005/activity`);
       setActivityData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -64,7 +68,7 @@ const Activity = ({}) => {
   const handleCloseModal = () => {
     setShowModal(false);
     setFormData({
-      id: '',
+      id_activity: '',
       activity_name: '',
       activity_date: '',
       activity_description: '',
@@ -73,21 +77,30 @@ const Activity = ({}) => {
 
   const handleEdit = (activity) => {
     setFormData({
-      id: activity.id,
+      id_activity: activity.id_activity,
       activity_name: activity.activity_name,
-      activity_date: activity.activity_date,
+      activity_date: formatDate(activity.activity_date),
       activity_description: activity.activity_description,
     });
     setShowModal(true);
   };
 
-  const handleSubmit = async () => {
-    if (formData.id) {
+  const handleSubmit = async (formData) => {
+    console.log('id:', formData.id_activity);
+    console.log('activity_name:', formData.activity_name);
+    console.log('activity_date:', formatDate(formData.activity_date));
+    console.log('activity_description:', formData.activity_description);
+    if(formData.id_activity) {
       try {
-        await axios.put(`http://localhost:5005/activity/${formData.id}`, formData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+        const updatedData = {
+            activity_name: formData.activity_name,
+            activity_date: formatDate(formData.activity_date),
+            activity_description: formData.activity_description,
+        };
+        await axios.put(`http://localhost:5005/activity/${formData.id_activity}`, updatedData, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
         });
         fetchActivityData();
         handleCloseModal();
@@ -117,17 +130,6 @@ const Activity = ({}) => {
       [name]: value,
     });
   };
-
-  const handleEntriesPerPageChange = (e) => {
-    const selectedEntriesPerPage = parseInt(e.target.value, 10);
-    setEntriesPerPage(selectedEntriesPerPage);
-    fetchActivityData();
-  };
-
-  const handleTambahAktivitasClick = () => {
-    console.log('Tambah Aktivitas clicked!');
-  };
-
   return (
     <main id="main" className="main">
       {/* ... Other code ... */}
@@ -137,20 +139,9 @@ const Activity = ({}) => {
             <div className="card-body">
               <h5 className="card-title">Activity</h5>
               <p>Here is the list of activities.</p>
-
-              <div className="d-flex mb-3">
-                <div className="mr-2">
-                  <label>Show entries:</label>
-                  <select value={entriesPerPage} onChange={handleEntriesPerPageChange}>
-                    <option value="10">10</option>
-                    <option value="25">25</option>
-                    <option value="50">50</option>
-                  </select>
-                </div>
-              </div>
               <div className='row'>
                     <div className='col-md-4'>
-                    <button onClick={handleTambahAktivitasClick} className="btn btn-primary">
+                    <button onClick={handleShowModal} className="btn btn-primary">
                         Tambah Aktivitas
                     </button>
                     </div>
@@ -167,10 +158,10 @@ const Activity = ({}) => {
                 </thead>
                 <tbody>
                   {activityData.map((activity, index) => (
-                    <tr key={activity.id}>
+                    <tr key={activity.id_activity}>
                       <td>{index + 1}</td>
                       <td>{activity.activity_name}</td>
-                      <td>{activity.activity_date}</td>
+                      <td>{formatDate(activity.activity_date)}</td>
                       <td>{activity.activity_description}</td>
                       <td>
                         <button
@@ -180,7 +171,7 @@ const Activity = ({}) => {
                         >
                           Edit
                         </button>
-                        <button onClick={() => confirmDelete(activity.id)} className="btn btn-danger mt-2 border">
+                        <button onClick={() => confirmDelete(activity.id_activity)} className="btn btn-danger mt-2 border">
                           Delete
                         </button>
                       </td>
@@ -195,28 +186,60 @@ const Activity = ({}) => {
       {/* Render the modal if showModal is true */}
       {showModal && (
         <Modal show={showModal} onHide={handleCloseModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>{formData.id ? `Edit Activity` : 'Add Activity'}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form>
-              {/* ... Other form groups ... */}
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal}>
-              Cancel
-            </Button>
-            {formData.id ? (
-              <button onClick={() => handleSubmit(formData)} className="btn btn-primary">
-                Edit
-              </button>
-            ) : (
-              <button onClick={handleSubmit} className="btn btn-primary">
-                Add
-              </button>
-            )}
-          </Modal.Footer>
+            <Modal.Header closeButton>
+                <Modal.Title>{formData.id_activity ? `Edit Activity` : 'Add Activity'}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    <Form.Group controlId="id" hidden>
+                        <Form.Control type="text" name="id" value={formData.id_activity} onChange={handleChange} placeholder='ID' />
+                    </Form.Group>
+                    <Form.Group controlId="activity_name">
+                        <Form.Label>Activity Name</Form.Label>
+                        <Form.Control
+                        type="text"
+                        name="activity_name"
+                        value={formData.activity_name}
+                        onChange={handleChange}
+                        placeholder='Activity Name'
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="activity_date">
+                        <Form.Label>Activity Date</Form.Label>
+                        <Form.Control
+                        type="date"
+                        name="activity_date"
+                        value={formatDate(formData.activity_date)}
+                        onChange={handleChange}
+                        placeholder='Activity Date'
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="activity_description">
+                        <Form.Label>Activity Description</Form.Label>
+                        <Form.Control
+                        type="text-area"
+                        name="activity_description"
+                        value={formData.activity_description}
+                        onChange={handleChange}
+                        placeholder='Activity Description'
+                        />
+                    </Form.Group>
+                </Form>
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleCloseModal}>
+                    Cancel
+                </Button>
+                {formData.id_activity ? (
+                <button onClick={() => handleSubmit(formData)} className="btn btn-primary">
+                    Edit
+                </button>
+                ) : (
+                <button onClick={handleSubmit} className="btn btn-primary">
+                    Add
+                </button>
+                )}
+            </Modal.Footer>
         </Modal>
       )}
     </main>
