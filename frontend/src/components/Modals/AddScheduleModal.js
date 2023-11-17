@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { DataTable } from 'simple-datatables';
-// import { set } from 'date-fns';
 
 const AddScheduleModal = ({ reloadData }) => {
     const [selectedRecipient, setSelectedRecipient] = useState([]);
@@ -77,29 +76,9 @@ const AddScheduleModal = ({ reloadData }) => {
               { select : 0, sortable : false }
             ],
           });
-
-          // Handle the page change event to restore the checked state
-          table.on('datatable-recipient.draw', function () {
-            updateCheckboxState();
-          });
-
-          // Clean up the DataTable when the component unmounts
-          return () => {
-            table.destroy();
-          };
       }
 
-      
     }, [formData.recipient_list]);
-
-    // Update the checked state based on the current page
-  const updateCheckboxState = () => {
-    const checkboxes = document.querySelectorAll('.datatable-recipient input[type="checkbox"]');
-    checkboxes.forEach((checkbox) => {
-      const recipientId = parseInt(checkbox.dataset.recipientId, 10);
-      checkbox.checked = selectedRecipient.includes(recipientId);
-    });
-  };
 
     const handleInputChange = (e) => {
       const { name, value } = e.target;
@@ -124,11 +103,11 @@ const AddScheduleModal = ({ reloadData }) => {
       if(name === 'id_grup') {
         const selectedGroup = groupData.find((group) => group.id === parseInt(value, 10));
         setFormData(prevFormData => ({ ...prevFormData, [name]: value, recipient_list: selectedGroup.recipients }));
+        setRecipientData(selectedGroup.recipients);
         console.log('selectedGroup', selectedGroup)
       }
       // Filter and set recipientData based on the selected group
       
-      console.log('recipientData', recipientData)
       console.log('formdata', formData);
     };
 
@@ -136,18 +115,24 @@ const AddScheduleModal = ({ reloadData }) => {
       // Initialize selectedRecipient with all recipient ids
       const allRecipientIds = formData.recipient_list.map((recipient) => recipient.id);
       setSelectedRecipient(allRecipientIds);
+      const allRecipientDataId = formData.recipient_list.map((recipient) => recipient.id_recipient);
+      setRecipientData(allRecipientDataId);
     }, [formData.recipient_list]);
 
-    const handleCheckboxChange = (id) => {
+    const handleCheckboxChange = (id, id_recipient) => {
       // Mengecek apakah id sudah ada di dalam array selectedRows
       if (selectedRecipient.includes(id)) {
         // Jika sudah ada, maka hapus dari array
         setSelectedRecipient((prevSelected) =>
           prevSelected.filter((rowId) => rowId !== id)
         );
+        setRecipientData((prevSelected) =>
+          prevSelected.filter((rowId) => rowId !== id_recipient)
+        );
       } else {
         // Jika belum ada, tambahkan ke array
         setSelectedRecipient([...selectedRecipient, id]);
+        setRecipientData([...recipientData, id_recipient]);
       }
 
       console.log('selectedRecipient', selectedRecipient);
@@ -160,20 +145,20 @@ const AddScheduleModal = ({ reloadData }) => {
     };
 
     const handleSubmit = async () => {
+      console.log('formData', formData);
+      console.log('selectedRecipient', recipientData);
       try {
-        // const response = await axios.post('http://localhost:5005/schedule', {
-        //   id_message: formData.id_message,
-        //   jenis_message: formData.jenis_message,
-        //   id_actvity: formData.id_actvity,
-        //   jenis_schedule: formData.jenis_schedule,
-        //   tanggal_mulai: formData.tanggal_mulai,
-        //   tanggal_akhir: formData.tanggal_akhir,
-        //   waktu: formData.waktu,
-        //   id_recipient: selectedRecipient,
-        // });
-        // console.log('response', response);
-        console.log('formData', formData);
-        console.log('selectedRecipient', selectedRecipient);
+        const response = await axios.post('http://localhost:5005/schedule', {
+          id_message: formData.id_message,
+          jenis_message: formData.jenis_message,
+          id_activity: formData.id_activity,
+          jenis_schedule: formData.jenis_schedule,
+          tanggal_mulai: formData.tanggal_mulai,
+          tanggal_akhir: formData.tanggal_akhir || formData.tanggal_mulai,
+          waktu: formData.waktu,
+          recipientList: recipientData,
+        });
+        console.log('response', response);
         reloadData();
         setShowModal(false);
       } catch (error) {
@@ -321,8 +306,7 @@ const AddScheduleModal = ({ reloadData }) => {
                             <input
                               type="checkbox"
                               checked={selectedRecipient.includes(recipient.id)}
-                              onChange={() => handleCheckboxChange(recipient.id)}
-                              data-recipient-id={recipient.id}
+                              onChange={() => handleCheckboxChange(recipient.id, recipient.id_recipient)}
                             />
                           </td>
                           <td>{index + 1}</td>
@@ -338,7 +322,7 @@ const AddScheduleModal = ({ reloadData }) => {
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Tutup</button>
-                <button type="button" className="btn btn-primary" onClick={handleSubmit}>Simpan</button>
+                <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={()=>handleSubmit()}>Simpan</button>
               </div>
             </div>
           </div>
