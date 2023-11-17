@@ -23,9 +23,7 @@ const login = async (req, res) => {
       if (!match) return res.status(400).json({ msg: "Password salah" });
       const userID = user.id;
       const username = user.username;
-      const accessToken = jwt.sign({ userID, username }, process.env.ACCESS_TOKEN_SECRET, {
-          expiresIn: '1d'
-      });
+      const accessToken = jwt.sign({ userID, username }, process.env.ACCESS_TOKEN_SECRET);
 
       const refreshToken = jwt.sign({ userID, username }, process.env.REFRESH_TOKEN_SECRET, {
           expiresIn: '1d'
