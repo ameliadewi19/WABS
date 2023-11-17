@@ -8,7 +8,7 @@ const createSchedule = async (req, res) => {
     const transaction = await sequelize.transaction();
 
     try {
-        const { id_message, jenis_message, id_activity, jenis_schedule, tanggal_mulai, tanggal_akhir, waktu, 'recipient-list': recipientList } = req.body;
+        const { id_message, jenis_message, id_activity, jenis_schedule, tanggal_mulai, tanggal_akhir, waktu, 'recipient_list': recipientList } = req.body;
 
         // Create a new schedule
         const newSchedule = await Schedule.create({
