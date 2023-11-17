@@ -67,6 +67,7 @@ const AddScheduleModal = ({ reloadData }) => {
             columns : [
               { select : 0, sortable : false }
             ],
+            scrollY: '300px',
           });
       }
 
