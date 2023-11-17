@@ -97,19 +97,16 @@ const DirectMessage = ({}) => {
             <div className="pagetitle">
             <div className='row'>
                 <div className='col-md-6'>
-                <h1>Template Message</h1>
+                <h1>Direct Message</h1>
                 <nav>
                     <ol className="breadcrumb">
                     <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
-                    <li className="breadcrumb-item active">Template Message</li>
+                    <li className="breadcrumb-item active">Direct Message</li>
                     </ol>
                 </nav>
                 </div>
                 <div className='col-md-6'>
-                    <div className='d-flex justify-content-end'>
-                        <button type="button" className="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addTemplateModal"><i className='bi bi-plus'></i>Tambah Template</button>
-                        <AddTemplateModal reloadData={fetchData} reloadDataActivity={fetchDataActivity} />
-                    </div>
+                    
                 </div>
             </div>
             </div>
@@ -140,12 +137,12 @@ const DirectMessage = ({}) => {
                             <div style={{ display: 'flex', gap: '5px' }}>
                                 <button
                                     type="button"
-                                    className="btn btn-primary"
+                                    className="btn btn-success"
                                     onClick={() => handleEdit(template)}
                                     data-bs-toggle="modal"
                                     data-bs-target="#editTemplateModal"
                                 >
-                                    <i className="bi bi-pencil-fill"></i>
+                                    <i className="bi bi-send-fill"></i>
                                 </button>
                                 <EditTemplateModal
                                 template={selectedTemplate}
@@ -153,9 +150,6 @@ const DirectMessage = ({}) => {
                                 reloadData={fetchData}
                                 reloadDataActivity={fetchDataActivity}
                                 />
-                                <button type="button" className="btn btn-danger" onClick={() => handleDelete(template.id)}>
-                                    <i className="bi bi-trash-fill"></i>
-                                </button>
                             </div>
                             </td>
                         </tr>
@@ -197,12 +191,12 @@ const DirectMessage = ({}) => {
                             <div style={{ display: 'flex', gap: '5px' }}>
                                 <button
                                     type="button"
-                                    className="btn btn-primary"
+                                    className="btn btn-success"
                                     onClick={() => handleEdit(templateActivity)}
                                     data-bs-toggle="modal"
                                     data-bs-target="#editTemplateModal"
                                 >
-                                    <i className="bi bi-pencil-fill"></i>
+                                    <i className="bi bi-send-fill"></i>
                                 </button>
                                 <EditTemplateModal
                                 template={selectedTemplate}
@@ -210,9 +204,6 @@ const DirectMessage = ({}) => {
                                 reloadData={fetchData}
                                 reloadDataActivity={fetchDataActivity}
                                 />
-                                <button type="button" className="btn btn-danger" onClick={() => handleDelete(templateActivity.id)}>
-                                    <i className="bi bi-trash-fill"></i>
-                                </button>
                             </div>
                             </td>
                         </tr>

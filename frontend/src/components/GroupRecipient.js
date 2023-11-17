@@ -50,21 +50,21 @@ const GroupRecipient = ({ }) => {
       }
     });
   };
-
+  
   const deleteGroup = async (id) => {
     try {
       // Call your delete API endpoint
       await axios.delete(`http://localhost:5005/groups/${id}`);
-
+  
       // Reload the data after deleting
       fetchData();
-
+  
       MySwal.fire('Deleted!', 'Your group has been deleted.', 'success');
     } catch (error) {
       console.error('Error deleting group:', error);
       MySwal.fire('Error!', 'An error occurred while deleting the group.', 'error');
     }
-  };
+  };  
 
   const handleEdit = (group) => {
     setSelectedGroup(group);

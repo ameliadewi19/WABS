@@ -5,7 +5,7 @@ const { createActivity, getActivities, getActivityById, updateActivity, deleteAc
 router.post('/activity', createActivity);
 router.get('/activity', getActivities);
 router.get('/activity/:id', getActivityById);
-router.patch('/activity/:id', updateActivity);
+router.put('/activity/:id', updateActivity);
 router.delete('/activity/:id', deleteActivity);
 
 module.exports = router;
