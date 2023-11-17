@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import feather from 'feather-icons';
+import Cookies from "js-cookie";
 
 const Navbar = ({}) => {
     const location = useLocation();
@@ -18,6 +19,23 @@ const Navbar = ({}) => {
         // Mengubah kelas pada body ketika state sidebarVisible berubah
         document.body.classList.toggle('toggle-sidebar', sidebarVisible);
     }, [sidebarVisible]);
+
+    function handleLogout() {
+        // Melakukan permintaan logout ke server
+        axios.delete('http://localhost:5005/logout')
+        .then((response) => {
+            console.log('Logout berhasil', response.data);
+    
+            localStorage.removeItem('jwt_token');
+            Cookies.remove('refreshToken');
+    
+            window.location.href = '/';
+      
+          })
+          .catch((error) => {
+            console.error('Logout gagal', error);
+          });
+    }
 
     return (
         <header id="header" className="header fixed-top d-flex align-items-center">
@@ -233,7 +251,7 @@ const Navbar = ({}) => {
                     </li>
 
                     <li>
-                    <a className="dropdown-item d-flex align-items-center" href="#">
+                    <a className="dropdown-item d-flex align-items-center" href="#" onClick={handleLogout}>
                         <i className="bi bi-box-arrow-right"></i>
                         <span>Sign Out</span>
                     </a>

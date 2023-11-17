@@ -14,7 +14,37 @@ import Aktivitas from './components/Aktivitas.js';
 import TemplateMessage from './components/TemplateMessage.js';
 import GroupRecipient from './components/GroupRecipient.js';
 
+
+function checkAuthorization() {
+  const token = localStorage.getItem('jwt_token');
+
+  console.log("token lokal:", token);
+  
+  if (!token) {
+    return false;
+  }
+  return true;
+}
+
+function ProtectedRoute({ children }) {
+  const location = useLocation();
+
+  const userHasAuthorization = checkAuthorization(); 
+
+  if (!userHasAuthorization) {
+    return <Navigate to="/" />;
+  }
+
+  return children;
+}
+
 function App() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  }
+  
   return (
     <BrowserRouter>
       <Routes>
@@ -29,67 +59,91 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            <>
-              <Navbar />
-              <Sidebar />
-              <Dashboard />
-              <Footer />
-            </>
+            <ProtectedRoute>
+              <div className="wrapper">
+                  <Sidebar />
+                <div className="main">
+                    <Navbar/>
+                    <Dashboard />
+                    <Footer />
+                </div>  
+              </div>
+            </ProtectedRoute>
           }
         />
         <Route
           path="/autentikasi-wbm"
           element={
-            <>
-              <Navbar />
-              <Sidebar />
-              <Autentikasi />
-              <Footer />
-            </>
+            <ProtectedRoute>
+            <div className="wrapper">
+                <Sidebar />
+              <div className="main">
+                  <Navbar/>
+                  <Autentikasi />
+                  <Footer />
+              </div>  
+            </div>
+          </ProtectedRoute>
           }
         />
         <Route
           path="/recipient"
           element={
-            <>
-              <Navbar />
-              <Sidebar />
-              <Recipient />
-              <Footer />
-            </>
+            <ProtectedRoute>
+            <div className="wrapper">
+                <Sidebar />
+              <div className="main">
+                  <Navbar/>
+                  <Recipient />
+                  <Footer />
+              </div>  
+            </div>
+          </ProtectedRoute>
           }
         />
         <Route
           path="/direct-message"
           element={
-            <>
-              <Navbar />
-              <Sidebar />
-              <DirectMessage />
-              <Footer />
-            </>
+            <ProtectedRoute>
+            <div className="wrapper">
+                <Sidebar />
+              <div className="main">
+                  <Navbar/>
+                  <DirectMessage />
+                  <Footer />
+              </div>  
+            </div>
+          </ProtectedRoute>
           }
         />
         <Route
           path="/schedule-message"
           element={
-            <>
-              <Navbar />
-              <Sidebar />
-              <ScheduleMessage />
-              <Footer />
-            </>
+            <ProtectedRoute>
+            <div className="wrapper">
+                <Sidebar />
+              <div className="main">
+                  <Navbar/>
+                  <ScheduleMessage />
+                  <Footer />
+              </div>  
+            </div>
+          </ProtectedRoute>
           }
         />
         <Route
           path="/aktivitas"
           element={
-            <>
-              <Navbar />
-              <Sidebar />
-              <Aktivitas />
-              <Footer />
-            </>
+            <ProtectedRoute>
+            <div className="wrapper">
+                <Sidebar />
+              <div className="main">
+                  <Navbar/>
+                  <Aktivitas />
+                  <Footer />
+              </div>  
+            </div>
+          </ProtectedRoute>
           }
         />
         <Route

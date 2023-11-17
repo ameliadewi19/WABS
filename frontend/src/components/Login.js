@@ -19,26 +19,22 @@ const Login = ({}) => {
     const navigate = useNavigate();
   
     const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-        const response = await axios.post('http://localhost:5005/login', {
-          username,
-          password,
-        });
-        
-        const token = response.data.accessToken;
-        
-        localStorage.setItem('token', token);
-  
-        console.log("token:", token);
-  
-        // If login is successful, redirect to the dashboard
-        console.log('Login berhasil', response.data);
-        navigate('/dashboard');
-         // Use navigate to redirect to the dashboard route
-      } catch (err) {
+        e.preventDefault();
+        try {
+          const response = await axios.post('http://localhost:5005/login', {
+            username,
+            password,
+          });
+          
+          const token = response.data.accessToken;
+          
+          localStorage.setItem('jwt_token', token);
+          //axios.defaults.headers.common['Authorization'] = Bearer ${token};
+          console.log('Login berhasil', response.data);
+          navigate('/dashboard'); // Use navigate to redirect to the dashboard route
+        } catch (err) {
         setError('Login gagal. Username atau password salah.');
-      }
+        }
     };
 
     return (

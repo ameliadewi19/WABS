@@ -1,4 +1,5 @@
 const Activity = require('../models/ActivityModel.js');
+const Schedule = require('../models/ScheduleModel.js');
 
 const getActivities = async (req, res) => {
   try {

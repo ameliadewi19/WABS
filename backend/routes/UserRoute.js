@@ -5,7 +5,7 @@ const {refreshToken} = require("../controllers/RefreshToken.js");
 
 const router = express.Router(); // Definisikan objek router terlebih dahulu
 
-router.get('/user',verifyToken,getUser);
+router.get('/user',getUser);
 router.post('/login', login);
 router.get('/token', refreshToken);
 router.delete('/logout', logout);
