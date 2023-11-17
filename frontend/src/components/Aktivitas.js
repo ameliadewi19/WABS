@@ -209,7 +209,7 @@ const Activity = ({}) => {
                         <Form.Control
                         type="date"
                         name="activity_date"
-                        value={formatDate(formData.activity_date)}
+                        value={formData.activity_date}
                         onChange={handleChange}
                         placeholder='Activity Date'
                         />
