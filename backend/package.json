@@ -33,6 +33,7 @@
     "sequelize": "^6.34.0",
     "sequelize-cli": "^6.6.2",
     "wbm": "^1.1.16",
+    "whatsapp-web.js": "^1.23.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

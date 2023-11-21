@@ -10,6 +10,17 @@ const recipientRoute = require("./routes/RecipientRoute.js");
 const TemplateMessageRoute = require("./routes/TemplateMessageRoutes.js");
 const groupRoute = require("./routes/GroupRoutes.js");
 const directMessageRoute = require("./routes/DirectMessageRoutes.js");
+const dashboardRoute = require("./routes/DashboardRoutes.js");
+const { Client, LocalAuth } = require('whatsapp-web.js');
+
+const whatsappClient = new Client({
+    puppeteer: {
+      headless: false
+    },
+    authStrategy: new LocalAuth({
+        clientId: "YOUR_CLIENT_ID",
+    }),
+});
 
 const cors = require('cors');
 // require("./controllers/SchedulerController.js");
@@ -33,5 +44,6 @@ app.use(whatsappRoute);
 app.use(TemplateMessageRoute);
 app.use(groupRoute);
 app.use(directMessageRoute);
+app.use(dashboardRoute);
 
 app.listen(5005, () => console.log('Server Up and Running...'));

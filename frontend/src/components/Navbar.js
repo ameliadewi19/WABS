@@ -207,20 +207,21 @@ const Navbar = ({}) => {
                 <li className="nav-item dropdown pe-3">
 
                 <a className="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-                    <img src="assets/img/profile-img.jpg" alt="Profile" className="rounded-circle"/>
-                    <span className="d-none d-md-block dropdown-toggle ps-2">K. Anderson</span>
+                    {/* <img src="assets/img/profile-img.jpg" alt="Profile" className="rounded-circle"/> */}
+                    <i className="bi bi-person-circle"></i>
+                    <span className="d-none d-md-block dropdown-toggle ps-2">Admin</span>
                 </a>
 
                 <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                     <li className="dropdown-header">
-                    <h6>Kevin Anderson</h6>
-                    <span>Web Designer</span>
+                    <h6>Admin</h6>
+                    {/* <span>Web Designer</span> */}
                     </li>
                     <li>
                     <hr className="dropdown-divider"/>
                     </li>
 
-                    <li>
+                    {/* <li>
                     <a className="dropdown-item d-flex align-items-center" href="users-profile.html">
                         <i className="bi bi-person"></i>
                         <span>My Profile</span>
@@ -248,7 +249,7 @@ const Navbar = ({}) => {
                     </li>
                     <li>
                     <hr className="dropdown-divider"/>
-                    </li>
+                    </li> */}
 
                     <li>
                     <a className="dropdown-item d-flex align-items-center" href="#" onClick={handleLogout}>

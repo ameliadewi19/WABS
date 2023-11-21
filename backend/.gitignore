@@ -4,3 +4,5 @@ node_modules/
 npm-debug.log
 .DS_Store
 package-lock.json
+.wwebjs_auth
+.wwebjs_cache
