@@ -3,7 +3,7 @@ import axios from 'axios';
 import { DataTable } from 'simple-datatables';
 import Swal from 'sweetalert2';
 
-const AddScheduleModal = ({ reloadData }) => {
+const EditScheduleModal = ({ reloadData, selectedScheduleId }) => {
     const [selectedRecipient, setSelectedRecipient] = useState([]);
     const [recipientData, setRecipientData] = useState([{
       id_recipient: '',
@@ -29,10 +29,43 @@ const AddScheduleModal = ({ reloadData }) => {
     const modalRef = useRef()
 
     useEffect(() => {
-      fetchtTemplateMessage();
-      fetchActivityData();
-      fetchGroupData();
-    }, []);
+      if (selectedScheduleId) {
+        fetchScheduleData();
+        fetchtTemplateMessage();
+        fetchActivityData();
+        fetchGroupData();
+      }
+    }, [selectedScheduleId]);
+
+    const fetchScheduleData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5005/schedule/${selectedScheduleId}`);
+        const scheduleData = response.data;
+  
+        setFormData({
+          id_message: scheduleData.id_message,
+          jenis_message: scheduleData.jenis_message,
+          id_activity: scheduleData.id_activity,
+          jenis_schedule: scheduleData.jenis_schedule,
+          tanggal_mulai: scheduleData.tanggal_mulai,
+          tanggal_akhir: scheduleData.tanggal_akhir,
+          waktu: scheduleData.waktu,
+          id_grup: scheduleData.id_grup,
+          recipient_list: scheduleData.recipient_list,
+        });
+  
+        const allRecipientIds = scheduleData.recipient_list.map((recipient) => recipient.id);
+        setSelectedRecipient(allRecipientIds);
+  
+        const updatedRecipientData = scheduleData.recipient_list.map((recipient) => ({
+          id_recipient: recipient.id_recipient,
+        }));
+        setRecipientData(updatedRecipientData);
+      } catch (error) {
+        console.error('Error fetching schedule data:', error);
+      }
+    };
+
     const fetchtTemplateMessage = async () => {
       try {
         const response = await axios.get('http://localhost:5005/template-messages');
@@ -63,7 +96,7 @@ const AddScheduleModal = ({ reloadData }) => {
     useEffect(() => {
       // Initialize the datatable here
       if (formData.recipient_list.length > 0) {
-          const table = new DataTable('.datatable-recipient', {
+          const table = new DataTable('.datatable-recipient-edit', {
             paging: false,
             columns : [
               { select : 0, sortable : false }
@@ -142,7 +175,7 @@ const AddScheduleModal = ({ reloadData }) => {
       console.log('formData', formData);
       console.log('selectedRecipient', recipientData);
       try {
-        const response = await axios.post('http://localhost:5005/schedule', {
+        const response = await axios.put(`http://localhost:5005/schedule/${selectedScheduleId}`, {
           id_message: formData.id_message,
           jenis_message: formData.jenis_message,
           id_activity: formData.id_activity,
@@ -153,12 +186,9 @@ const AddScheduleModal = ({ reloadData }) => {
           recipient_list: recipientData,
         });
         console.log('response', response);
-
-        // Close the modal using modalRef
-        modalRef.current.click();
         Swal.fire({
           icon: 'success',
-          title: 'Berhasil menambahkan schedule',
+          title: 'Schedule berhasil diubah!',
           showConfirmButton: false,
           timer: 1500,
         }).then(() => {
@@ -166,22 +196,22 @@ const AddScheduleModal = ({ reloadData }) => {
           modalRef.current.click();
         });
       } catch (error) {
+        console.error('Error fetching data:', error);
         Swal.fire({
           icon: 'error',
-          title: 'Gagal menambahkan schedule',
+          title: 'Gagal merubah schedule',
           showConfirmButton: false,
           timer: 1500,
         });
-        console.error('Error fetching data:', error);
       }
     }
 
     return (
-        <div className={`modal fade`} id="addScheduleModal" tabIndex="-1" aria-labelledby="addScheduleModalLabel" aria-hidden={!showModal}>
+        <div className={`modal fade`} id="editScheduleModal" tabIndex="-1" aria-labelledby="editScheduleModalLabel" aria-hidden={!showModal}>
           <div className="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="addScheduleModalLabel">Tambah Data Schedule</h5>
+                <h5 className="modal-title" id="editScheduleModalLabel">Edit Data Schedule</h5>
                 <button type="button" className="d-none" ref={modalRef} data-bs-dismiss="modal"></button>
               </div>
               <div className="modal-body">
@@ -249,7 +279,7 @@ const AddScheduleModal = ({ reloadData }) => {
                           className="form-control"
                           name="tanggal_mulai"
                           onChange={(e) => handleInputChange(e)}
-                          value={formData.message}
+                          value={formData.tanggal_mulai}
                           required
                         />
                       </div>
@@ -261,7 +291,7 @@ const AddScheduleModal = ({ reloadData }) => {
                             className="form-control"
                             name="tanggal_akhir"
                             onChange={(e) => handleInputChange(e)}
-                            value={formData.message}
+                            value={formData.tanggal_akhir}
                             required
                           />
                         </div>
@@ -274,7 +304,7 @@ const AddScheduleModal = ({ reloadData }) => {
                           className="form-control"
                           name="waktu"
                           onChange={(e) => handleInputChange(e)}
-                          value={formData.message}
+                          value={formData.waktu}
                           min="00:00"
                           max="23:59"
                           required
@@ -300,7 +330,7 @@ const AddScheduleModal = ({ reloadData }) => {
                     </div>
                     <div className='mb-3'>
                     <label className="form-label">Recipient List</label>
-                    <table className="table datatable-recipient table-striped">
+                    <table className="table datatable-recipient-edit table-striped">
                       <thead>
                         <tr>
                           <th></th>
@@ -340,4 +370,4 @@ const AddScheduleModal = ({ reloadData }) => {
     );
 }
 
-export default AddScheduleModal;
+export default EditScheduleModal;

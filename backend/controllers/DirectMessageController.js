@@ -76,8 +76,6 @@ const directMessagesGeneral = async (req, res) => {
     
             // res.status(200).json({ success: true, message: 'Messages sent successfully' });
           });
-        
-          
 
           contactCounter++;
   

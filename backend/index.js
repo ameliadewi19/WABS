@@ -23,7 +23,7 @@ const whatsappClient = new Client({
 });
 
 const cors = require('cors');
-// require("./controllers/SchedulerController.js");
+require("./controllers/SchedulerController.js");
 
 dotenv.config();
 

@@ -2,35 +2,69 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { DataTable } from 'simple-datatables'; 
+import Swal from 'sweetalert2';
 import AddScheduleModal from './Modals/AddScheduleModal';
+import EditScheduleModal from './Modals/EditScheduleModal';
+import RecipientListModal from './Modals/RecipientListDetailModal';
 
 const ScheduleMessage = ({}) => {
     const location = useLocation();
     const [scheduleMessage, setScheduleMessage] = useState([]);
-    const [recipientList, setRecipientList] = useState([]);
+    const [selectedId, setSelectedId] = useState(null);
     
+    const fetchSchedule = () => {
+        axios.get('http://localhost:5005/schedule')
+            .then(async (response) => {
+                console.log(response.data);
+                // Loop through each schedule to fetch activity name
+                const scheduleWithActivityNames = await Promise.all(response.data.map(async (schedule) => {
+                    // Check if id_activity is not null before fetching activity details
+                    if (schedule.id_activity !== null) {
+                        // Fetch activity details using id_activity
+                        const activityDetails = await fetchActivityById(schedule.id_activity);
+                        // Add activity name to the schedule object using object destructuring
+                        return { ...schedule, activity_name: activityDetails.activity_name };
+                    } else {
+                        // If id_activity is null, return the original schedule without adding activityName
+                        return schedule;
+                    }
+                }));
+    
+                // Now scheduleWithActivityNames contains the original schedules with added activity names
+                setScheduleMessage(scheduleWithActivityNames);
+            })
+            .catch((error) => {
+                console.error('Error fetching schedule message:', error);
+            });
+    }
+    
+    const fetchActivityById = async (activityId) => {
+        try {
+            const activityResponse = await axios.get(`http://localhost:5005/activity/${activityId}`);
+            return activityResponse.data;
+        } catch (error) {
+            console.error('Error fetching activity by ID:', error);
+            throw error;
+        }
+    }
+
     useEffect(() => {
         fetchSchedule();
     }, []);
-
-    const fetchSchedule = () => {
-        axios.get('http://localhost:5005/schedule')
-            .then(response => {
-                setScheduleMessage(response.data);
-            })
-            .catch(err => console.log(err));
-    }
 
     useEffect(() => {
         // Initialize the datatable here
         if (scheduleMessage.length > 0) {
             const table = new DataTable('.datatable', {
+                data: scheduleMessage,
+                info: true,
                 columns : [
-                    { select : 9, sortable : false },
+                    { select : 7, sortable : false },
+                    { select : 6, sortable : false }
                 ],
                 responsive: true,
             });
-        }
+        };
     }, [scheduleMessage]);
 
     function formatDate(dateString) {
@@ -39,6 +73,53 @@ const ScheduleMessage = ({}) => {
         const month = (dateObject.getMonth() + 1).toString().padStart(2, '0'); // Tambah 1 karena bulan dimulai dari 0
         const year = dateObject.getFullYear();
         return `${day}-${month}-${year}`;
+    }
+
+    const handleEdit = (id) => {
+        setSelectedId(id);
+        console.log("selected id edit: ", id);
+    }
+
+    const handleDetailrecipient = (id) => {
+        setSelectedId(id);
+        console.log("selected id detail: ", id);
+    }
+
+    const handleDelete = (id) => {
+        Swal.fire({
+            title: 'Apakah anda yakin?',
+            text: "Anda tidak akan dapat mengembalikan ini!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal'
+          }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`http://localhost:5005/schedule/${id}`)
+                    .then((response) => {
+                        console.log(response);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil menghapus schedule',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        }).then(() => {
+                            fetchSchedule();
+                        });
+                    })
+                    .catch((error) => {
+                        console.error('Error deleting schedule:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal menghapus schedule',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    });
+            }
+          });
     }
 
     return (
@@ -75,14 +156,12 @@ const ScheduleMessage = ({}) => {
                                 <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Id Message</th>
                                     <th scope="col">Jenis Message</th>
                                     <th scope="col">Aktivitas</th>
-                                    <th scope="col">Recipient</th>
                                     <th scope="col">Jenis Schedule</th>
-                                    <th scope="col">Tanggal Mulai</th>
-                                    <th scope="col">Tanggal Akhir</th>
+                                    <th scope="col">Rentang Tanggal</th>
                                     <th scope="col">Waktu</th>
+                                    <th scope="col">Recipient</th>
                                     <th scope="col">Aksi</th>
                                 </tr>
                                 </thead>
@@ -90,19 +169,21 @@ const ScheduleMessage = ({}) => {
                                     {scheduleMessage.map((schedule, index) => (
                                         <tr key={schedule.id}>
                                             <td>{index + 1}</td>
-                                            <td>{schedule.id_message}</td>
-                                            <td>{schedule.jenis_message}</td>
-                                            <td>{schedule.id_activity}</td>
-                                            <td>Recipient</td>
-                                            <td>{schedule.jenis_schedule}</td>
-                                            <td>{formatDate(schedule.tanggal_mulai)}</td>
-                                            <td>{formatDate(schedule.tanggal_akhir)}</td>
+                                            <td><p className='text-capitalize'>{schedule.jenis_message}</p></td>
+                                            <td>{schedule.activity_name || '-'}</td>
+                                            <td><p className='text-capitalize'>{schedule.jenis_schedule}</p></td>
+                                            <td>{formatDate(schedule.tanggal_mulai) + ' - ' + formatDate(schedule.tanggal_akhir)}</td>
                                             <td>{schedule.waktu}</td>
                                             <td>
+                                                <button type="button" className="btn btn-success btn-sm ms-1" onClick={()=>handleDetailrecipient(schedule.id)} data-bs-toggle="modal" data-bs-target="#recipientListModal"><i className='bi-people-fill'></i> Detail</button>
+                                                <RecipientListModal reloadData={fetchSchedule} selectedScheduleId={selectedId}/>
+                                            </td>
+                                            <td>
                                                 <div className='d-flex flex-column flex-sm-row'>
-                                                    <button type="button" className="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal"><i className='bi-pencil-fill'></i></button>
-                                                    <button type="button" className="btn btn-danger btn-sm ms-1"><i className='bi-trash-fill'></i></button>
+                                                    <button type="button" className="btn btn-primary btn-sm" onClick={()=>handleEdit(schedule.id)} data-bs-toggle="modal" data-bs-target="#editScheduleModal"><i className='bi-pencil-fill'></i></button>
+                                                    <button type="button" className="btn btn-danger btn-sm ms-1" onClick={()=>handleDelete(schedule.id)}><i className='bi-trash-fill'></i></button>
                                                 </div>
+                                                <EditScheduleModal reloadData={fetchSchedule} selectedScheduleId={selectedId}/>
                                             </td>
                                         </tr>
                                     ))}

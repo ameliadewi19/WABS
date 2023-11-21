@@ -42,40 +42,33 @@ const Recipient = ({}) => {
         }
     };
     
-        // const fetchRecipientData = async (username, password) => {
-    //     try {
-    //         // Mendapatkan token dari credential login
-    //         const credentials = { username, password };  // Assuming you have a method to fetch credentials based on the username and password
-    //         const token = await getAccessToken(credentials);
+    // const fetchRecipientData = async () => {
+    //   try {
+    //     // Mendapatkan token dari localStorage
+    //     const token = localStorage.getItem('jwt_token');
     
-    //         // Menambahkan token ke header Authorization
-    //         const headers = {
-    //             Authorization: `Bearer ${token}`,
-    //         };
-    
-    //         // Melakukan panggilan API dengan menyertakan header
-    //         const response = await axios.get('http://localhost:5005/recipient', { headers });
-    
-    //         // Menggunakan data yang diterima
-    //         setRecipientData(response.data);
-    //     } catch (error) {
-    //         console.error('Error fetching data:', error);
+    //     if (!token) {
+    //       console.error('Token not found in localStorage');
+    //       return;
     //     }
+    
+    //     // Membuat header Authorization dengan menggunakan token
+    //     const authToken = `Bearer ${token}`;
+    
+    //     // Menambahkan header Authorization ke permintaan Axios
+    //     const response = await axios.get('http://localhost:5005/recipient', {
+    //       headers: {
+    //         Authorization: authToken,
+    //       },
+    //     });
+    
+    //     // Mengupdate data penerima setelah mendapatkan respons
+    //     setRecipientData(response.data);
+    //   } catch (error) {
+    //     console.error('Error fetching data:', error);
+    //   }
     // };
     
-    // const getAccessToken = async (credentials) => {
-    //     try {
-    //         // Perform the logic to obtain the access token based on the provided credentials
-    //         // This could involve making a request to your authentication server or fetching it from a database
-    //         // For example:
-    //         const authenticationResponse = await axios.post('http://localhost:5005/authenticate', credentials);
-    //         const token = authenticationResponse.data.accessToken;
-    //         return token;
-    //     } catch (error) {
-    //         console.error('Error obtaining access token:', error);
-    //         throw error; // You may want to handle this error more gracefully in your application
-    //     }
-    // };
 
     const deleteRecipient = async (id) => {
         console.log('ID yang akan dihapus:', id);

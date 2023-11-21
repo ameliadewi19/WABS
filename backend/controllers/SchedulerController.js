@@ -13,7 +13,7 @@ async function fetchSchedule() {
 }
 
 function calculateSchedule(item){
-    if(item.jenis_schedule === "harian"){
+    if(item.jenis_schedule === "daily"){
         const schedule = [];
         const currentDate = moment(item.tanggal_mulai);
 
@@ -22,7 +22,7 @@ function calculateSchedule(item){
             currentDate.add(1, 'days');
         }
         return schedule;
-    } else if (item.jenis_schedule === "mingguan"){
+    } else if (item.jenis_schedule === "weekly"){
         const schedule = [];
         const currentDate = moment(item.tanggal_mulai);
 
@@ -31,7 +31,7 @@ function calculateSchedule(item){
             currentDate.add(7, 'days');
         }
         return schedule;
-    } else if (item.jenis_schedule === "bulanan"){
+    } else if (item.jenis_schedule === "monthly"){
         const schedule = [];
         const currentDate = moment(item.tanggal_mulai);
 
@@ -47,26 +47,35 @@ function calculateSchedule(item){
 
 async function setupCronJobs() {
     const data = await fetchSchedule();
+    const today = moment().format('YYYY-MM-DD');
 
     data.forEach((item) => {
         const schedule = calculateSchedule(item);
-        
+
         schedule.forEach((date) => {
-            const [jam, menit, detik] = item.waktu.split(':');
-            const cronSchedule = `${menit} ${jam} * * *`;
-            const job = cron.schedule(cronSchedule, () => {
-                const today = moment().format('YYYY-MM-DD');
-                if (today === date) {
-                    console.log(`Sending message ${item.id_message} at ${date} ${item.waktu}...`);
-                }
-            }, {
-                scheduled: true,
-                timezone: 'Asia/Jakarta'
-            });
-            job.start();
-            console.log(`Cron job untuk tanggal ${date} dari id ${item.id} telah diatur.`)
+            // Tambahkan pengecekan apakah tanggal sudah terlewat
+            if (moment(date).isSame(today, 'day')) {
+                const [jam, menit, detik] = item.waktu.split(':');
+                const cronSchedule = `${menit} ${jam} * * *`;
+                const job = cron.schedule(cronSchedule, () => {
+                    item.recipient_list.forEach((recipient) => {
+                        recipient.recipients.forEach((data) => {
+                            console.log(`Sending message to ${data.nama_recipient}...`);
+                        });
+                    });
+                }, {
+                    scheduled: true,
+                    timezone: 'Asia/Jakarta'
+                });
+                job.start();
+                console.log(`Cron job untuk tanggal ${date} dari id ${item.id} telah diatur.`)
+            } 
         });
     });
 }
 
 setupCronJobs();
+
+module.exports = {
+    setupCronJobs
+};
