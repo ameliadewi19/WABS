@@ -55,7 +55,7 @@ const directMessagesGeneral = async (req, res) => {
             console.log(contact.no_whatsapp);
 
             await wbm.send([contact.no_whatsapp], message); // wbm.send() expects an array of phone numbers
-            const timeoutMillis = 15000;
+            const timeoutMillis = 20000;
             await new Promise(resolve => setTimeout(resolve, timeoutMillis));
 
             contactCounter++;

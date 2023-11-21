@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { DataTable } from 'simple-datatables';
+import Swal from 'sweetalert2';
 
 const AddScheduleModal = ({ reloadData }) => {
     const [selectedRecipient, setSelectedRecipient] = useState([]);
@@ -152,19 +153,35 @@ const AddScheduleModal = ({ reloadData }) => {
           recipient_list: recipientData,
         });
         console.log('response', response);
-        reloadData();
-        setShowModal(false);
+
+        // Close the modal using modalRef
+        modalRef.current.click();
+        Swal.fire({
+          icon: 'success',
+          title: 'Berhasil menambahkan schedule',
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          reloadData();
+          modalRef.current.click();
+        });
       } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal menambahkan schedule',
+          showConfirmButton: false,
+          timer: 1500,
+        });
         console.error('Error fetching data:', error);
       }
     }
 
     return (
-        <div className={`modal fade ${showModal ? 'show' : ''}`} id="addScheduleModal" tabIndex="-1" aria-labelledby="addScheduleModalLabel" aria-hidden={!showModal}>
+        <div className={`modal fade`} id="addScheduleModal" tabIndex="-1" aria-labelledby="addScheduleModalLabel" aria-hidden={!showModal}>
           <div className="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="addScheduleModalLabel">Tambah Data Konfirmasi</h5>
+                <h5 className="modal-title" id="addScheduleModalLabel">Tambah Data Schedule</h5>
                 <button type="button" className="d-none" ref={modalRef} data-bs-dismiss="modal"></button>
               </div>
               <div className="modal-body">

@@ -12,7 +12,7 @@ const groupRoute = require("./routes/GroupRoutes.js");
 const directMessageRoute = require("./routes/DirectMessageRoutes.js");
 
 const cors = require('cors');
-// require("./controllers/SchedulerController.js");
+require("./controllers/SchedulerController.js");
 
 dotenv.config();
 
