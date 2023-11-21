@@ -1,8 +1,10 @@
 const Schedule = require('../models/ScheduleModel.js');
 const RecipientList = require('../models/RecipientListModel.js');
 const Recipient = require('../models/RecipientModel.js');
+const Activity = require('../models/ActivityModel.js');
 const sequelize = require('../config/Database.js');
 const Sequelize = require('sequelize');
+const setupCronJobs = require('../controllers/SchedulerController.js');
 
 const createSchedule = async (req, res) => {
     const transaction = await sequelize.transaction();
@@ -42,20 +44,23 @@ const createSchedule = async (req, res) => {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
+    
+    setupCronJobs.setupCronJobs();
 };
 
 const getSchedule = async (req, res) => {
     try {
         const schedules = await Schedule.findAll({
             include: [{
-              model: RecipientList,
-              as: 'recipient_list', // Specify the alias here
-              include: [{
-                model: Recipient,
-                as: 'recipients', // Specify the alias for Recipient
-              }],
+                model: RecipientList,
+                as: 'recipient_list',
+                include: [{
+                    model: Recipient,
+                    as: 'recipients',
+                }],
             }],
-          });
+        });
+
         res.status(200).json(schedules);
      } catch (error) {
         console.error('Error fetching schedule:', error);
@@ -148,6 +153,7 @@ const updateSchedule = async (req, res) => {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
+    setupCronJobs.setupCronJobs();
 };
 
 const deleteSchedule = async (req, res) => {

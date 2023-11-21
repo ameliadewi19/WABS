@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/Database.js');
 const RecipientList = require('./RecipientListModel.js');
+const Activity = require('./ActivityModel.js');
 
 const Schedule = sequelize.define('Schedule', {
     id: {
