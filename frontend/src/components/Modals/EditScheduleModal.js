@@ -269,6 +269,7 @@ const EditScheduleModal = ({ reloadData, selectedScheduleId }) => {
                         <option value="daily">Daily</option>
                         <option value="weekly">Weekly</option>
                         <option value="monthly">Monthly</option>
+                        <option value="annually">Annually</option>
                       </select>
                     </div>
                     <div className="mb-3 row">
