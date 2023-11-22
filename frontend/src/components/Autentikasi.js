@@ -102,8 +102,8 @@ const Autentikasi = ({}) => {
                                     {/* <button type="button" class="btn btn-primary me-2" onClick={getLoginStatus}>Check Login Status</button> */}
                                     <button type="button" class="btn btn-primary" onClick={getQRCode}>Get QR Code</button>
 
-                                    <h3 className='mt-5'>Tes Client</h3>
-                                    <div class="row mb-3">
+                                    {/* <h3 className='mt-5'>Tes Client</h3> */}
+                                    {/* <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">No Telepon</label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="No Telepon"/>
@@ -115,7 +115,7 @@ const Autentikasi = ({}) => {
                                         <textarea className="form-control" style={{ height: '70px' }} value={msg} onChange={(e) => setMessage(e.target.value)} placeholder="Isi pesan"></textarea>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn btn-primary" onClick={testClient}>Send</button>
+                                    <button type="button" class="btn btn-primary" onClick={testClient}>Send</button> */}
                                 </div>
                                 <div class="col-lg-4">
                                     {/* {loginStatus && (

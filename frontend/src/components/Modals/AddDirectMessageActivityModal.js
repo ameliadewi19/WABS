@@ -3,7 +3,7 @@ import axios from 'axios';
 import { DataTable } from 'simple-datatables';
 import Swal from 'sweetalert2';
 
-const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
+const AddDirectMessageActivityModal = ({ reloadData, idTemplate }) => {
     const [selectedRecipient, setSelectedRecipient] = useState([]);
     const [recipientData, setRecipientData] = useState([]);
     const [templateMessages, setTemplateMessage] = useState([]);
@@ -12,9 +12,10 @@ const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
     const [groupData, setGroupData] = useState([]);
 
     const [formData, setFormData] = useState({
-      idTemplate: idTemplate,
+      // idTemplate: idTemplate,
       id_grup: '',
       recipient_list: [],
+      id_activity: null,
     });
 
     const [showModal, setShowModal] = useState(false);
@@ -23,6 +24,7 @@ const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
     useEffect(() => {
       fetchtTemplateMessage();
       fetchGroupData();
+      fetchActivityData();
     }, []);
 
     const fetchRecipientData = async () => {
@@ -31,6 +33,15 @@ const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
         setRecipientData(response.data);
       } catch (error) {
         console.error('Error fetching data recipient:', error);
+      }
+    };
+
+    const fetchActivityData = async () => {
+      try {
+        const response = await axios.get('http://localhost:5005/activity');
+        setActivityData(response.data);
+      } catch (error) {
+        console.error('Error fetching data activity:', error);
       }
     };
 
@@ -133,9 +144,10 @@ const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
       console.log("id template: ", idTemplate);
       console.log('selectedRecipient', recipientData);
       try {
-        const response = await axios.post('http://localhost:5005/direct-message', {
+        const response = await axios.post('http://localhost:5005/direct-message-activity', {
           id_template: idTemplate,
           recipientList: recipientData,
+          id_activity: formData.id_activity,
         });
         console.log('response', response);
 
@@ -161,11 +173,11 @@ const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
     }
 
     return (
-        <div className={`modal fade ${showModal ? 'show' : ''}`} id="addDirectMessageModal" tabIndex="-1" aria-labelledby="addDirectMessageModalLabel" aria-hidden={!showModal}>
+        <div className={`modal fade ${showModal ? 'show' : ''}`} id="addDirectMessageActivityModal" tabIndex="-1" aria-labelledby="addDirectMessageActivityModalLabel" aria-hidden={!showModal}>
           <div className="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="addDirectMessageModalLabel">Tambah Data Konfirmasi</h5>
+                <h5 className="modal-title" id="addDirectMessageActivityModalLabel">Tambah Data Konfirmasi</h5>
                 <button type="button" className="d-none" ref={modalRef} data-bs-dismiss="modal"></button>
               </div>
               <div className="modal-body">
@@ -186,6 +198,24 @@ const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
                             </option>
                         ))}
                       </select>
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="message" className="form-label">Activity</label>
+                        {/* nanti harus retrieve dulu dari db  */}
+                        <select
+                          className="form-select"
+                          name="id_activity"
+                          onChange={(e) => handleInputChange(e)}
+                          value={formData.id_activity}
+                          required
+                        >
+                          <option value="">Activity</option>
+                          {activityData.map((activity, index) => (
+                              <option key={index} value={activity.id_activity}>
+                                {activity.activity_name} - {activity.activity_date}
+                              </option>
+                          ))}
+                        </select>
                     </div>
                     <div className='mb-3'>
                     <label className="form-label">Recipient List</label>
@@ -229,4 +259,4 @@ const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
     );
 }
 
-export default AddDirectMessageModal;
+export default AddDirectMessageActivityModal;

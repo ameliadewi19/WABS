@@ -231,26 +231,25 @@ const Recipient = ({}) => {
             <div className="row">
                 <div className="card mt-5">
                     <div className="card-body">
-                    <div className="row">
-                        <div className="col-lg-6">
-                          <h5 className="card-title">Recipient</h5>
-                          <p>Berikut ini merupakan list recipient yang bisa menerima pesan broadcast</p>
-                        </div>
-                        <div className="col-lg-6">
-                        <div className="upload-section">
-                          <button className="btn btn-primary" onClick={handleShowModal}><i className='bi bi-plus'></i>
-                            Tambah Dosen
-                          </button>
-                          <label htmlFor="fileInput" className="btn btn-secondary upload-button">
-                            <span dangerouslySetInnerHTML={{ __html: feather.icons.upload.toSvg() }} className="mr-2" />
-                          </label>
-                          <input type="file" id="fileInput" accept=".xlsx" onChange={handleFileUpload} />
-                          <a className="btn btn-primary download-template" href="/template/excel-template.xlsx" download>
-                            <i className="icon" data-feather="download"></i>
-                          </a>
-                        </div>
-                        </div>
-
+                    <div className='row'>
+                            <div className='col-md-6'>
+                                <h5 className="card-title">Recipient</h5>  
+                                <p>Berikut ini merupakan list recipient yang bisa menerima pesan broadcast</p>  
+                            </div>
+                            <div className='col-md-6 mt-3'>
+                                <div className='d-flex justify-content-end'>
+                                  <button className="btn btn-primary me-2" onClick={handleShowModal}><i className='bi bi-plus'></i>
+                                    Tambah Recipient
+                                  </button>
+                                  <label htmlFor="fileInput" className="btn btn-secondary upload-button me-2">
+                                    <span dangerouslySetInnerHTML={{ __html: feather.icons.upload.toSvg() }} className="" />
+                                  </label>
+                                  <input type="file" id="fileInput" accept=".xlsx" onChange={handleFileUpload} />
+                                  <a className="btn btn-primary download-template" href="/template/excel-template.xlsx" download>
+                                    <i className="icon" data-feather="download"></i>
+                                  </a>
+                                </div>
+                            </div>
                     </div>
                     <table className="table datatable">
                     <thead>
