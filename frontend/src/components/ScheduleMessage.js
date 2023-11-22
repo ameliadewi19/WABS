@@ -175,7 +175,7 @@ const ScheduleMessage = ({}) => {
                                             <td>{formatDate(schedule.tanggal_mulai) + ' - ' + formatDate(schedule.tanggal_akhir)}</td>
                                             <td>{schedule.waktu}</td>
                                             <td>
-                                                <button type="button" className="btn btn-success btn-sm ms-1" onClick={()=>handleDetailrecipient(schedule.id)} data-bs-toggle="modal" data-bs-target="#recipientListModal"><i className='bi-people-fill'></i> Detail</button>
+                                                <button type="button" className="btn btn-success btn-sm ms-1" onClick={()=>handleDetailrecipient(schedule.id)} data-bs-toggle="modal" data-bs-target="#recipientListModal"><i className='bi-people-fill'></i></button>
                                                 <RecipientListModal reloadData={fetchSchedule} selectedScheduleId={selectedId}/>
                                             </td>
                                             <td>

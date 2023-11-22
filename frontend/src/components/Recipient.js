@@ -229,7 +229,7 @@ const Recipient = ({}) => {
               
             <section className="section">
             <div className="row">
-                <div className="card mt-5">
+                <div className="card mt-2">
                     <div className="card-body">
                     <div className='row'>
                             <div className='col-md-6'>
@@ -300,7 +300,7 @@ const Recipient = ({}) => {
               <Form.Group controlId="id" hidden>
                 <Form.Control type="text" name="id" value={formData.id} onChange={handleChange} placeholder='ID' />
               </Form.Group>
-              <Form.Group controlId="nama">
+              <Form.Group controlId="nama" className='mb-3'>
                 <Form.Label>Nama</Form.Label>
                 <Form.Control type="text" name="nama" value={formData.nama} onChange={handleChange} placeholder='Nama Recipient'/>
               </Form.Group>

@@ -79,7 +79,7 @@ const Activity = ({}) => {
     setFormData({
       id_activity: activity.id_activity,
       activity_name: activity.activity_name,
-      activity_date: formatDate(activity.activity_date),
+      activity_date: activity.activity_date,
       activity_description: activity.activity_description,
     });
     setShowModal(true);
@@ -132,20 +132,33 @@ const Activity = ({}) => {
   };
   return (
     <main id="main" className="main">
-      {/* ... Other code ... */}
+      <div className="pagetitle">
+            <h1>Activity</h1>
+            <nav>
+                <ol className="breadcrumb">
+                <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
+                <li className="breadcrumb-item">Activity</li>
+                </ol>
+            </nav>
+      </div>
       <section className="section">
         <div className="row">
-          <div className="card mt-5">
+          <div className="card mt-2">
             <div className="card-body">
-              <h5 className="card-title">Activity</h5>
-              <p>Here is the list of activities.</p>
               <div className='row'>
-                    <div className='col-md-4'>
-                    <button onClick={handleShowModal} className="btn btn-primary">
-                        Tambah Aktivitas
-                    </button>
-                    </div>
+                <div className='col-md-6'>
+                  <h5 className="card-title">Activity</h5> 
+                  <p>Here is the list of activities.</p>   
                 </div>
+                <div className='col-md-6'>
+                  <div className='d-flex justify-content-end'>
+                    <button onClick={handleShowModal} className="btn btn-primary mt-3">
+                    <i className='bi-plus'></i>Tambah Aktivitas
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
               <table className="table datatable">
                 <thead>
                   <tr>
@@ -169,10 +182,10 @@ const Activity = ({}) => {
                           className="btn btn-primary mt-2 border"
                           style={{ marginRight: '5px' }}
                         >
-                          Edit
+                          <i className='bi-pencil-fill'></i>
                         </button>
                         <button onClick={() => confirmDelete(activity.id_activity)} className="btn btn-danger mt-2 border">
-                          Delete
+                        <i className='bi-trash-fill'></i>
                         </button>
                       </td>
                     </tr>
@@ -194,7 +207,7 @@ const Activity = ({}) => {
                     <Form.Group controlId="id" hidden>
                         <Form.Control type="text" name="id" value={formData.id_activity} onChange={handleChange} placeholder='ID' />
                     </Form.Group>
-                    <Form.Group controlId="activity_name">
+                    <Form.Group controlId="activity_name" className='mb-3'>
                         <Form.Label>Activity Name</Form.Label>
                         <Form.Control
                         type="text"
@@ -204,7 +217,7 @@ const Activity = ({}) => {
                         placeholder='Activity Name'
                         />
                     </Form.Group>
-                    <Form.Group controlId="activity_date">
+                    <Form.Group controlId="activity_date" className='mb-3'>
                         <Form.Label>Activity Date</Form.Label>
                         <Form.Control
                         type="date"
@@ -214,7 +227,7 @@ const Activity = ({}) => {
                         placeholder='Activity Date'
                         />
                     </Form.Group>
-                    <Form.Group controlId="activity_description">
+                    <Form.Group controlId="activity_description" className='mb-3'>
                         <Form.Label>Activity Description</Form.Label>
                         <Form.Control
                         type="text-area"
