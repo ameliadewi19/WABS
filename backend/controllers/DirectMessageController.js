@@ -71,10 +71,22 @@ const directMessagesGeneral = async (req, res) => {
             const chatId = number.substring(1) + "@c.us";
     
             // Sending message.
-            whatsappClient.sendMessage(chatId, text);
-    
-            // res.status(200).json({ success: true, message: 'Messages sent successfully' });
-          });
+            whatsappClient.sendMessage(chatId, text, { quotedMessageId: null })
+                .then(() => {
+                  console.log('Message sent successfully!');
+                  // Send the response only if it hasn't been sent yet
+                  if (!res.headersSent) {
+                    res.status(200).json({ success: true, message: 'Message sent successfully' });
+                  }
+                })
+                .catch((err) => {
+                  console.error('Error sending message:', err);
+                  // Send the response only if it hasn't been sent yet
+                  if (!res.headersSent) {
+                    res.status(500).json({ error: 'Error sending message' });
+                  }
+                })
+            });
 
           contactCounter++;
   
@@ -88,13 +100,18 @@ const directMessagesGeneral = async (req, res) => {
   
       sendNextContact();
 
-      try { await whatsappClient.initialize() } catch {}
-  
+      await whatsappClient.initialize();
+
+      // Add a delay (e.g., 5 seconds) before destroying the client
+      setTimeout(async () => {
+        await whatsappClient.destroy();
+      }, 5000);
+
       res.status(200).json({ message: 'Direct message submitted successfully.' });
     } catch (error) {
       console.error('Error handling direct message submission:', error);
       res.status(500).json({ error: 'Internal server error' });
-    }
+    }     
 };
 
 const directMessagesActivity = async (req, res) => {
@@ -166,9 +183,22 @@ const directMessagesActivity = async (req, res) => {
           const chatId = number.substring(1) + "@c.us";
 
           // Sending message.
-          whatsappClient.sendMessage(chatId, text);
-
-        });
+          whatsappClient.sendMessage(chatId, text, { quotedMessageId: null })
+                .then(() => {
+                  console.log('Message sent successfully!');
+                  // Send the response only if it hasn't been sent yet
+                  if (!res.headersSent) {
+                    res.status(200).json({ success: true, message: 'Message sent successfully' });
+                  }
+                })
+                .catch((err) => {
+                  console.error('Error sending message:', err);
+                  // Send the response only if it hasn't been sent yet
+                  if (!res.headersSent) {
+                    res.status(500).json({ error: 'Error sending message' });
+                  }
+                })
+          });
 
         contactCounter++;
 
@@ -182,7 +212,12 @@ const directMessagesActivity = async (req, res) => {
 
     sendNextContact();
 
-    try { await whatsappClient.initialize() } catch {}
+    await whatsappClient.initialize();
+
+      // Add a delay (e.g., 5 seconds) before destroying the client
+      setTimeout(async () => {
+        await whatsappClient.destroy();
+      }, 5000);
 
     res.status(200).json({ message: 'Direct message submitted successfully.' });
   } catch (error) {
