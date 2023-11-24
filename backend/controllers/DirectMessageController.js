@@ -88,7 +88,7 @@ const directMessagesGeneral = async (req, res) => {
   
       sendNextContact();
 
-      whatsappClient.initialize();
+      try { await whatsappClient.initialize() } catch {}
   
       res.status(200).json({ message: 'Direct message submitted successfully.' });
     } catch (error) {
@@ -182,7 +182,7 @@ const directMessagesActivity = async (req, res) => {
 
     sendNextContact();
 
-    whatsappClient.initialize();
+    try { await whatsappClient.initialize() } catch {}
 
     res.status(200).json({ message: 'Direct message submitted successfully.' });
   } catch (error) {

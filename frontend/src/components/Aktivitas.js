@@ -32,7 +32,6 @@ const Activity = () => {
   }, [activityData]);
 
   const MySwal = Swal.mixin({
-    
   });
 
   const formatDate = (dateString) => {

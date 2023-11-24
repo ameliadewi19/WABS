@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const EditGroupModal = ({ reloadData, groupId }) => {
   const [groupData, setGroupData] = useState({
@@ -93,8 +94,22 @@ const EditGroupModal = ({ reloadData, groupId }) => {
 
       reloadData();
       modalRef.current.click();
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Group Recipient Message Edited!',
+        showConfirmButton: true,
+        timer: 1500,
+      });
     } catch (error) {
       console.error('Error updating group:', error);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Group Recipient Message Not Edited!',
+        showConfirmButton: true,
+        timer: 1500,
+      });
     }
   }; 
 

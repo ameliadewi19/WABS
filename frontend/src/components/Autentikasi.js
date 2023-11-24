@@ -34,13 +34,17 @@ const Autentikasi = ({}) => {
           console.log("kontak", phone, msg);
           const res = await axios.get("http://localhost:5005/getAuthStatus");
           console.log(res.data);
-          if (res.data) {
-            console.log("Not Authenticated");
-            setLoginStatus("Not Authenticated");
-          } else {
-            console.log("Authenticated");
-            setLoginStatus("Authenticated");
-          }
+          setLoginStatus(res.data);
+        } catch (error) {
+          console.error(error);
+        }
+    };  
+
+    const Logout = async () => {
+        try {
+          const res = await axios.get("http://localhost:5005/logout");
+          console.log(res.data);
+        //   setLoginStatus(res.data);
         } catch (error) {
           console.error(error);
         }
@@ -99,33 +103,41 @@ const Autentikasi = ({}) => {
                                     <p>3. Ketuk <span style={{fontWeight: "bold"}}>Perangkat tertaut</span>, lalu <span style={{fontWeight: "bold"}}>Tautkan perangkat</span></p>
                                     <p>4. Isi form dibawah untuk test apakah pesan terkirim</p>
                                     <p>5. Arahkan telepon Anda ke layar ini untuk memindai kode QR</p>
-                                    {/* <button type="button" class="btn btn-primary me-2" onClick={getLoginStatus}>Check Login Status</button> */}
-                                    <button type="button" class="btn btn-primary" onClick={getQRCode}>Get QR Code</button>
+                                    <button type="button" class="btn btn-primary me-2" onClick={getLoginStatus}><i className='bi bi-info-circle me-1'></i> Login Status</button>
+                                    {loginStatus === 'Authenticated' && 
+                                        <button type="button" class="btn btn-success me-2" onClick={getQRCode}><i className='bi bi-box-arrow-in-right me-1'></i> Login WA</button>
+                                    }
 
-                                    {/* <h3 className='mt-5'>Tes Client</h3> */}
-                                    {/* <div class="row mb-3">
-                                    <label for="inputText" class="col-sm-2 col-form-label">No Telepon</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" class="form-control" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="No Telepon"/>
+                                    {loginStatus === 'Not Authenticated' && 
+                                    <>
+                                        <button type="button" class="btn btn-danger me-2" onClick={Logout}><i className='bi bi-box-arrow-in-left me-1'></i> Logout WA</button>
+
+                                        <h3 className='mt-5'>Tes Client</h3>
+                                        <div class="row mb-3">
+                                        <label for="inputText" class="col-sm-2 col-form-label">No Telepon</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="No Telepon"/>
+                                            </div>
+                                            </div>
+                                        <div class="row mb-3">
+                                            <label for="inputEmail" class="col-sm-2 col-form-label">Pesan</label>
+                                            <div class="col-sm-10">
+                                            <textarea className="form-control" style={{ height: '70px' }} value={msg} onChange={(e) => setMessage(e.target.value)} placeholder="Isi pesan"></textarea>
+                                            </div>
                                         </div>
-                                        </div>
-                                    <div class="row mb-3">
-                                        <label for="inputEmail" class="col-sm-2 col-form-label">Pesan</label>
-                                        <div class="col-sm-10">
-                                        <textarea className="form-control" style={{ height: '70px' }} value={msg} onChange={(e) => setMessage(e.target.value)} placeholder="Isi pesan"></textarea>
-                                        </div>
-                                    </div>
-                                    <button type="button" class="btn btn-primary" onClick={testClient}>Send</button> */}
+                                        <button type="button" class="btn btn-primary" onClick={testClient}>Send</button>
+                                    </>
+                                    }
                                 </div>
                                 <div class="col-lg-4">
-                                    {/* {loginStatus && (
+                                    {loginStatus && (
                                     <div className="d-flex align-items-center">
                                         <h5 className="me-2">STATUS: </h5>
                                         <div className={`alert ${loginStatus === '-' ? 'alert-light' : (loginStatus === 'Authenticated' ? 'alert-success' : (loginStatus === 'Loading' ? 'alert-warning' : 'alert-danger'))}`} style={{ paddingBottom: '0px', paddingTop: '10px' }}>
                                             <p>{loginStatus}</p>
                                         </div>
                                     </div>
-                                    )} */}
+                                    )}
 
                                     {!loading && qrcode && (
                                         // <div style={{ margin: "100px" }}>
