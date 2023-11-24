@@ -27,12 +27,14 @@
     "node-cron": "^3.0.2",
     "pg": "^8.11.3",
     "pg-promise": "^11.5.4",
+    "puppeteer": "^21.5.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.18.0",
     "sequelize": "^6.34.0",
     "sequelize-cli": "^6.6.2",
     "wbm": "^1.1.16",
+    "whatsapp-web.js": "^1.23.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

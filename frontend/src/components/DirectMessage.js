@@ -6,6 +6,7 @@ import { DataTable } from 'simple-datatables';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import AddDirectMessageModal from './Modals/AddDirectMessageModal';
+import AddDirectMessageActivityModal from './Modals/AddDirectMessageActivityModal';
 
 const DirectMessage = ({}) => {
     const location = useLocation();
@@ -187,12 +188,12 @@ const DirectMessage = ({}) => {
                                     type="button"
                                     className="btn btn-success"
                                     data-bs-toggle="modal"
-                                    data-bs-target="#addDirectMessageModal"
+                                    data-bs-target="#addDirectMessageActivityModal"
                                     onClick={() => handleSend(templateActivity.id)}
                                 >
                                     <i className="bi bi-send-fill"></i>
                                 </button>
-                                <AddDirectMessageModal reloadData={fetchData} />                                
+                                <AddDirectMessageActivityModal reloadData={fetchData} idTemplate={selectedTemplate}/>                                
                             </div>
                             </td>
                         </tr>

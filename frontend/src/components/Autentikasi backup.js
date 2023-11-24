@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import feather from 'feather-icons';
-import QRCode from 'react-qr-code';
+import QRCode from "qrcode.react";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const Autentikasi = ({}) => {
@@ -17,9 +17,9 @@ const Autentikasi = ({}) => {
         setLoading(true);
         try {
           console.log("kontak", phone, msg);
-          const res = await axios.get("http://localhost:5005/getQRCode");
-          console.log(res.data.qrCodeData);
-          setQRCode(res.data.qrCodeData);
+          const res = await axios.get("http://localhost:5005/authenticate");
+          console.log(res.data);
+          setQRCode(res.data);
           setLoading(false);
         } catch (error) {
           console.error(error);
@@ -32,15 +32,9 @@ const Autentikasi = ({}) => {
         setLoginStatus("Loading");
         try {
           console.log("kontak", phone, msg);
-          const res = await axios.get("http://localhost:5005/getAuthStatus");
+          const res = await axios.get("http://localhost:5005/authenticate-status");
           console.log(res.data);
-          if (res.data) {
-            console.log("Not Authenticated");
-            setLoginStatus("Not Authenticated");
-          } else {
-            console.log("Authenticated");
-            setLoginStatus("Authenticated");
-          }
+          setLoginStatus(res.data);
         } catch (error) {
           console.error(error);
         }
@@ -99,11 +93,11 @@ const Autentikasi = ({}) => {
                                     <p>3. Ketuk <span style={{fontWeight: "bold"}}>Perangkat tertaut</span>, lalu <span style={{fontWeight: "bold"}}>Tautkan perangkat</span></p>
                                     <p>4. Isi form dibawah untuk test apakah pesan terkirim</p>
                                     <p>5. Arahkan telepon Anda ke layar ini untuk memindai kode QR</p>
-                                    {/* <button type="button" class="btn btn-primary me-2" onClick={getLoginStatus}>Check Login Status</button> */}
+                                    <button type="button" class="btn btn-primary me-2" onClick={getLoginStatus}>Check Login Status</button>
                                     <button type="button" class="btn btn-primary" onClick={getQRCode}>Get QR Code</button>
 
-                                    {/* <h3 className='mt-5'>Tes Client</h3> */}
-                                    {/* <div class="row mb-3">
+                                    <h3 className='mt-5'>Tes Client</h3>
+                                    <div class="row mb-3">
                                     <label for="inputText" class="col-sm-2 col-form-label">No Telepon</label>
                                         <div class="col-sm-10">
                                             <input type="text" class="form-control" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="No Telepon"/>
@@ -115,17 +109,17 @@ const Autentikasi = ({}) => {
                                         <textarea className="form-control" style={{ height: '70px' }} value={msg} onChange={(e) => setMessage(e.target.value)} placeholder="Isi pesan"></textarea>
                                         </div>
                                     </div>
-                                    <button type="button" class="btn btn-primary" onClick={testClient}>Send</button> */}
+                                    <button type="button" class="btn btn-primary" onClick={testClient}>Send</button>
                                 </div>
                                 <div class="col-lg-4">
-                                    {/* {loginStatus && (
+                                    {loginStatus && (
                                     <div className="d-flex align-items-center">
                                         <h5 className="me-2">STATUS: </h5>
                                         <div className={`alert ${loginStatus === '-' ? 'alert-light' : (loginStatus === 'Authenticated' ? 'alert-success' : (loginStatus === 'Loading' ? 'alert-warning' : 'alert-danger'))}`} style={{ paddingBottom: '0px', paddingTop: '10px' }}>
                                             <p>{loginStatus}</p>
                                         </div>
                                     </div>
-                                    )} */}
+                                    )}
 
                                     {!loading && qrcode && (
                                         // <div style={{ margin: "100px" }}>

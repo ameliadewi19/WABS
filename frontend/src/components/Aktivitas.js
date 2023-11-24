@@ -3,8 +3,9 @@ import axios from 'axios';
 import { Modal, Button, Form } from 'react-bootstrap';
 import feather from 'feather-icons';
 import { DataTable } from 'simple-datatables';
+import Swal from 'sweetalert2';
 
-const Activity = ({}) => {
+const Activity = () => {
   const [activityData, setActivityData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -13,7 +14,7 @@ const Activity = ({}) => {
     activity_date: '',
     activity_description: '',
   });
-  
+
   useEffect(() => {
     feather.replace(); // Replace the icons after component mounts
     fetchActivityData();
@@ -30,11 +31,16 @@ const Activity = ({}) => {
     }
   }, [activityData]);
 
+  const MySwal = Swal.mixin({
+    
+  });
+
   const formatDate = (dateString) => {
     const dateObject = new Date(dateString);
     const formattedDate = dateObject.toISOString().split('T')[0];
     return formattedDate;
   };
+
   const fetchActivityData = async () => {
     try {
       const response = await axios.get(`http://localhost:5005/activity`);
@@ -55,14 +61,29 @@ const Activity = ({}) => {
   };
 
   const confirmDelete = (id) => {
-    const shouldDelete = window.confirm('Are you sure you want to delete this data?');
-    if (shouldDelete) {
+    MySwal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this template!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+    if (result.isConfirmed) {
       deleteActivity(id);
     }
+    });
   };
 
   const handleShowModal = () => {
+    // Reset the form data when the modal is opened
     setShowModal(true);
+    setFormData({
+      id_activity: '',
+      activity_name: '',
+      activity_date: '',
+      activity_description: '',
+    });
   };
 
   const handleCloseModal = () => {
@@ -79,28 +100,29 @@ const Activity = ({}) => {
     setFormData({
       id_activity: activity.id_activity,
       activity_name: activity.activity_name,
-      activity_date: formatDate(activity.activity_date),
+      activity_date: activity.activity_date,
       activity_description: activity.activity_description,
     });
     setShowModal(true);
   };
 
-  const handleSubmit = async (formData) => {
+  const handleSubmit = async () => {
     console.log('id:', formData.id_activity);
     console.log('activity_name:', formData.activity_name);
-    console.log('activity_date:', formatDate(formData.activity_date));
+    console.log('activity_date:', formData.activity_date);
     console.log('activity_description:', formData.activity_description);
-    if(formData.id_activity) {
+    if (formData.id_activity) {
       try {
         const updatedData = {
-            activity_name: formData.activity_name,
-            activity_date: formatDate(formData.activity_date),
-            activity_description: formData.activity_description,
+          activity_name: formData.activity_name,
+          activity_date: formData.activity_date,
+          activity_description: formData.activity_description,
         };
+
         await axios.put(`http://localhost:5005/activity/${formData.id_activity}`, updatedData, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
+          headers: {
+            'Content-Type': 'application/json',
+          },
         });
         fetchActivityData();
         handleCloseModal();
@@ -109,7 +131,13 @@ const Activity = ({}) => {
       }
     } else {
       try {
-        await axios.post('http://localhost:5005/activity', formData, {
+        const postData = {
+          activity_name: formData.activity_name,
+          activity_date: formData.activity_date,
+          activity_description: formData.activity_description,
+        };
+
+        await axios.post('http://localhost:5005/activity', postData, {
           headers: {
             'Content-Type': 'application/json',
           },
@@ -124,28 +152,43 @@ const Activity = ({}) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(`Handling change for ${name}: ${value}`);
 
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: value,
-    });
+    }));
   };
+
   return (
     <main id="main" className="main">
-      {/* ... Other code ... */}
+      <div className="pagetitle">
+        <h1>Activity</h1>
+        <nav>
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
+            <li className="breadcrumb-item">Activity</li>
+          </ol>
+        </nav>
+      </div>
       <section className="section">
         <div className="row">
-          <div className="card mt-5">
+          <div className="card mt-2">
             <div className="card-body">
-              <h5 className="card-title">Activity</h5>
-              <p>Here is the list of activities.</p>
               <div className='row'>
-                    <div className='col-md-4'>
-                    <button onClick={handleShowModal} className="btn btn-primary">
-                        Tambah Aktivitas
-                    </button>
-                    </div>
+                <div className='col-md-6'>
+                  <h5 className="card-title">Activity</h5>
+                  <p>Here is the list of activities.</p>
                 </div>
+                <div className='col-md-6'>
+                  <div className='d-flex justify-content-end'>
+                    <button onClick={handleShowModal} className="btn btn-primary mt-3">
+                      <i className='bi-plus'></i>Tambah Aktivitas
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               <table className="table datatable">
                 <thead>
                   <tr>
@@ -169,10 +212,10 @@ const Activity = ({}) => {
                           className="btn btn-primary mt-2 border"
                           style={{ marginRight: '5px' }}
                         >
-                          Edit
+                          <i className='bi-pencil-fill'></i>
                         </button>
                         <button onClick={() => confirmDelete(activity.id_activity)} className="btn btn-danger mt-2 border">
-                          Delete
+                          <i className='bi-trash-fill'></i>
                         </button>
                       </td>
                     </tr>
@@ -186,60 +229,60 @@ const Activity = ({}) => {
       {/* Render the modal if showModal is true */}
       {showModal && (
         <Modal show={showModal} onHide={handleCloseModal}>
-            <Modal.Header closeButton>
-                <Modal.Title>{formData.id_activity ? `Edit Activity` : 'Add Activity'}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form>
-                    <Form.Group controlId="id" hidden>
-                        <Form.Control type="text" name="id" value={formData.id_activity} onChange={handleChange} placeholder='ID' />
-                    </Form.Group>
-                    <Form.Group controlId="activity_name">
-                        <Form.Label>Activity Name</Form.Label>
-                        <Form.Control
-                        type="text"
-                        name="activity_name"
-                        value={formData.activity_name}
-                        onChange={handleChange}
-                        placeholder='Activity Name'
-                        />
-                    </Form.Group>
-                    <Form.Group controlId="activity_date">
-                        <Form.Label>Activity Date</Form.Label>
-                        <Form.Control
-                        type="date"
-                        name="activity_date"
-                        value={formData.activity_date}
-                        onChange={handleChange}
-                        placeholder='Activity Date'
-                        />
-                    </Form.Group>
-                    <Form.Group controlId="activity_description">
-                        <Form.Label>Activity Description</Form.Label>
-                        <Form.Control
-                        type="text-area"
-                        name="activity_description"
-                        value={formData.activity_description}
-                        onChange={handleChange}
-                        placeholder='Activity Description'
-                        />
-                    </Form.Group>
-                </Form>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleCloseModal}>
-                    Cancel
-                </Button>
-                {formData.id_activity ? (
-                <button onClick={() => handleSubmit(formData)} className="btn btn-primary">
-                    Edit
-                </button>
-                ) : (
-                <button onClick={handleSubmit} className="btn btn-primary">
-                    Add
-                </button>
-                )}
-            </Modal.Footer>
+          <Modal.Header closeButton>
+            <Modal.Title>{formData.id_activity ? `Edit Activity` : 'Add Activity'}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form>
+              <Form.Group controlId="id" hidden>
+                <Form.Control type="text" name="id" value={formData.id_activity} onChange={handleChange} placeholder='ID' />
+              </Form.Group>
+              <Form.Group controlId="activity_name" className='mb-3'>
+                <Form.Label>Activity Name</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="activity_name"
+                  value={formData.activity_name}
+                  onChange={handleChange}
+                  placeholder='Activity Name'
+                />
+              </Form.Group>
+              <Form.Group controlId="activity_date" className='mb-3'>
+                <Form.Label>Activity Date</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="activity_date"
+                  value={formData.activity_date}
+                  onChange={handleChange}
+                  placeholder='Activity Date'
+                />
+              </Form.Group>
+              <Form.Group controlId="activity_description" className='mb-3'>
+                <Form.Label>Activity Description</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="activity_description"
+                  value={formData.activity_description}
+                  onChange={handleChange}
+                  placeholder='Activity Description'
+                />
+              </Form.Group>
+            </Form>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseModal}>
+              Cancel
+            </Button>
+            {formData.id_activity ? (
+              <button onClick={() => handleSubmit(formData)} className="btn btn-primary">
+                Edit
+              </button>
+            ) : (
+              <button onClick={handleSubmit} className="btn btn-primary">
+                Add
+              </button>
+            )}
+          </Modal.Footer>
         </Modal>
       )}
     </main>

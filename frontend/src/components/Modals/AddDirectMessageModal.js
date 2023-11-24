@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { DataTable } from 'simple-datatables';
+import Swal from 'sweetalert2';
 
 const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
     const [selectedRecipient, setSelectedRecipient] = useState([]);
@@ -137,10 +138,25 @@ const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
           recipientList: recipientData,
         });
         console.log('response', response);
+
+        // Show success message
+        Swal.fire({
+          icon: 'success',
+          title: 'Pesan terkirim!',
+          text: 'Pesan berhasil terkirim kepada penerima yang dipilih.',
+        });
+
         reloadData();
         setShowModal(false);
       } catch (error) {
         console.error('Error fetching data:', error);
+
+        // Show error message
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal mengirim pesan',
+          text: 'Terjadi kesalahan saat mengirim pesan. Silakan coba lagi.',
+        });
       }
     }
 

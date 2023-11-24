@@ -44,14 +44,14 @@ const Sidebar = ({}) => {
 
                 <li className="nav-item">
                 <a className={`nav-link ${location.pathname === '/direct-message' ? '' : 'collapsed'}`} href="/direct-message">
-                    <i className="bi bi-grid"></i>
+                    <i className="bi bi-send"></i>
                     <span>Direct Message</span>
                     </a>
                 </li>
 
                 <li className="nav-item">
                 <a className={`nav-link ${location.pathname === '/schedule-message' ? '' : 'collapsed'}`} href="/schedule-message">
-                    <i className="bi bi-envelope"></i>
+                    <i className="bi bi-envelope-plus"></i>
                     <span>Schedule Message</span>
                     </a>
                 </li>

@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/Database.js");
+const Schedule = require("./ScheduleModel.js");
 
 const Activity = sequelize.define("Activity", {
   id_activity: {
@@ -28,5 +29,6 @@ const Activity = sequelize.define("Activity", {
 (async () => {
   await Activity.sync();
 })();
+
 
 module.exports = Activity;

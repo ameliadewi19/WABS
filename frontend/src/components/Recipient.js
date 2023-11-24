@@ -2,21 +2,22 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Modal, Button, Form } from 'react-bootstrap';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 import './createRecipient.css';
 import feather from 'feather-icons';
 import { DataTable } from 'simple-datatables'; 
+import Swal from 'sweetalert2';
 
 const Recipient = ({}) => {
     const [recipientData, setRecipientData] = useState([]);
-    const MySwal = withReactContent(Swal);
     const [showModal, setShowModal] = useState(false);
     const [formData, setFormData] = useState({
             nama: '',
             no_whatsapp: '',
     });
     const location = useLocation();
+
+    const MySwal = Swal.mixin({
+    });
     
 
     useEffect(() => {
@@ -45,6 +46,34 @@ const Recipient = ({}) => {
         }
     };
     
+    // const fetchRecipientData = async () => {
+    //   try {
+    //     // Mendapatkan token dari localStorage
+    //     const token = localStorage.getItem('jwt_token');
+    
+    //     if (!token) {
+    //       console.error('Token not found in localStorage');
+    //       return;
+    //     }
+    
+    //     // Membuat header Authorization dengan menggunakan token
+    //     const authToken = `Bearer ${token}`;
+    
+    //     // Menambahkan header Authorization ke permintaan Axios
+    //     const response = await axios.get('http://localhost:5005/recipient', {
+    //       headers: {
+    //         Authorization: authToken,
+    //       },
+    //     });
+    
+    //     // Mengupdate data penerima setelah mendapatkan respons
+    //     setRecipientData(response.data);
+    //   } catch (error) {
+    //     console.error('Error fetching data:', error);
+    //   }
+    // };
+    
+
     const deleteRecipient = async (id) => {
         console.log('ID yang akan dihapus:', id);
         try {
@@ -58,14 +87,13 @@ const Recipient = ({}) => {
     const confirmDelete = (id) => {
       MySwal.fire({
         title: 'Are you sure?',
-        text: 'You will not be able to recover this recipient!',
+        text: 'You will not be able to recover this template!',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, delete it!',
         cancelButtonText: 'No, cancel!',
       }).then((result) => {
         if (result.isConfirmed) {
-          // User clicked Yes, proceed with deletion
           deleteRecipient(id);
         }
       });
@@ -185,6 +213,12 @@ const Recipient = ({}) => {
           alert("Nama hanya boleh mengandung huruf.");
           return;
         }
+
+        // Validasi NO WHATSAPP: Hanya angka diizinkan
+        // if (name === "no_whatsapp" && !/^\+\d{11,15}$/.test(value)) {
+        //   alert("Masukkan nomor telepon dengan format yang benar, contoh: +6280102108290");
+        //   return;
+        // }
       
         setFormData({
           ...formData,
@@ -207,7 +241,7 @@ const Recipient = ({}) => {
               
             <section className="section">
             <div className="row">
-                <div className="card mt-5">
+                <div className="card mt-2">
                     <div className="card-body">
                     <div className="row">
                         <div className="col-lg-6">
@@ -279,7 +313,7 @@ const Recipient = ({}) => {
               <Form.Group controlId="id" hidden>
                 <Form.Control type="text" name="id" value={formData.id} onChange={handleChange} placeholder='ID' />
               </Form.Group>
-              <Form.Group controlId="nama">
+              <Form.Group controlId="nama" className='mb-3'>
                 <Form.Label>Nama</Form.Label>
                 <Form.Control type="text" name="nama" value={formData.nama} onChange={handleChange} placeholder='Nama Recipient'/>
               </Form.Group>
