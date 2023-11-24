@@ -105,11 +105,7 @@ const Autentikasi = ({}) => {
                                     <p>5. Arahkan telepon Anda ke layar ini untuk memindai kode QR</p>
                                     <button type="button" class="btn btn-primary me-2" onClick={getLoginStatus}><i className='bi bi-info-circle me-1'></i> Login Status</button>
                                     {loginStatus === 'Authenticated' && 
-                                        <button type="button" class="btn btn-success me-2" onClick={getQRCode}><i className='bi bi-box-arrow-in-right me-1'></i> Login WA</button>
-                                    }
-
-                                    {loginStatus === 'Not Authenticated' && 
-                                    <>
+                                        <>
                                         <button type="button" class="btn btn-danger me-2" onClick={Logout}><i className='bi bi-box-arrow-in-left me-1'></i> Logout WA</button>
 
                                         <h3 className='mt-5'>Tes Client</h3>
@@ -126,6 +122,12 @@ const Autentikasi = ({}) => {
                                             </div>
                                         </div>
                                         <button type="button" class="btn btn-primary" onClick={testClient}>Send</button>
+                                    </>
+                                    }
+
+                                    {loginStatus === 'Not Authenticated' && 
+                                    <>
+                                        <button type="button" class="btn btn-success me-2" onClick={getQRCode}><i className='bi bi-box-arrow-in-right me-1'></i> Login WA</button>
                                     </>
                                     }
                                 </div>

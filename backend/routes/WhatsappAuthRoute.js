@@ -30,6 +30,63 @@ router.get('/getQRCode', async (req, res) => {
   try { await whatsappClient.initialize() } catch {}
 });
 
+router.post('/test-client', async (req, res) => {
+  const { phone, msg } = req.body;
+
+  const whatsappClient = new Client({
+    puppeteer: {
+      headless: false
+    },
+    authStrategy: new LocalAuth({
+      clientId: "YOUR_CLIENT_ID",
+    }),
+  });
+
+  try {
+    console.log('Phone:', phone);
+    console.log('Message:', msg);
+
+    whatsappClient.on('ready', () => {
+      console.log('Client is ready!');
+      
+      const number = phone;
+      const text = msg;
+      const chatId = number.substring(1) + "@c.us";
+
+      whatsappClient.sendMessage(chatId, text, { quotedMessageId: null })
+        .then(() => {
+          console.log('Message sent successfully!');
+          // Send the response only if it hasn't been sent yet
+          if (!res.headersSent) {
+            res.status(200).json({ success: true, message: 'Message sent successfully' });
+          }
+        })
+        .catch((err) => {
+          console.error('Error sending message:', err);
+          // Send the response only if it hasn't been sent yet
+          if (!res.headersSent) {
+            res.status(500).json({ error: 'Error sending message' });
+          }
+        })
+      });
+
+    await whatsappClient.initialize();
+
+    // Add a delay (e.g., 5 seconds) before destroying the client
+    setTimeout(async () => {
+      await whatsappClient.destroy();
+    }, 5000);
+  } catch (error) {
+    console.error('Error initializing WhatsApp client:', error);
+    // Send the response only if it hasn't been sent yet
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  } 
+});
+
+
+
 router.get('/getAuthStatus', async (req, res) => {
   let status = 'Not Authenticated';
 
