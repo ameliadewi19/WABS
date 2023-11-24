@@ -15,9 +15,9 @@ const directMessagesGeneral = async (req, res) => {
   console.log("directMessagesGeneral");
 
   const whatsappClient = new Client({
-    puppeteer: {
-      headless: false
-    },
+    // puppeteer: {
+    //   headless: false
+    // },
     authStrategy: new LocalAuth({
         clientId: "YOUR_CLIENT_ID",
     }),
