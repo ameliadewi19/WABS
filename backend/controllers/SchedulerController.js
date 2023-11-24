@@ -59,7 +59,21 @@ async function sendMessageGeneral(id_message, listContacts) {
                 const chatId = number.substring(1) + "@c.us";
         
                 // Sending message.
-                whatsappClient.sendMessage(chatId, text);
+                whatsappClient.sendMessage(chatId, text, { quotedMessageId: null })
+                    .then(() => {
+                        console.log('Message sent successfully!');
+                        // Send the response only if it hasn't been sent yet
+                        // if (!res.headersSent) {
+                        // res.status(200).json({ success: true, message: 'Message sent successfully' });
+                        // }
+                    })
+                    .catch((err) => {
+                        console.error('Error sending message:', err);
+                        // Send the response only if it hasn't been sent yet
+                        // if (!res.headersSent) {
+                        // res.status(500).json({ error: 'Error sending message' });
+                        // }
+                    })
         
                 // res.status(200).json({ success: true, message: 'Messages sent successfully' });
               });
@@ -75,10 +89,13 @@ async function sendMessageGeneral(id_message, listContacts) {
           };
       
           sendNextContact();
-    
-          try { 
-            await whatsappClient.initialize();
-         } catch {} 
+
+          await whatsappClient.initialize();
+      
+            // Add a delay (e.g., 5 seconds) before destroying the client
+            setTimeout(async () => {
+              await whatsappClient.destroy();
+            }, 5000);
       } catch (error) {
         console.error('Error handling direct message submission:', error);
       }
@@ -139,9 +156,21 @@ async function sendMessageActivity(id_message, id_activity, listContacts) {
                 const chatId = number.substring(1) + "@c.us";
         
                 // Sending message.
-                whatsappClient.sendMessage(chatId, text);
-        
-                // res.status(200).json({ success: true, message: 'Messages sent successfully' });
+                whatsappClient.sendMessage(chatId, text, { quotedMessageId: null })
+                    .then(() => {
+                        console.log('Message sent successfully!');
+                        // Send the response only if it hasn't been sent yet
+                        // if (!res.headersSent) {
+                        // res.status(200).json({ success: true, message: 'Message sent successfully' });
+                        // }
+                    })
+                    .catch((err) => {
+                        console.error('Error sending message:', err);
+                        // Send the response only if it hasn't been sent yet
+                        // if (!res.headersSent) {
+                        // res.status(500).json({ error: 'Error sending message' });
+                        // }
+                    })
               });
     
               contactCounter++;
@@ -155,12 +184,13 @@ async function sendMessageActivity(id_message, id_activity, listContacts) {
           };
       
           sendNextContact();
-    
-          try {
-            await whatsappClient.initialize();
-          } catch (error) {
-            console.error('Error handling initilize message submission:', error);
-          }
+
+          await whatsappClient.initialize();
+      
+            // Add a delay (e.g., 5 seconds) before destroying the client
+            setTimeout(async () => {
+              await whatsappClient.destroy();
+            }, 5000);
       } catch (error) {
         console.error('Error handling direct message submission:', error);
       } 
@@ -259,28 +289,35 @@ async function setupCronJobs() {
                 const job = cron.schedule(cronSchedule, () => {
                     console.log(`Scheduled job for date ${date} and ID ${item.id}`);
                     if(item.jenis_message === 'general'){
-                        const recipientList = []
-                        item.recipient_list.forEach((recipient) => {
-                            recipientList.push(recipient.id_recipient);
-                        });
-                        console.log("recipientList", recipientList);
-                        axios.post('http://localhost:5005/direct-message', {
-                            id_template: item.id_message,
-                            recipientList: recipientList,
-                        });
-                        // sendMessageGeneral(item.id_message, item.recipient_list);
+                        // const recipientList = []
+                        // item.recipient_list.forEach((recipient) => {
+                        //     recipientList.push(recipient.id_recipient);
+                        // });
+                        // console.log("id_template", item.id_message);
+                        // console.log("recipientList", recipientList);
+                        // axios.post('http://localhost:5005/direct-message', {
+                        //     id_template: item.id_message,
+                        //     recipientList: recipientList,
+                        // }, {
+                        //     timeout: 5000  // Set the timeout in milliseconds (adjust as needed)
+                        // });
+                        sendMessageGeneral(item.id_message, item.recipient_list);
                     } else if(item.jenis_message === 'activity'){
-                        const recipientList = []
-                        item.recipient_list.forEach((recipient) => {
-                            recipientList.push(recipient.id_recipient);
-                        });
-                        console.log("recipientList", recipientList);
-                        axios.post('http://localhost:5005/direct-message-activity', {
-                            id_template: item.id_message,
-                            recipientList: recipientList,
-                            id_activity: item.id_activity
-                        });
-                        // sendMessageActivity(item.id_message, item.id_activity, item.recipient_list)
+                        // const recipientList = []
+                        // item.recipient_list.forEach((recipient) => {
+                        //     recipientList.push(recipient.id_recipient);
+                        // });
+                        // console.log("id_template", item.id_message);
+                        // console.log("recipientList", recipientList);
+                        // console.log("id_activity", item.id_activity);
+                        // axios.post('http://localhost:5005/direct-message-activity', {
+                        //     id_template: item.id_message,
+                        //     recipientList: recipientList,
+                        //     id_activity: item.id_activity
+                        // }, {
+                        //     timeout: 5000  // Set the timeout in milliseconds (adjust as needed)
+                        // });
+                        sendMessageActivity(item.id_message, item.id_activity, item.recipient_list)
                     }
                 }, {
                     scheduled: true,
