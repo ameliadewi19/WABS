@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const EditTemplateModal = ({ template, handleClose, reloadData, reloadDataActivity }) => {
   const [message, setMessage] = useState('');
@@ -43,6 +44,13 @@ const EditTemplateModal = ({ template, handleClose, reloadData, reloadDataActivi
       //   elementsToRemove.forEach(function (element) {
       //   element.parentNode.removeChild(element);
       // });
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Template Message Edited!',
+        showConfirmButton: true,
+        timer: 1500,
+      });
       
     } catch (error) {
       console.error('Error saving edited template:', error);

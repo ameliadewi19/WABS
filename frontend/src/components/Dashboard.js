@@ -37,7 +37,7 @@ const Dashboard = ({}) => {
 
                 <div class="col-lg-12" style={{marginBottom: '150px'}}>
                 <div class="row">
-                    <div class="col-xxl-4 col-md-12">
+                    <div class="col-xxl-12 col-md-12">
                     <div class="card info-card sales-card">
 
                         <div class="card-body">
