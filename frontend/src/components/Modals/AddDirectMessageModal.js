@@ -165,7 +165,7 @@ const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
           <div className="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="addDirectMessageModalLabel">Tambah Data Konfirmasi</h5>
+                <h5 className="modal-title" id="addDirectMessageModalLabel">Direct Message</h5>
                 <button type="button" className="d-none" ref={modalRef} data-bs-dismiss="modal"></button>
               </div>
               <div className="modal-body">
@@ -179,7 +179,7 @@ const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
                         value={formData.id_grup}
                         required
                       >
-                        <option value="">Pilih Group</option>
+                        <option value="" disabled selected>Choose Group</option>
                         {groupData.map((group, index) => (
                             <option key={index} value={group.id}>
                               {group.nama_grup}
@@ -193,9 +193,9 @@ const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
                       <thead>
                         <tr>
                           <th></th>
-                          <th>No</th>
-                          <th>Nama</th>
-                          <th>No Whatsapp</th>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>Phone Number</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -220,8 +220,8 @@ const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
     
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Tutup</button>
-                <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={()=>handleSubmit()}>Simpan</button>
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Close</button>
+                <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={()=>handleSubmit()}>Send</button>
               </div>
             </div>
           </div>

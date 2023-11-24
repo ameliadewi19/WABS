@@ -102,17 +102,17 @@ const TemplateMessage = ({}) => {
             <div className="pagetitle">
             <div className='row'>
                 <div className='col-md-6'>
-                <h1>Template Message</h1>
+                <h1>Message Templates</h1>
                 <nav>
                     <ol className="breadcrumb">
                     <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
-                    <li className="breadcrumb-item active">Template Message</li>
+                    <li className="breadcrumb-item active">Message Templates</li>
                     </ol>
                 </nav>
                 </div>
                 <div className='col-md-6'>
                     <div className='d-flex justify-content-end'>
-                        <button type="button" className="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addTemplateModal"><i className='bi bi-plus'></i>Tambah Template</button>
+                        <button type="button" className="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addTemplateModal"><i className='bi bi-plus'></i>Add Template</button>
                         <AddTemplateModal reloadData={fetchData} reloadDataActivity={fetchDataActivity} />
                     </div>
                 </div>
@@ -126,15 +126,15 @@ const TemplateMessage = ({}) => {
                 <div className="card">
                     <div className="card-body">
                     <h5 className="card-title">General Templates</h5>
-                    <p>Template yang bisa digunakan untuk mengirim pesan broadcast</p>
+                    <p>Here is template to sending messages for general purposes</p>
 
                     <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
                         <table className="table datatable">
                             <thead>
                             <tr>
-                                <th scope="col">No</th>
+                                <th scope="col">#</th>
                                 <th scope="col">Message</th>
-                                <th scope="col">Aksi</th>
+                                <th scope="col">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -184,14 +184,14 @@ const TemplateMessage = ({}) => {
                     <div className="card-body">
 
                     <h5 className="card-title">Activity Templates</h5>
-                    <p>Template yang bisa digunakan untuk kegiatan tertentu</p>
+                    <p>Here is template to sending messages for activity purposes</p>
                     <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
                         <table className="table2 datatable-activity">
                             <thead>
                             <tr>
-                                <th scope="col">No</th>
+                                <th scope="col">#</th>
                                 <th scope="col">Message</th>
-                                <th scope="col">Aksi</th>
+                                <th scope="col">Actions</th>
                             </tr>
                             </thead>
                             <tbody>

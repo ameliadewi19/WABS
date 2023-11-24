@@ -12,6 +12,7 @@ const Autentikasi = ({}) => {
     const [msg, setMessage] = useState("");
     const [qrcode, setQRCode] = useState(false);
     const [loginStatus, setLoginStatus] = useState("-");
+    const [check, setCheck] = useState(false);
 
     const getQRCode = async () => {
         setLoading(true);
@@ -69,6 +70,10 @@ const Autentikasi = ({}) => {
         feather.replace(); // Replace the icons after component mount
 
         console.log(phone, msg);
+        if (check === false){
+            getLoginStatus();
+            setCheck(true);
+        }
 
     }, [phone, msg]);
 
@@ -103,7 +108,7 @@ const Autentikasi = ({}) => {
                                     <p>3. Ketuk <span style={{fontWeight: "bold"}}>Perangkat tertaut</span>, lalu <span style={{fontWeight: "bold"}}>Tautkan perangkat</span></p>
                                     <p>4. Isi form dibawah untuk test apakah pesan terkirim</p>
                                     <p>5. Arahkan telepon Anda ke layar ini untuk memindai kode QR</p>
-                                    <button type="button" class="btn btn-primary me-2" onClick={getLoginStatus}><i className='bi bi-info-circle me-1'></i> Login Status</button>
+                                    {/* <button type="button" class="btn btn-primary me-2" onClick={getLoginStatus}><i className='bi bi-info-circle me-1'></i> Login Status</button> */}
                                     {loginStatus === 'Authenticated' && 
                                         <>
                                         <button type="button" class="btn btn-danger me-2" onClick={Logout}><i className='bi bi-box-arrow-in-left me-1'></i> Logout WA</button>
@@ -121,7 +126,7 @@ const Autentikasi = ({}) => {
                                             <textarea className="form-control" style={{ height: '70px' }} value={msg} onChange={(e) => setMessage(e.target.value)} placeholder="Isi pesan"></textarea>
                                             </div>
                                         </div>
-                                        <button type="button" class="btn btn-primary" onClick={testClient}>Send</button>
+                                        <button type="button" class="btn btn-primary" onClick={testClient}><i className='bi bi-send me-1'></i> Send</button>
                                     </>
                                     }
 

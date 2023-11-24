@@ -124,16 +124,16 @@ const DirectMessage = ({}) => {
                         <div className="card">
                             <div className="card-body">
                                 <h5 className="card-title">General Templates</h5>
-                                <p>Template yang bisa digunakan untuk mengirim pesan broadcast</p>
+                                <p>Choose template and send the messages</p>
 
                                 {/* Wrap the table in a container with fixed height and scroll overflow */}
                                 <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
                                     <table className="table datatable">
                                         <thead>
                                             <tr>
-                                                <th scope="col">No</th>
+                                                <th scope="col">#</th>
                                                 <th scope="col">Message</th>
-                                                <th scope="col">Aksi</th>
+                                                <th scope="col">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -176,14 +176,14 @@ const DirectMessage = ({}) => {
                     <div className="card-body">
 
                     <h5 className="card-title">Activity Templates</h5>
-                    <p>Template yang bisa digunakan untuk kegiatan tertentu</p>
+                    <p>Choose template and send the messages</p>
                     <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
                         <table className="table2 datatable-activity">
                             <thead>
                             <tr>
-                                <th scope="col">No</th>
+                                <th scope="col">#</th>
                                 <th scope="col">Message</th>
-                                <th scope="col">Aksi</th>
+                                <th scope="col">Actions</th>
                             </tr>
                             </thead>
                             <tbody>

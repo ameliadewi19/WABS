@@ -79,11 +79,11 @@ const GroupRecipient = ({ }) => {
   return (
     <main id="main" className="main">
       <div className="pagetitle">
-        <h1>Group Recipient</h1>
+        <h1>Recipient Groups</h1>
         <nav>
           <ol className="breadcrumb">
             <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
-            <li className="breadcrumb-item active">Group Recipient</li>
+            <li className="breadcrumb-item active">Recipient Groups</li>
           </ol>
         </nav>
       </div>
@@ -96,12 +96,12 @@ const GroupRecipient = ({ }) => {
               <div className="card-body">
                 <div className='row'>
                   <div className='col-md-6'>
-                    <h5 className="card-title">Group Recipient</h5>
-                    <p>Group yang berisikan list recipient</p>
+                    <h5 className="card-title">Recipient Groups</h5>
+                    <p>Here is list of recipient groups</p>
                   </div>
                   <div className='col-md-6'>
                     <div className='d-flex justify-content-end'>
-                      <button type="button" className="btn btn-primary me-2 mt-3" data-bs-toggle="modal" data-bs-target="#addGroupModal"><i className='bi bi-plus'></i>Tambah Group</button>
+                      <button type="button" className="btn btn-primary me-2 mt-3" data-bs-toggle="modal" data-bs-target="#addGroupModal"><i className='bi bi-plus'></i>Add Group</button>
                       <AddGroupModal reloadData={fetchData} />
                     </div>
                   </div>
@@ -111,10 +111,10 @@ const GroupRecipient = ({ }) => {
                   <table className="table datatable">
                     <thead>
                       <tr>
-                        <th >No</th>
-                        <th >Nama Grup</th>
-                        <th >Deskripsi</th>
-                        <th >Aksi</th>
+                        <th >#</th>
+                        <th >Group Name</th>
+                        <th >Description</th>
+                        <th >Actions</th>
                       </tr>
                     </thead>
                     <tbody>

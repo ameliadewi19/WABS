@@ -93,27 +93,27 @@ const AddGroupModal = ({ reloadData }) => {
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title" id="addGroupModalLabel">Tambah Group Recipient</h5>
+            <h5 className="modal-title" id="addGroupModalLabel">Add Group Recipient</h5>
             <button type="button" className="d-none" ref={modalRef} data-bs-dismiss="modal"></button>
           </div>
           <div className="modal-body">
             <form>
               <div className="mb-3">
-                <label htmlFor="namagroup" className="form-label">Nama Grup</label>
+                <label htmlFor="namagroup" className="form-label">Grup Name</label>
                 <input
                   className="form-control"
                   type="text"
-                  placeholder="Masukkan nama grup"
+                  placeholder="Add group name"
                   value={nama_grup}
                   onChange={handleGroupChange}
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="pembuka" className="form-label">Deskripsi</label>
+                <label htmlFor="pembuka" className="form-label">Description</label>
                 <textarea
                   className="form-control"
                   type="text"
-                  placeholder="Masukkan deskripsi grup"
+                  placeholder="Add group description"
                   style={{ height: '100px' }}
                   value={deskripsi}
                   onChange={handleDeskripsiChange}
@@ -131,7 +131,7 @@ const AddGroupModal = ({ reloadData }) => {
                       required
                     >
                       <option value="" disabled selected>
-                        Pilih kontak
+                        Choose Recipient
                       </option>
                       {recipientOptions.map((option) => (
                         <option key={option.id} value={option.id}>
@@ -151,8 +151,8 @@ const AddGroupModal = ({ reloadData }) => {
             </form>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Tutup</button>
-            <button type="button" className="btn btn-primary" onClick={handleSave}>Simpan</button>
+            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Close</button>
+            <button type="button" className="btn btn-primary" onClick={handleSave}>Save</button>
           </div>
         </div>
       </div>
