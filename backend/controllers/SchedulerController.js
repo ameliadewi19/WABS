@@ -259,9 +259,28 @@ async function setupCronJobs() {
                 const job = cron.schedule(cronSchedule, () => {
                     console.log(`Scheduled job for date ${date} and ID ${item.id}`);
                     if(item.jenis_message === 'general'){
-                        sendMessageGeneral(item.id_message, item.recipient_list);
+                        const recipientList = []
+                        item.recipient_list.forEach((recipient) => {
+                            recipientList.push(recipient.id_recipient);
+                        });
+                        console.log("recipientList", recipientList);
+                        axios.post('http://localhost:5005/direct-message', {
+                            id_template: item.id_message,
+                            recipientList: recipientList,
+                        });
+                        // sendMessageGeneral(item.id_message, item.recipient_list);
                     } else if(item.jenis_message === 'activity'){
-                        sendMessageActivity(item.id_message, item.id_activity, item.recipient_list)
+                        const recipientList = []
+                        item.recipient_list.forEach((recipient) => {
+                            recipientList.push(recipient.id_recipient);
+                        });
+                        console.log("recipientList", recipientList);
+                        axios.post('http://localhost:5005/direct-message-activity', {
+                            id_template: item.id_message,
+                            recipientList: recipientList,
+                            id_activity: item.id_activity
+                        });
+                        // sendMessageActivity(item.id_message, item.id_activity, item.recipient_list)
                     }
                 }, {
                     scheduled: true,

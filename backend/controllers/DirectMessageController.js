@@ -15,9 +15,9 @@ const directMessagesGeneral = async (req, res) => {
   console.log("directMessagesGeneral");
 
   const whatsappClient = new Client({
-    puppeteer: {
-      headless: false
-    },
+    // puppeteer: {
+    //   headless: false
+    // },
     authStrategy: new LocalAuth({
         clientId: "YOUR_CLIENT_ID",
     }),
@@ -88,7 +88,7 @@ const directMessagesGeneral = async (req, res) => {
   
       sendNextContact();
 
-      try { await whatsappClient.initialize() } catch {}
+      whatsappClient.initialize();
   
       res.status(200).json({ message: 'Direct message submitted successfully.' });
     } catch (error) {
@@ -182,7 +182,7 @@ const directMessagesActivity = async (req, res) => {
 
     sendNextContact();
 
-    try { await whatsappClient.initialize() } catch {}
+    whatsappClient.initialize();
 
     res.status(200).json({ message: 'Direct message submitted successfully.' });
   } catch (error) {
