@@ -11,9 +11,9 @@ const MINUTE_INTERVAL = 1; // Adjust as needed
 
 async function sendMessageGeneral(id_message, listContacts) {
     const whatsappClient = new Client({
-        // puppeteer: {
-        //   headless: false
-        // },
+        puppeteer: {
+          headless: false
+        },
         authStrategy: new LocalAuth({
             clientId: "YOUR_CLIENT_ID",
         }),
@@ -28,36 +28,54 @@ async function sendMessageGeneral(id_message, listContacts) {
           return;
         }
     
-        const contacts = {
-            nama: listContacts.nama,
-            no_whatsapp: listContacts.no_whatsapp
-        }
+        const contacts = listContacts.map(data => ({
+            nama: data.recipients.nama,
+            no_whatsapp: data.recipients.no_whatsapp
+          }));
+      
+          // console.log(contacts);
+      
+          let contactCounter = 0;
+      
+          const sendNextContact = async () => {
+            if (contactCounter < contacts.length) {
+              const contact = contacts[contactCounter];
+              const message = `${template.message.replace('{{nama}}', contact.nama)}`;
+      
+              whatsappClient.on('ready', () => {
+                console.log('Client is ready!');
+                
+                // Number where you want to send the message.
+                const number = contact.no_whatsapp;
     
-        console.log(contacts);
-        const message = `${template.message.replace('{{nama}}', contacts.nama)}`;
-        whatsappClient.on('ready', () => {
-            console.log('Client is ready!');
-            
-            // Number where you want to send the message.
-            const number = contacts.no_whatsapp;
-
-            console.log(number);
-            
-            // Your message.
-            const text = message;
-            
-            // Getting chatId from the number.
-            // we have to delete "+" from the beginning and add "@c.us" at the end of the number.
-            const chatId = number.substring(1) + "@c.us";
+                console.log(number);
+                
+                // Your message.
+                const text = message;
+                
+                // Getting chatId from the number.
+                // we have to delete "+" from the beginning and add "@c.us" at the end of the number.
+                const chatId = number.substring(1) + "@c.us";
+        
+                // Sending message.
+                whatsappClient.sendMessage(chatId, text);
+        
+                // res.status(200).json({ success: true, message: 'Messages sent successfully' });
+              });
     
-            // Sending message.
-            whatsappClient.sendMessage(chatId, text);
-            console.log(`Message sent to ${contacts.nama} with number ${contacts.no_whatsapp}`);
+              contactCounter++;
+      
+              if (contactCounter < contacts.length && contactCounter % MAX_MESSAGES_PER_INTERVAL === 0) {
+                setTimeout(sendNextContact, MINUTE_INTERVAL * 60 * 1000);
+              } else {
+                sendNextContact();
+              }
+            } 
+          };
+      
+          sendNextContact();
     
-            // res.status(200).json({ success: true, message: 'Messages sent successfully' });
-          });
-  
-        whatsappClient.initialize();
+          whatsappClient.initialize();
       } catch (error) {
         console.error('Error handling direct message submission:', error);
       }
@@ -65,9 +83,9 @@ async function sendMessageGeneral(id_message, listContacts) {
 
 async function sendMessageActivity(id_message, id_activity, listContacts) {
     const whatsappClient = new Client({
-        // puppeteer: {
-        //   headless: false
-        // },
+        puppeteer: {
+          headless: false
+        },
         authStrategy: new LocalAuth({
             clientId: "YOUR_CLIENT_ID",
         }),
@@ -84,40 +102,54 @@ async function sendMessageActivity(id_message, id_activity, listContacts) {
 
         const activity = await fetchActivity(id_activity);
     
-        const contacts = {
-            nama: listContacts.nama,
-            no_whatsapp: listContacts.no_whatsapp
-        }
+        const contacts = listContacts.map(data => ({
+            nama: data.recipients.nama,
+            no_whatsapp: data.recipients.no_whatsapp
+          }));
+      
+          // console.log(contacts);
+      
+          let contactCounter = 0;
+      
+          const sendNextContact = async () => {
+            if (contactCounter < contacts.length) {
+              const contact = contacts[contactCounter];
+              const message = `${template.message.replace('{{nama}}', contact.nama)}`;
+      
+              whatsappClient.on('ready', () => {
+                console.log('Client is ready!');
+                
+                // Number where you want to send the message.
+                const number = contact.no_whatsapp;
     
-        console.log(contacts);
-        const message = template.message
-                        .replace('{{nama}}', contacts.nama)
-                        .replace('{{nama_kegiatan}}', activity.activity_name)
-                        .replace('{{tanggal}}', activity.activity_date)
-                        .replace('{{keterangan}}', activity.activity_description);
-        whatsappClient.on('ready', () => {
-            console.log('Client is ready!');
-            
-            // Number where you want to send the message.
-            const number = contacts.no_whatsapp;
-
-            console.log(number);
-            
-            // Your message.
-            const text = message;
-            
-            // Getting chatId from the number.
-            // we have to delete "+" from the beginning and add "@c.us" at the end of the number.
-            const chatId = number.substring(1) + "@c.us";
+                console.log(number);
+                
+                // Your message.
+                const text = message;
+                
+                // Getting chatId from the number.
+                // we have to delete "+" from the beginning and add "@c.us" at the end of the number.
+                const chatId = number.substring(1) + "@c.us";
+        
+                // Sending message.
+                whatsappClient.sendMessage(chatId, text);
+        
+                // res.status(200).json({ success: true, message: 'Messages sent successfully' });
+              });
     
-            // Sending message.
-            whatsappClient.sendMessage(chatId, text);
-            console.log(`Message sent to ${contacts.nama} with number ${contacts.no_whatsapp}`);
+              contactCounter++;
+      
+              if (contactCounter < contacts.length && contactCounter % MAX_MESSAGES_PER_INTERVAL === 0) {
+                setTimeout(sendNextContact, MINUTE_INTERVAL * 60 * 1000);
+              } else {
+                sendNextContact();
+              }
+            } 
+          };
+      
+          sendNextContact();
     
-            // res.status(200).json({ success: true, message: 'Messages sent successfully' });
-          });
-  
-        whatsappClient.initialize();
+          whatsappClient.initialize();
       } catch (error) {
         console.error('Error handling direct message submission:', error);
       }
@@ -213,29 +245,20 @@ async function setupCronJobs() {
             if (moment(date).isSame(today, 'day')) {
                 const [jam, menit, detik] = item.waktu.split(':');
                 const cronSchedule = `${menit} ${jam} * * *`;
-                if(!scheduledJobs[item.id]){
-                    const job = cron.schedule(cronSchedule, () => {
-                        console.log(`Scheduled job for date ${date} and ID ${item.id}`);
-                    
-                        item.recipient_list.forEach((recipient) => {
-                            if(item.jenis_message === 'general'){
-                                console.log(`Sending message for recipient ${recipient.recipients}`);
-                                sendMessageGeneral(item.id_message, recipient.recipients);
-                            } else if(item.jenis_message === 'activity'){
-                                console.log(`Sending message for recipient ${recipient.recipients}`);
-                                sendMessageActivity(item.id_message, item.id_activity, recipient.recipients)
-                            }
-                        });
-                    }, {
-                        scheduled: true,
-                        timezone: 'Asia/Jakarta'
-                    });
-                    job.start();
-                    
-                    // Simpan referensi pekerjaan cron
-                    scheduledJobs[item.id] = job;
-                    console.log(`Cron job untuk tanggal ${date} dari id ${item.id} telah diatur.`)
-                }
+                const job = cron.schedule(cronSchedule, () => {
+                    console.log(`Scheduled job for date ${date} and ID ${item.id}`);
+                    if(item.jenis_message === 'general'){
+                        sendMessageGeneral(item.id_message, item.recipient_list);
+                    } else if(item.jenis_message === 'activity'){
+                        sendMessageActivity(item.id_message, item.id_activity, item.recipient_list);
+                    }
+                }, {
+                    scheduled: true,
+                    timezone: 'Asia/Jakarta'
+                });
+                
+                job.start();
+                console.log(`Cron job untuk tanggal ${date} dari id ${item.id} telah diatur.`)
             } 
         });
     });

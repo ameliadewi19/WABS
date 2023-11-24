@@ -5,6 +5,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import './createRecipient.css';
 import feather from 'feather-icons';
 import { DataTable } from 'simple-datatables'; 
+import Swal from 'sweetalert2';
 
 const Recipient = ({}) => {
     const [recipientData, setRecipientData] = useState([]);
@@ -14,6 +15,9 @@ const Recipient = ({}) => {
             no_whatsapp: '',
     });
     const location = useLocation();
+
+    const MySwal = Swal.mixin({
+    });
     
 
     useEffect(() => {
@@ -81,10 +85,18 @@ const Recipient = ({}) => {
     };
 
     const confirmDelete = (id) => {
-        const shouldDelete = window.confirm('Apakah Anda yakin ingin menghapus data ini?');
-        if (shouldDelete) {
+      MySwal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this template!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
           deleteRecipient(id);
         }
+      });
     };
 
     const handleShowModal = () => {
