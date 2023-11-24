@@ -132,32 +132,32 @@ const AddDirectMessageModal = ({ reloadData, idTemplate }) => {
     const handleSubmit = async () => {
       console.log("id template: ", idTemplate);
       console.log('selectedRecipient', recipientData);
-      try {
-        const response = await axios.post('http://localhost:5005/direct-message', {
-          id_template: idTemplate,
-          recipientList: recipientData,
-        });
-        console.log('response', response);
+      // try {
+      //   const response = await axios.post('http://localhost:5005/direct-message', {
+      //     id_template: idTemplate,
+      //     recipientList: recipientData,
+      //   });
+      //   console.log('response', response);
 
-        // Show success message
-        Swal.fire({
-          icon: 'success',
-          title: 'Pesan terkirim!',
-          text: 'Pesan berhasil terkirim kepada penerima yang dipilih.',
-        });
+      //   // Show success message
+      //   Swal.fire({
+      //     icon: 'success',
+      //     title: 'Pesan terkirim!',
+      //     text: 'Pesan berhasil terkirim kepada penerima yang dipilih.',
+      //   });
 
-        reloadData();
-        setShowModal(false);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+      //   reloadData();
+      //   setShowModal(false);
+      // } catch (error) {
+      //   console.error('Error fetching data:', error);
 
-        // Show error message
-        Swal.fire({
-          icon: 'error',
-          title: 'Gagal mengirim pesan',
-          text: 'Terjadi kesalahan saat mengirim pesan. Silakan coba lagi.',
-        });
-      }
+      //   // Show error message
+      //   Swal.fire({
+      //     icon: 'error',
+      //     title: 'Gagal mengirim pesan',
+      //     text: 'Terjadi kesalahan saat mengirim pesan. Silakan coba lagi.',
+      //   });
+      // }
     }
 
     return (

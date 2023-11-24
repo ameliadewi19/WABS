@@ -85,7 +85,7 @@ const Autentikasi = ({}) => {
             </nav>
             </div>
 
-            <section class="section dashboard">
+            <section class="section dashboard mb-5">
             <div class="row">
 
                 <div class="col-lg-12">

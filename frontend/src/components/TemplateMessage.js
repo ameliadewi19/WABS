@@ -22,17 +22,22 @@ const TemplateMessage = ({}) => {
         fetchDataActivity();
     }, []);
 
+    const tableOptions = {
+        paging: false, // Disable pagination
+        // Other DataTable options if needed
+    };
+
     useEffect(() => {
         // Initialize the datatable here
         if (templateMessages.length > 0) {
-            const table = new DataTable('.datatable');
+            const table = new DataTable('.datatable', tableOptions);
         }
     }, [templateMessages]);
 
     useEffect(() => {
         // Initialize the datatable here
         if (templateActivityMessages.length > 0) {
-            const table2 = new DataTable('.datatable-activity');
+            const table2 = new DataTable('.datatable-activity', tableOptions);
         }
     }, [templateActivityMessages]);
 
@@ -123,46 +128,47 @@ const TemplateMessage = ({}) => {
                     <h5 className="card-title">General Templates</h5>
                     <p>Template yang bisa digunakan untuk mengirim pesan broadcast</p>
 
-                    <table className="table datatable">
-                        <thead>
-                        <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">Message</th>
-                            <th scope="col">Aksi</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {templateMessages.map((template, index) => (
-                        <tr key={index}>
-                            <th scope="row">{index + 1}</th>
-                            <td>{template.message}</td>
-                            <td>
-                            <div style={{ display: 'flex', gap: '5px' }}>
-                                <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    onClick={() => handleEdit(template)}
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editTemplateModal"
-                                >
-                                    <i className="bi bi-pencil-fill"></i>
-                                </button>
-                                <EditTemplateModal
-                                template={selectedTemplate}
-                                handleClose={() => setSelectedTemplate(null)}
-                                reloadData={fetchData}
-                                reloadDataActivity={fetchDataActivity}
-                                />
-                                <button type="button" className="btn btn-danger" onClick={() => handleDelete(template.id)}>
-                                    <i className="bi bi-trash-fill"></i>
-                                </button>
-                            </div>
-                            </td>
-                        </tr>
-                        ))}
-                        </tbody>
-                    </table>
-
+                    <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                        <table className="table datatable">
+                            <thead>
+                            <tr>
+                                <th scope="col">No</th>
+                                <th scope="col">Message</th>
+                                <th scope="col">Aksi</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {templateMessages.map((template, index) => (
+                            <tr key={index}>
+                                <th scope="row">{index + 1}</th>
+                                <td>{template.message}</td>
+                                <td>
+                                <div style={{ display: 'flex', gap: '5px' }}>
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={() => handleEdit(template)}
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editTemplateModal"
+                                    >
+                                        <i className="bi bi-pencil-fill"></i>
+                                    </button>
+                                    <EditTemplateModal
+                                    template={selectedTemplate}
+                                    handleClose={() => setSelectedTemplate(null)}
+                                    reloadData={fetchData}
+                                    reloadDataActivity={fetchDataActivity}
+                                    />
+                                    <button type="button" className="btn btn-danger" onClick={() => handleDelete(template.id)}>
+                                        <i className="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
+                                </td>
+                            </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
                     </div>
                 </div>
 
@@ -179,47 +185,47 @@ const TemplateMessage = ({}) => {
 
                     <h5 className="card-title">Activity Templates</h5>
                     <p>Template yang bisa digunakan untuk kegiatan tertentu</p>
-
-                    <table className="table2 datatable-activity">
-                        <thead>
-                        <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">Message</th>
-                            <th scope="col">Aksi</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {templateActivityMessages.map((templateActivity, index) => (
-                        <tr key={index}>
-                            <th scope="row">{index + 1}</th>
-                            <td>{templateActivity.message}</td>
-                            <td>
-                            <div style={{ display: 'flex', gap: '5px' }}>
-                                <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    onClick={() => handleEdit(templateActivity)}
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editTemplateModal"
-                                >
-                                    <i className="bi bi-pencil-fill"></i>
-                                </button>
-                                <EditTemplateModal
-                                template={selectedTemplate}
-                                handleClose={() => setSelectedTemplate(null)}
-                                reloadData={fetchData}
-                                reloadDataActivity={fetchDataActivity}
-                                />
-                                <button type="button" className="btn btn-danger" onClick={() => handleDelete(templateActivity.id)}>
-                                    <i className="bi bi-trash-fill"></i>
-                                </button>
-                            </div>
-                            </td>
-                        </tr>
-                        ))}
-                        </tbody>
-                    </table>
-
+                    <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                        <table className="table2 datatable-activity">
+                            <thead>
+                            <tr>
+                                <th scope="col">No</th>
+                                <th scope="col">Message</th>
+                                <th scope="col">Aksi</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {templateActivityMessages.map((templateActivity, index) => (
+                            <tr key={index}>
+                                <th scope="row">{index + 1}</th>
+                                <td>{templateActivity.message}</td>
+                                <td>
+                                <div style={{ display: 'flex', gap: '5px' }}>
+                                    <button
+                                        type="button"
+                                        className="btn btn-primary"
+                                        onClick={() => handleEdit(templateActivity)}
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editTemplateModal"
+                                    >
+                                        <i className="bi bi-pencil-fill"></i>
+                                    </button>
+                                    <EditTemplateModal
+                                    template={selectedTemplate}
+                                    handleClose={() => setSelectedTemplate(null)}
+                                    reloadData={fetchData}
+                                    reloadDataActivity={fetchDataActivity}
+                                    />
+                                    <button type="button" className="btn btn-danger" onClick={() => handleDelete(templateActivity.id)}>
+                                        <i className="bi bi-trash-fill"></i>
+                                    </button>
+                                </div>
+                                </td>
+                            </tr>
+                            ))}
+                            </tbody>
+                        </table>
+                    </div>
                     </div>
                 </div>
 
