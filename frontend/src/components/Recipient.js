@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Modal, Button, Form } from 'react-bootstrap';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 import './createRecipient.css';
 import feather from 'feather-icons';
 import { DataTable } from 'simple-datatables'; 
 
 const Recipient = ({}) => {
     const [recipientData, setRecipientData] = useState([]);
+    const MySwal = withReactContent(Swal);
     const [showModal, setShowModal] = useState(false);
     const [formData, setFormData] = useState({
             nama: '',
@@ -42,34 +45,6 @@ const Recipient = ({}) => {
         }
     };
     
-    // const fetchRecipientData = async () => {
-    //   try {
-    //     // Mendapatkan token dari localStorage
-    //     const token = localStorage.getItem('jwt_token');
-    
-    //     if (!token) {
-    //       console.error('Token not found in localStorage');
-    //       return;
-    //     }
-    
-    //     // Membuat header Authorization dengan menggunakan token
-    //     const authToken = `Bearer ${token}`;
-    
-    //     // Menambahkan header Authorization ke permintaan Axios
-    //     const response = await axios.get('http://localhost:5005/recipient', {
-    //       headers: {
-    //         Authorization: authToken,
-    //       },
-    //     });
-    
-    //     // Mengupdate data penerima setelah mendapatkan respons
-    //     setRecipientData(response.data);
-    //   } catch (error) {
-    //     console.error('Error fetching data:', error);
-    //   }
-    // };
-    
-
     const deleteRecipient = async (id) => {
         console.log('ID yang akan dihapus:', id);
         try {
@@ -81,10 +56,19 @@ const Recipient = ({}) => {
     };
 
     const confirmDelete = (id) => {
-        const shouldDelete = window.confirm('Apakah Anda yakin ingin menghapus data ini?');
-        if (shouldDelete) {
+      MySwal.fire({
+        title: 'Are you sure?',
+        text: 'You will not be able to recover this recipient!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // User clicked Yes, proceed with deletion
           deleteRecipient(id);
         }
+      });
     };
 
     const handleShowModal = () => {
@@ -201,12 +185,6 @@ const Recipient = ({}) => {
           alert("Nama hanya boleh mengandung huruf.");
           return;
         }
-
-        // Validasi NO WHATSAPP: Hanya angka diizinkan
-        // if (name === "no_whatsapp" && !/^\+\d{11,15}$/.test(value)) {
-        //   alert("Masukkan nomor telepon dengan format yang benar, contoh: +6280102108290");
-        //   return;
-        // }
       
         setFormData({
           ...formData,
@@ -239,7 +217,7 @@ const Recipient = ({}) => {
                         <div className="col-lg-6">
                         <div className="upload-section">
                           <button className="btn btn-primary" onClick={handleShowModal}><i className='bi bi-plus'></i>
-                            Tambah Dosen
+                            Tambah Recipient
                           </button>
                           <label htmlFor="fileInput" className="btn btn-secondary upload-button">
                             <span dangerouslySetInnerHTML={{ __html: feather.icons.upload.toSvg() }} className="mr-2" />
