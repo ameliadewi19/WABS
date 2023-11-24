@@ -45,34 +45,6 @@ const Recipient = ({}) => {
           console.error('Error fetching data:', error);
         }
     };
-    
-    // const fetchRecipientData = async () => {
-    //   try {
-    //     // Mendapatkan token dari localStorage
-    //     const token = localStorage.getItem('jwt_token');
-    
-    //     if (!token) {
-    //       console.error('Token not found in localStorage');
-    //       return;
-    //     }
-    
-    //     // Membuat header Authorization dengan menggunakan token
-    //     const authToken = `Bearer ${token}`;
-    
-    //     // Menambahkan header Authorization ke permintaan Axios
-    //     const response = await axios.get('http://localhost:5005/recipient', {
-    //       headers: {
-    //         Authorization: authToken,
-    //       },
-    //     });
-    
-    //     // Mengupdate data penerima setelah mendapatkan respons
-    //     setRecipientData(response.data);
-    //   } catch (error) {
-    //     console.error('Error fetching data:', error);
-    //   }
-    // };
-    
 
     const deleteRecipient = async (id) => {
         console.log('ID yang akan dihapus:', id);
@@ -119,93 +91,157 @@ const Recipient = ({}) => {
         });
         setShowModal(true);
       };
+   
+  const handleSubmit = async () => {
+    if (formData.id) {
+      // ... (your existing code for updating recipient)
+    } else {
+      try {
+        await axios.post('http://localhost:5005/recipient1', formData, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-      const handleSubmit = async () => {
-        if (formData.id) {
-          try {
-            await axios.put(`http://localhost:5005/recipient/${formData.id}`, formData, {
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-            fetchRecipientData();
-            handleCloseModal();
-          } catch (error) {
-            console.error('Error updating data:', error);
-          }
-        } else {
-          try {
-            await axios.post('http://localhost:5005/recipient1', formData, {
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            });
-            fetchRecipientData();
-            handleCloseModal();
-          } catch (error) {
-            console.error('Error saving data:', error);
-          }
-        }
-      };
-    
-      const handleEditSave = async (recipient) => {
-        const { id, ...formDataWithoutId } = recipient; // Separate id from formData
-    
-        try {
-            await axios.patch(`http://localhost:5005/recipient/${id}`, formDataWithoutId, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-    
-            // Find the index of the edited recipient in the array
-            const index = recipientData.findIndex((r) => r.id === id);
-    
-            // Create a new array with the updated recipient at the same position
-            const updatedRecipientData = [...recipientData];
-            updatedRecipientData[index] = recipient;
-    
-            // Update the state with the new array
-            setRecipientData(updatedRecipientData);
-    
-            handleCloseModal();
-        } catch (error) {
-            console.error('Error updating data:', error);
-        }
-    };
-    
+        // SweetAlert notification when a recipient is added successfully
+        Swal.fire({
+          icon: 'success',
+          title: 'Recipient Added',
+          text: 'Recipient has been added successfully!',
+        });
 
+        fetchRecipientData();
+        handleCloseModal();
+      } catch (error) {
+        console.error('Error saving data:', error);
 
-      const handleFileUpload = async (e) => {
-        const fileInput = e.target; // Get a reference to the file input element
-        const file = fileInput.files[0];
-        const formData = new FormData();
-        formData.append('excelFile', file);
-      
-        // Show a confirmation dialog before proceeding with the upload
-        const confirmUpload = window.confirm("Are you sure you want to upload this Excel file?");
-        
-        if (confirmUpload) {
-            try {
-                const response = await axios.post('http://localhost:5005/recipient', formData, {
-                  headers: {
-                    'Content-Type': 'multipart/form-data',
-                  },
-                });
-                console.log(response.data);
-                fetchRecipientData(); // Fetch the updated data
-                // Clear the file input field after successful upload
-                fileInput.value = ''; // Reset the file input value to an empty string
-          } catch (error) {
-            console.error('Error uploading file:', error);
-          }
-        } else {
-          // User canceled the upload, you can handle it as needed
-          console.log("Upload canceled.");
-        }
-      };
+        // SweetAlert notification for an error
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to add recipient. Please try again.',
+        });
+      }
+    }
+  };
 
-      const handleChange = (e) => {
+  const handleEditSave = async (recipient) => {
+    const { id, ...formDataWithoutId } = recipient;
+
+    try {
+      await axios.patch(`http://localhost:5005/recipient/${id}`, formDataWithoutId, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Find the index of the edited recipient in the array
+      const index = recipientData.findIndex((r) => r.id === id);
+
+      // Create a new array with the updated recipient at the same position
+      const updatedRecipientData = [...recipientData];
+      updatedRecipientData[index] = recipient;
+
+      // Update the state with the new array
+      setRecipientData(updatedRecipientData);
+
+      handleCloseModal();
+
+      // SweetAlert notification when a recipient is updated successfully
+      Swal.fire({
+        icon: 'success',
+        title: 'Recipient Updated',
+        text: 'Recipient has been updated successfully!',
+      });
+    } catch (error) {
+      console.error('Error updating data:', error);
+
+      // SweetAlert notification for an error
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to update recipient. Please try again.',
+      });
+    }
+  };
+  
+  const handleFileUpload = async (e) => {
+    const fileInput = e.target; // Get a reference to the file input element
+    const file = fileInput.files[0];
+  
+    // Check if a file is selected
+    if (!file) {
+      console.error('No file selected.');
+      return;
+    }
+  
+    // Check the file format
+    if (!isValidFileFormat(file)) {
+      // Display an error message for invalid file format
+      Swal.fire({
+        icon: 'error',
+        title: 'Invalid File Format',
+        text: 'Please upload a valid Excel file.',
+      });
+      return;
+    }
+  
+    // Show a confirmation dialog before proceeding with the upload
+    const confirmUpload = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You are about to upload a file. Do you want to proceed?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, upload it!',
+      cancelButtonText: 'No, cancel!',
+    });
+  
+    if (confirmUpload.isConfirmed) {
+      const formData = new FormData();
+      formData.append('excelFile', file);
+  
+      try {
+        const response = await axios.post('http://localhost:5005/recipient', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+  
+        console.log(response.data);
+        fetchRecipientData(); // Fetch the updated data
+  
+        // Clear the file input field after a successful upload
+        fileInput.value = '';
+  
+        // Display a success message
+        Swal.fire({
+          icon: 'success',
+          title: 'File Uploaded',
+          text: 'The file has been uploaded successfully!',
+        });
+      } catch (error) {
+        console.error('Error uploading file:', error);
+  
+        // Display an error message
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to upload file. Please try again.',
+        });
+      }
+    } else {
+      // User canceled the upload, you can handle it as needed
+      console.log('Upload canceled.');
+    }
+  };
+  
+  // Function to check the file format (e.g., Excel file)
+  const isValidFileFormat = (file) => {
+    return file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+  };
+  
+  
+  const handleChange = (e) => {
         const { name, value } = e.target;
       
         // Validasi Nama: Hanya huruf diizinkan
@@ -257,7 +293,7 @@ const Recipient = ({}) => {
                                     <span dangerouslySetInnerHTML={{ __html: feather.icons.upload.toSvg() }} className="" />
                                   </label>
                                   <input type="file" id="fileInput" accept=".xlsx" onChange={handleFileUpload} />
-                                  <a className="btn btn-primary download-template" href="/template/excel-template.xlsx" download>
+                                  <a className="btn btn-primary download-template" href="/assets/templates/template-Recipient.xlsx" download>
                                     <i className="icon" data-feather="download"></i>
                                   </a>
                                 </div>
