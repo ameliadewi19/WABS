@@ -32,7 +32,6 @@ const Activity = () => {
   }, [activityData]);
 
   const MySwal = Swal.mixin({
-    
   });
 
   const formatDate = (dateString) => {
@@ -100,7 +99,7 @@ const Activity = () => {
     setFormData({
       id_activity: activity.id_activity,
       activity_name: activity.activity_name,
-      activity_date: activity.activity_date,
+      activity_date: formatDate(activity.activity_date),
       activity_description: activity.activity_description,
     });
     setShowModal(true);
@@ -111,42 +110,49 @@ const Activity = () => {
     console.log('activity_name:', formData.activity_name);
     console.log('activity_date:', formData.activity_date);
     console.log('activity_description:', formData.activity_description);
-    if (formData.id_activity) {
-      try {
-        const updatedData = {
-          activity_name: formData.activity_name,
-          activity_date: formData.activity_date,
-          activity_description: formData.activity_description,
-        };
 
-        await axios.put(`http://localhost:5005/activity/${formData.id_activity}`, updatedData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+    try {
+        if (formData.id_activity) {
+            const updatedData = {
+                activity_name: formData.activity_name,
+                activity_date: formData.activity_date,
+                activity_description: formData.activity_description,
+            };
+
+            await axios.put(`http://localhost:5005/activity/${formData.id_activity}`, updatedData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            // Display success message using SweetAlert
+            Swal.fire('Success!', 'Activity updated successfully.', 'success');
+        } else {
+            const postData = {
+                activity_name: formData.activity_name,
+                activity_date: formData.activity_date,
+                activity_description: formData.activity_description,
+            };
+
+            await axios.post('http://localhost:5005/activity', postData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            // Display success message using SweetAlert
+            Swal.fire('Success!', 'New activity added successfully.', 'success');
+        }
+
+        // Fetch updated data and close the modal
         fetchActivityData();
         handleCloseModal();
-      } catch (error) {
-        console.error('Error updating data:', error);
-      }
-    } else {
-      try {
-        const postData = {
-          activity_name: formData.activity_name,
-          activity_date: formData.activity_date,
-          activity_description: formData.activity_description,
-        };
-
-        await axios.post('http://localhost:5005/activity', postData, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+    } catch (error) {
+        // Display error message using SweetAlert
         fetchActivityData();
         handleCloseModal();
-      } catch (error) {
-        console.error('Error saving data:', error);
-      }
+        Swal.fire('Error', 'An error occurred. Please try again later.', 'error');
+        console.error('Error:', error);
     }
   };
 
@@ -183,7 +189,7 @@ const Activity = () => {
                 <div className='col-md-6'>
                   <div className='d-flex justify-content-end'>
                     <button onClick={handleShowModal} className="btn btn-primary mt-3">
-                      <i className='bi-plus'></i>Tambah Aktivitas
+                      <i className='bi-plus'></i>Add Activity
                     </button>
                   </div>
                 </div>
@@ -245,6 +251,7 @@ const Activity = () => {
                   value={formData.activity_name}
                   onChange={handleChange}
                   placeholder='Activity Name'
+                  required
                 />
               </Form.Group>
               <Form.Group controlId="activity_date" className='mb-3'>
@@ -255,6 +262,7 @@ const Activity = () => {
                   value={formData.activity_date}
                   onChange={handleChange}
                   placeholder='Activity Date'
+                  required
                 />
               </Form.Group>
               <Form.Group controlId="activity_description" className='mb-3'>
@@ -265,6 +273,7 @@ const Activity = () => {
                   value={formData.activity_description}
                   onChange={handleChange}
                   placeholder='Activity Description'
+                  required
                 />
               </Form.Group>
             </Form>

@@ -11,9 +11,9 @@ const MINUTE_INTERVAL = 1; // Adjust as needed
 
 async function sendMessageGeneral(id_message, listContacts) {
     const whatsappClient = new Client({
-        puppeteer: {
-          headless: false
-        },
+        // puppeteer: {
+        //   headless: false
+        // },
         authStrategy: new LocalAuth({
             clientId: "YOUR_CLIENT_ID",
         }),
@@ -76,54 +76,6 @@ async function sendMessageGeneral(id_message, listContacts) {
           sendNextContact();
     
           whatsappClient.initialize();
-        const contacts = listContacts.map(data => ({
-            nama: data.recipients.nama,
-            no_whatsapp: data.recipients.no_whatsapp
-          }));
-      
-          // console.log(contacts);
-      
-          let contactCounter = 0;
-      
-          const sendNextContact = async () => {
-            if (contactCounter < contacts.length) {
-              const contact = contacts[contactCounter];
-              const message = `${template.message.replace('{{nama}}', contact.nama)}`;
-      
-              whatsappClient.on('ready', () => {
-                console.log('Client is ready!');
-                
-                // Number where you want to send the message.
-                const number = contact.no_whatsapp;
-    
-                console.log(number);
-                
-                // Your message.
-                const text = message;
-                
-                // Getting chatId from the number.
-                // we have to delete "+" from the beginning and add "@c.us" at the end of the number.
-                const chatId = number.substring(1) + "@c.us";
-        
-                // Sending message.
-                whatsappClient.sendMessage(chatId, text);
-        
-                // res.status(200).json({ success: true, message: 'Messages sent successfully' });
-              });
-    
-              contactCounter++;
-      
-              if (contactCounter < contacts.length && contactCounter % MAX_MESSAGES_PER_INTERVAL === 0) {
-                setTimeout(sendNextContact, MINUTE_INTERVAL * 60 * 1000);
-              } else {
-                sendNextContact();
-              }
-            } 
-          };
-      
-          sendNextContact();
-    
-          whatsappClient.initialize();
       } catch (error) {
         console.error('Error handling direct message submission:', error);
       }
@@ -131,9 +83,9 @@ async function sendMessageGeneral(id_message, listContacts) {
 
 async function sendMessageActivity(id_message, id_activity, listContacts) {
     const whatsappClient = new Client({
-        puppeteer: {
-          headless: false
-        },
+        // puppeteer: {
+        //   headless: false
+        // },
         authStrategy: new LocalAuth({
             clientId: "YOUR_CLIENT_ID",
         }),
