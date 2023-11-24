@@ -19,10 +19,15 @@ const GroupRecipient = ({ }) => {
     fetchData();
   }, []);
 
+  const tableOptions = {
+    paging: false, // Disable pagination
+    // Other DataTable options if needed
+  };
+
   useEffect(() => {
     // Initialize the datatable here
     if (groups.length > 0) {
-      const table = new DataTable('.datatable');
+      const table = new DataTable('.datatable', tableOptions);
     }
   }, [groups]);
 
@@ -102,47 +107,47 @@ const GroupRecipient = ({ }) => {
                   </div>
                 </div>
 
-
-                <table className="table datatable">
-                  <thead>
-                    <tr>
-                      <th >No</th>
-                      <th >Nama Grup</th>
-                      <th >Deskripsi</th>
-                      <th >Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {groups.map((group, index) => (
-                      <tr key={index}>
-                        <th scope="row">{index + 1}</th>
-                        <td>{group.nama_grup}</td>
-                        <td>{group.deskripsi}</td>
-                        <td>
-                          <div style={{ display: 'flex', gap: '5px' }}>
-                            <button
-                              type="button"
-                              className="btn btn-primary"
-                              onClick={() => handleEdit(group.id)}
-                              data-bs-toggle="modal"
-                              data-bs-target="#editGroupModal"
-                            >
-                              <i className="bi bi-pencil-fill"></i>
-                            </button>
-                            <EditGroupModal
-                              reloadData={fetchData}
-                              groupId={selectedGroup}
-                            />
-                            <button type="button" className="btn btn-danger" onClick={() => handleDelete(group.id)}>
-                              <i className="bi bi-trash-fill"></i>
-                            </button>
-                          </div>
-                        </td>
+                <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                  <table className="table datatable">
+                    <thead>
+                      <tr>
+                        <th >No</th>
+                        <th >Nama Grup</th>
+                        <th >Deskripsi</th>
+                        <th >Aksi</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-
+                    </thead>
+                    <tbody>
+                      {groups.map((group, index) => (
+                        <tr key={index}>
+                          <th scope="row">{index + 1}</th>
+                          <td>{group.nama_grup}</td>
+                          <td>{group.deskripsi}</td>
+                          <td>
+                            <div style={{ display: 'flex', gap: '5px' }}>
+                              <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={() => handleEdit(group.id)}
+                                data-bs-toggle="modal"
+                                data-bs-target="#editGroupModal"
+                              >
+                                <i className="bi bi-pencil-fill"></i>
+                              </button>
+                              <EditGroupModal
+                                reloadData={fetchData}
+                                groupId={selectedGroup}
+                              />
+                              <button type="button" className="btn btn-danger" onClick={() => handleDelete(group.id)}>
+                                <i className="bi bi-trash-fill"></i>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 

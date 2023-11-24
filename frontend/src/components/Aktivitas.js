@@ -15,6 +15,11 @@ const Activity = () => {
     activity_description: '',
   });
 
+  const tableOptions = {
+    paging: false, // Disable pagination
+    // Other DataTable options if needed
+  };
+
   useEffect(() => {
     feather.replace(); // Replace the icons after component mounts
     fetchActivityData();
@@ -27,6 +32,7 @@ const Activity = () => {
         columns: [
           { select: 4, sortable: false }, // Assuming index 4 is the "Actions" column
         ],
+        paging: false,
       });
     }
   }, [activityData]);
@@ -194,40 +200,41 @@ const Activity = () => {
                   </div>
                 </div>
               </div>
-
-              <table className="table datatable">
-                <thead>
-                  <tr>
-                    <th>No</th>
-                    <th>Activity Name</th>
-                    <th>Activity Date</th>
-                    <th>Activity Description</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {activityData.map((activity, index) => (
-                    <tr key={activity.id_activity}>
-                      <td>{index + 1}</td>
-                      <td>{activity.activity_name}</td>
-                      <td>{formatDate(activity.activity_date)}</td>
-                      <td>{activity.activity_description}</td>
-                      <td>
-                        <button
-                          onClick={() => handleEdit(activity)}
-                          className="btn btn-primary mt-2 border"
-                          style={{ marginRight: '5px' }}
-                        >
-                          <i className='bi-pencil-fill'></i>
-                        </button>
-                        <button onClick={() => confirmDelete(activity.id_activity)} className="btn btn-danger mt-2 border">
-                          <i className='bi-trash-fill'></i>
-                        </button>
-                      </td>
+              <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                <table className="table datatable">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Activity Name</th>
+                      <th>Activity Date</th>
+                      <th>Activity Description</th>
+                      <th>Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {activityData.map((activity, index) => (
+                      <tr key={activity.id_activity}>
+                        <td>{index + 1}</td>
+                        <td>{activity.activity_name}</td>
+                        <td>{formatDate(activity.activity_date)}</td>
+                        <td>{activity.activity_description}</td>
+                        <td>
+                          <button
+                            onClick={() => handleEdit(activity)}
+                            className="btn btn-primary mt-2 border"
+                            style={{ marginRight: '5px' }}
+                          >
+                            <i className='bi-pencil-fill'></i>
+                          </button>
+                          <button onClick={() => confirmDelete(activity.id_activity)} className="btn btn-danger mt-2 border">
+                            <i className='bi-trash-fill'></i>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                </div>
             </div>
           </div>
         </div>

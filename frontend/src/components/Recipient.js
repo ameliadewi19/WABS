@@ -32,7 +32,9 @@ const Recipient = ({}) => {
           const table = new DataTable('.datatable', {
               columns : [
                   { select : 3, sortable : false },
-              ]
+                  
+              ],
+              paging: false, // Disable pagination
           });
       }
   }, [recipientData]);
@@ -299,38 +301,41 @@ const Recipient = ({}) => {
                                 </div>
                             </div>
                     </div>
-                    <table className="table datatable">
-                    <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>Nama</th>
-                        <th>No Whatsapp</th>
-                        <th>Aksi</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    {recipientData.map((recipient, index) => (
-                      <tr key={recipient.id}>
-                        <td>{index + 1}</td>
-                        <td>{recipient.nama}</td>
-                        <td>{recipient.no_whatsapp}</td>
-                        <td>
-                          <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={() => handleEdit(recipient)}
-                            style={{ marginRight: '5px' }}
-                          >
-                          <i className="bi bi-pencil-fill"></i>
-                          </button>
-                          <button type="button" className="btn btn-danger" onClick={() => confirmDelete(recipient.id)}>
-                          <i className="bi bi-trash-fill"></i>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                    </tbody>
-                  </table>
+
+                    <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                      <table className="table datatable">
+                        <thead>
+                          <tr>
+                            <th>No</th>
+                            <th>Nama</th>
+                            <th>No Whatsapp</th>
+                            <th>Aksi</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        {recipientData.map((recipient, index) => (
+                          <tr key={recipient.id}>
+                            <td>{index + 1}</td>
+                            <td>{recipient.nama}</td>
+                            <td>{recipient.no_whatsapp}</td>
+                            <td>
+                              <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={() => handleEdit(recipient)}
+                                style={{ marginRight: '5px' }}
+                              >
+                              <i className="bi bi-pencil-fill"></i>
+                              </button>
+                              <button type="button" className="btn btn-danger" onClick={() => confirmDelete(recipient.id)}>
+                              <i className="bi bi-trash-fill"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                        </tbody>
+                      </table>
+                    </div>
 
                     </div>
                 </div>
