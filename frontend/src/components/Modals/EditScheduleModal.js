@@ -211,13 +211,13 @@ const EditScheduleModal = ({ reloadData, selectedScheduleId }) => {
           <div className="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="editScheduleModalLabel">Edit Data Schedule</h5>
+                <h5 className="modal-title" id="editScheduleModalLabel">Edit</h5>
                 <button type="button" className="d-none" ref={modalRef} data-bs-dismiss="modal"></button>
               </div>
               <div className="modal-body">
                   <form onSubmit={submit}>
                     <div className="mb-3">
-                        <label htmlFor="pembuka" className="form-label">Template Pesan</label>
+                        <label htmlFor="pembuka" className="form-label">Message Template</label>
                         {/* nanti harus retrieve dulu dari db  */}
                         <select
                           className="form-select"
@@ -226,7 +226,7 @@ const EditScheduleModal = ({ reloadData, selectedScheduleId }) => {
                           value={formData.id_message}
                           required
                         >
-                          <option value="">Pilih Template Message</option>
+                          <option value="" disabled>Select Message Template</option>
                             {templateMessages.map((template, index) => (
                               <option key={index} value={template.id}>
                                 {template.message}
@@ -236,7 +236,7 @@ const EditScheduleModal = ({ reloadData, selectedScheduleId }) => {
                     </div>
                     {formData.jenis_message === 'activity' && (
                       <div className="mb-3">
-                        <label htmlFor="message" className="form-label">Activity</label>
+                        <label htmlFor="message" className="form-label">Select Activity</label>
                         {/* nanti harus retrieve dulu dari db  */}
                         <select
                           className="form-select"
@@ -245,7 +245,7 @@ const EditScheduleModal = ({ reloadData, selectedScheduleId }) => {
                           value={formData.id_activity}
                           required
                         >
-                          <option value="">Activity</option>
+                          <option value="" disabled>Select Activity</option>
                           {activityData.map((activity, index) => (
                               <option key={index} value={activity.id_activity}>
                                 {activity.activity_name} - {activity.activity_date}
@@ -256,7 +256,7 @@ const EditScheduleModal = ({ reloadData, selectedScheduleId }) => {
                     )}
                     
                     <div className="mb-3">
-                      <label htmlFor="message" className="form-label">Jenis Schedule</label>
+                      <label htmlFor="message" className="form-label">Schedule Type</label>
                       <select
                         className="form-select"
                         name="jenis_schedule"
@@ -264,7 +264,7 @@ const EditScheduleModal = ({ reloadData, selectedScheduleId }) => {
                         value={formData.jenis_schedule}
                         required
                       >
-                        <option value="">Pilih Jenis Schedule</option>
+                        <option value="" disabled>Select Schedule Type</option>
                         <option value="once">Once</option>
                         <option value="daily">Daily</option>
                         <option value="weekly">Weekly</option>
@@ -274,7 +274,7 @@ const EditScheduleModal = ({ reloadData, selectedScheduleId }) => {
                     </div>
                     <div className="mb-3 row">
                       <div className='col-md-4'>
-                        <label htmlFor="message" className="form-label">Tanggal Mulai</label>
+                        <label htmlFor="message" className="form-label">Start Date</label>
                         <input
                           type="date"
                           className="form-control"
@@ -286,7 +286,7 @@ const EditScheduleModal = ({ reloadData, selectedScheduleId }) => {
                       </div>
                       {formData.jenis_schedule != 'once' && (
                         <div className='col-md-4'>
-                          <label htmlFor="message" className="form-label">Tanggal Akhir</label>
+                          <label htmlFor="message" className="form-label">End Date</label>
                           <input
                             type="date"
                             className="form-control"
@@ -299,7 +299,7 @@ const EditScheduleModal = ({ reloadData, selectedScheduleId }) => {
                       )}
                       
                       <div className='col-md-4'>
-                        <label htmlFor="message" className="form-label">Waktu</label>
+                        <label htmlFor="message" className="form-label">Time</label>
                         <input
                           type="time"
                           className="form-control"
@@ -335,9 +335,9 @@ const EditScheduleModal = ({ reloadData, selectedScheduleId }) => {
                       <thead>
                         <tr>
                           <th></th>
-                          <th>No</th>
-                          <th>Nama</th>
-                          <th>No Whatsapp</th>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>Phone Number</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -362,8 +362,8 @@ const EditScheduleModal = ({ reloadData, selectedScheduleId }) => {
     
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Tutup</button>
-                <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={()=>handleSubmit()}>Simpan</button>
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Close</button>
+                <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={()=>handleSubmit()}>Save</button>
               </div>
             </div>
           </div>
