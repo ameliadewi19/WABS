@@ -3,6 +3,7 @@ const axios = require('axios');
 const moment = require('moment');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const TemplateMessage = require("../models/TemplateMessageModel.js"); // Sesuaikan dengan path yang benar
+const { fi } = require('date-fns/locale');
 
 const allSessionsObject = {};
 
@@ -11,9 +12,9 @@ const MINUTE_INTERVAL = 1; // Adjust as needed
 
 async function sendMessageGeneral(id_message, listContacts) {
     const whatsappClient = new Client({
-        // puppeteer: {
-        //   headless: false
-        // },
+        puppeteer: {
+          headless: false
+        },
         authStrategy: new LocalAuth({
             clientId: "YOUR_CLIENT_ID",
         }),
@@ -75,7 +76,9 @@ async function sendMessageGeneral(id_message, listContacts) {
       
           sendNextContact();
     
-          whatsappClient.initialize();
+          try { 
+            await whatsappClient.initialize();
+         } catch {} 
       } catch (error) {
         console.error('Error handling direct message submission:', error);
       }
@@ -83,9 +86,9 @@ async function sendMessageGeneral(id_message, listContacts) {
 
 async function sendMessageActivity(id_message, id_activity, listContacts) {
     const whatsappClient = new Client({
-        // puppeteer: {
-        //   headless: false
-        // },
+        puppeteer: {
+          headless: false
+        },
         authStrategy: new LocalAuth({
             clientId: "YOUR_CLIENT_ID",
         }),
@@ -115,7 +118,7 @@ async function sendMessageActivity(id_message, id_activity, listContacts) {
             if (contactCounter < contacts.length) {
               const contact = contacts[contactCounter];
               const message = template.message
-                        .replace('{{nama}}', contacts.nama)
+                        .replace('{{nama}}', contact.nama)
                         .replace('{{nama_kegiatan}}', activity.activity_name)
                         .replace('{{tanggal}}', activity.activity_date)
                         .replace('{{keterangan}}', activity.activity_description);
@@ -148,15 +151,19 @@ async function sendMessageActivity(id_message, id_activity, listContacts) {
               } else {
                 sendNextContact();
               }
-            } 
+            }
           };
       
           sendNextContact();
     
-          whatsappClient.initialize();
+          try {
+            await whatsappClient.initialize();
+          } catch (error) {
+            console.error('Error handling initilize message submission:', error);
+          }
       } catch (error) {
         console.error('Error handling direct message submission:', error);
-      }
+      } 
 }
 
 async function fetchSchedule() {
