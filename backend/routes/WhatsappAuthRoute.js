@@ -10,25 +10,7 @@ const {
     authenticateWhatsApp
 } = require('../controllers/WhatsappAuthController.js');
 
-router.get("/authenticate", async (req, res) => {
-  wbm.start({qrCodeData: true, session: true, showBrowser: true})
-  .then(async qrCodeData => {
-    if (qrCodeData) {
-      console.log(qrCodeData); // show data used to generate QR Code
-      res.send(qrCodeData);
-      await wbm.waitQRCode();
-      const timeoutMillis = 20000;
-      await new Promise(resolve => setTimeout(resolve, timeoutMillis));
-      await wbm.end();
-    } else {
-      console.log('Authentication successful, no QR Code needed.');
-      res.send('Authentication successful, no QR Code needed.');
-    }
-  } ).catch(err => { console.log(err); });
-
-});  
-
-router.get('/getQRCode', (req, res) => {
+router.get('/getQRCode', async (req, res) => {
   const whatsappClient = new Client({
     puppeteer: {
       headless: false
@@ -45,79 +27,79 @@ router.get('/getQRCode', (req, res) => {
       res.json({ qrCodeData: qr });
   });
 
-  whatsappClient.initialize();
+  try { await whatsappClient.initialize() } catch {}
 });
 
-router.get('/getAuthStatus', (req, res) => {
+router.get('/getAuthStatus', async (req, res) => {
+  let status = 'Not Authenticated';
+
   const whatsappClient = new Client({
+    puppeteer: {
+      headless: false
+    },
     authStrategy: new LocalAuth({
-        clientId: "YOUR_CLIENT_ID",
+      clientId: "YOUR_CLIENT_ID",
     }),
   });
-  
-  console.log("getQRCode");
 
-  console.log("test");
-
-  whatsappClient.on('authenticated', () => {
-    console.log('Client is ready!');
-    res.json({ status: "Authenticated"});
+  whatsappClient.on('qr', (qr) => {
+    // Respond with the QR code data
+    setImmediate(() => whatsappClient.destroy());
+    res.json('Not Authenticated');
   });
 
-  whatsappClient.on('disconnected', () => {
-    console.log('Client is disconnected!');
-    res.json({ status: "Not Authenticated"});
+  whatsappClient.on('ready', () => {
+    console.log('Client is authenticated!');
+    setImmediate(() => whatsappClient.destroy());
+    res.json('Authenticated');
   });
 
-  whatsappClient.initialize();
+  try {
+    await whatsappClient.initialize();
+  } catch (error) {
+    console.error('Error initializing WhatsApp client:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  } 
 });
 
+router.get('/logout', async (req, res) => {
+  const whatsappClient = new Client({
+    puppeteer: {
+      headless: false
+    },
+    authStrategy: new LocalAuth({
+      clientId: "YOUR_CLIENT_ID",
+    }),
+  });
 
-// router.get("/authenticate-status", async (req, res) => {
-//   try {
-//     const qrCodeData = await wbm.start({ qrCodeData: true, session: true, showBrowser: true });
+  try {
+    whatsappClient.on('ready', async () => {
+      console.log('Client is ready!');
+      
+      try {
+        // Attempt to log out once the client is ready
+        await whatsappClient.logout();
+      } catch (logoutError) {
+        console.error('Error during logout:', logoutError);
+        res.status(500).json({ error: 'Error during logout' });
+      } finally {
+        // Always destroy the client, whether there's an error or not
+        await whatsappClient.destroy();
+      }
+    });
 
-//     if (qrCodeData) {
-//       console.log(qrCodeData); // show data used to generate QR Code
-//       res.send('Not Authenticated');
-//       // await wbm.waitQRCode();
-//       await wbm.end();
-//     } else {
-//       console.log('Authentication successful, no QR Code needed.');
-//       res.send('Authenticated');
-//       await wbm.end();
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
+    // Listen for the 'disconnected' event to detect when the client has successfully logged out
+    whatsappClient.on('disconnected', (reason) => {
+      console.log(`Client has been disconnected. Reason: ${reason}`);
+      res.status(200).json('Success Logout!');
+    });
 
-// router.post("/test-client", async (req, res) => {
-//   const { phone, msg } = req.body;
+    await whatsappClient.initialize();
+  } catch (error) {
+    console.error('Error initializing WhatsApp client:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
-//   console.log(phone, msg);
-//   wbm
-//     .start({ qrCodeData: true, session: true, showBrowser: true })
-//     .then(async (qrCodeData) => {
-
-//       console.log(qrCodeData); // show data used to generate QR Code
-//       await wbm.waitQRCode();
-
-//       const phones = [phone];
-//       const message = msg;
-
-//       await wbm.send(phones, message);
-//       const timeoutMillis = 15000;
-//       await new Promise(resolve => setTimeout(resolve, timeoutMillis));
-
-//       await wbm.end();
-//     })
-    
-//     .catch((err) => {
-//       console.log(err);
-//     });
-
-// });
 
 module.exports = router;
