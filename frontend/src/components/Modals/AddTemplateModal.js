@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2'; 
 
 const AddTemplateModal = ({ reloadData, reloadDataActivity }) => {
   const [message, setMessage] = useState('');
@@ -30,6 +31,16 @@ const AddTemplateModal = ({ reloadData, reloadDataActivity }) => {
 
       // Close the modal using modalRef
       modalRef.current.click();
+
+      modalRef.current.click();
+
+      // Show SweetAlert on success
+      Swal.fire({
+        icon: 'success',
+        title: 'Template Message Added!',
+        showConfirmButton: true,
+        timer: 1500,
+      });
     } catch (error) {
       console.error('Error saving template:', error);
     }
