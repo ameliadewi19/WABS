@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const AddGroupModal = ({ reloadData }) => {
   const [nama_grup, setNamaGroup] = useState('');
@@ -69,8 +70,21 @@ const AddGroupModal = ({ reloadData }) => {
   
       // Close the modal using modalRef
       modalRef.current.click();
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Group Recipient Message Added!',
+        showConfirmButton: true,
+        timer: 1500,
+      });
     } catch (error) {
       console.error('Error saving group:', error);
+      Swal.fire({
+        icon: 'success',
+        title: 'Group Recipient Message Not Added!',
+        showConfirmButton: true,
+        timer: 1500,
+      });
     }
   };  
 

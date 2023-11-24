@@ -54,6 +54,13 @@ const EditTemplateModal = ({ template, handleClose, reloadData, reloadDataActivi
       
     } catch (error) {
       console.error('Error saving edited template:', error);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Template Message Not Edited!',
+        showConfirmButton: true,
+        timer: 1500,
+      });
     }
   };
 

@@ -43,6 +43,13 @@ const AddTemplateModal = ({ reloadData, reloadDataActivity }) => {
       });
     } catch (error) {
       console.error('Error saving template:', error);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Template Message Not Added!',
+        showConfirmButton: true,
+        timer: 1500,
+      });
     }
   };
 
