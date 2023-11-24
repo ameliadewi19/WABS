@@ -158,7 +158,7 @@ const AddScheduleModal = ({ reloadData }) => {
         modalRef.current.click();
         Swal.fire({
           icon: 'success',
-          title: 'Berhasil menambahkan schedule',
+          title: 'Add schedule sucessfully',
           showConfirmButton: false,
           timer: 1500,
         }).then(() => {
@@ -168,7 +168,7 @@ const AddScheduleModal = ({ reloadData }) => {
       } catch (error) {
         Swal.fire({
           icon: 'error',
-          title: 'Gagal menambahkan schedule',
+          title: 'Failed to add schedule',
           showConfirmButton: false,
           timer: 1500,
         });
@@ -181,13 +181,13 @@ const AddScheduleModal = ({ reloadData }) => {
           <div className="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="addScheduleModalLabel">Tambah Data Schedule</h5>
+                <h5 className="modal-title" id="addScheduleModalLabel">Add</h5>
                 <button type="button" className="d-none" ref={modalRef} data-bs-dismiss="modal"></button>
               </div>
               <div className="modal-body">
                   <form onSubmit={submit}>
                     <div className="mb-3">
-                        <label htmlFor="pembuka" className="form-label">Template Pesan</label>
+                        <label htmlFor="pembuka" className="form-label">Message Template</label>
                         {/* nanti harus retrieve dulu dari db  */}
                         <select
                           className="form-select"
@@ -196,7 +196,7 @@ const AddScheduleModal = ({ reloadData }) => {
                           value={formData.id_message}
                           required
                         >
-                          <option value="">Pilih Template Message</option>
+                          <option value="" disabled selected>Select Message Template</option>
                             {templateMessages.map((template, index) => (
                               <option key={index} value={template.id}>
                                 {template.message}
@@ -215,7 +215,7 @@ const AddScheduleModal = ({ reloadData }) => {
                           value={formData.id_activity}
                           required
                         >
-                          <option value="">Activity</option>
+                          <option value="" disabled selected>Select Activity</option>
                           {activityData.map((activity, index) => (
                               <option key={index} value={activity.id_activity}>
                                 {activity.activity_name} - {activity.activity_date}
@@ -226,7 +226,7 @@ const AddScheduleModal = ({ reloadData }) => {
                     )}
                     
                     <div className="mb-3">
-                      <label htmlFor="message" className="form-label">Jenis Schedule</label>
+                      <label htmlFor="message" className="form-label">Schedule Type</label>
                       <select
                         className="form-select"
                         name="jenis_schedule"
@@ -234,7 +234,7 @@ const AddScheduleModal = ({ reloadData }) => {
                         value={formData.jenis_schedule}
                         required
                       >
-                        <option value="">Pilih Jenis Schedule</option>
+                        <option value="" disabled selected>Select Schedule Type</option>
                         <option value="once">Once</option>
                         <option value="daily">Daily</option>
                         <option value="weekly">Weekly</option>
@@ -244,7 +244,7 @@ const AddScheduleModal = ({ reloadData }) => {
                     </div>
                     <div className="mb-3 row">
                       <div className='col-md-4'>
-                        <label htmlFor="message" className="form-label">Tanggal Mulai</label>
+                        <label htmlFor="message" className="form-label">Start Date</label>
                         <input
                           type="date"
                           className="form-control"
@@ -256,7 +256,7 @@ const AddScheduleModal = ({ reloadData }) => {
                       </div>
                       {formData.jenis_schedule != 'once' && (
                         <div className='col-md-4'>
-                          <label htmlFor="message" className="form-label">Tanggal Akhir</label>
+                          <label htmlFor="message" className="form-label">End Date</label>
                           <input
                             type="date"
                             className="form-control"
@@ -269,7 +269,7 @@ const AddScheduleModal = ({ reloadData }) => {
                       )}
                       
                       <div className='col-md-4'>
-                        <label htmlFor="message" className="form-label">Waktu</label>
+                        <label htmlFor="message" className="form-label">Time</label>
                         <input
                           type="time"
                           className="form-control"
@@ -291,7 +291,7 @@ const AddScheduleModal = ({ reloadData }) => {
                         value={formData.id_grup}
                         required
                       >
-                        <option value="">Pilih Group</option>
+                        <option value="" disabled selected>Select Group</option>
                         {groupData.map((group, index) => (
                             <option key={index} value={group.id}>
                               {group.nama_grup}
@@ -305,9 +305,9 @@ const AddScheduleModal = ({ reloadData }) => {
                       <thead>
                         <tr>
                           <th></th>
-                          <th>No</th>
-                          <th>Nama</th>
-                          <th>No Whatsapp</th>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>Phone Number</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -332,8 +332,8 @@ const AddScheduleModal = ({ reloadData }) => {
     
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Tutup</button>
-                <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={()=>handleSubmit()}>Simpan</button>
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Close</button>
+                <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={()=>handleSubmit()}>Save</button>
               </div>
             </div>
           </div>
