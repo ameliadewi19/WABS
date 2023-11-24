@@ -284,12 +284,12 @@ const Recipient = ({}) => {
                     <div className='row'>
                             <div className='col-md-6'>
                                 <h5 className="card-title">Recipient</h5>  
-                                <p>Berikut ini merupakan list recipient yang bisa menerima pesan broadcast</p>  
+                                <p>Here are recipient list</p>  
                             </div>
                             <div className='col-md-6 mt-3'>
                                 <div className='d-flex justify-content-end'>
                                   <button className="btn btn-primary me-2" onClick={handleShowModal}><i className='bi bi-plus'></i>
-                                    Tambah Recipient
+                                    Add Recipient
                                   </button>
                                   <label htmlFor="fileInput" className="btn btn-secondary upload-button me-2">
                                     <span dangerouslySetInnerHTML={{ __html: feather.icons.upload.toSvg() }} className="" />
@@ -306,10 +306,10 @@ const Recipient = ({}) => {
                       <table className="table datatable">
                         <thead>
                           <tr>
-                            <th>No</th>
-                            <th>Nama</th>
-                            <th>No Whatsapp</th>
-                            <th>Aksi</th>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Phone Number</th>
+                            <th>Actions</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -346,7 +346,7 @@ const Recipient = ({}) => {
       {showModal && (
         <Modal show={showModal} onHide={handleCloseModal}>
           <Modal.Header closeButton>
-            <Modal.Title>{formData.id? `Edit Recipient` : 'Tambah Recipient'}</Modal.Title>
+            <Modal.Title>{formData.id? `Edit Recipient` : 'Add Recipient'}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form>
@@ -354,17 +354,17 @@ const Recipient = ({}) => {
                 <Form.Control type="text" name="id" value={formData.id} onChange={handleChange} placeholder='ID' />
               </Form.Group>
               <Form.Group controlId="nama" className='mb-3'>
-                <Form.Label>Nama</Form.Label>
-                <Form.Control type="text" name="nama" value={formData.nama} onChange={handleChange} placeholder='Nama Recipient'/>
+                <Form.Label>Name</Form.Label>
+                <Form.Control type="text" name="nama" value={formData.nama} onChange={handleChange} placeholder='Recipient Name'/>
               </Form.Group>
               <Form.Group controlId="no_whatsapp">
-                <Form.Label>No Whatsapp</Form.Label>
+                <Form.Label>Phone Number</Form.Label>
                 <Form.Control
                   type="text"
                   name="no_whatsapp"
                   value={formData.no_whatsapp}
                   onChange={handleChange}
-                  placeholder='Nomor Whatsapp, Contoh: +6289389982923'
+                  placeholder='Phone number, example: +6289389982923'
                 />
               </Form.Group>
             </Form>

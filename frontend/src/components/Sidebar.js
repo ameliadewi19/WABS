@@ -24,21 +24,21 @@ const Sidebar = ({}) => {
                 <li className="nav-item">
                     <a className={`nav-link ${location.pathname === '/autentikasi-wbm' ? '' : 'collapsed'}`} href="/autentikasi-wbm">
                     <i className="bi bi-box-arrow-in-right"></i>
-                    <span>Autentikasi Whatsapp</span>
+                    <span>Whatsapp Authecation</span>
                     </a>
                 </li>
 
                 <li className="nav-item">
                 <a className={`nav-link ${location.pathname === '/recipient' ? '' : 'collapsed'}`} href="/recipient">
                     <i className="bi bi-person"></i>
-                    <span>Recipient</span>
+                    <span>Recipients</span>
                     </a>
                 </li>
 
                 <li className="nav-item">
                 <a className={`nav-link ${location.pathname === '/group-recipient' ? '' : 'collapsed'}`} href="/group-recipient">
                     <i className="bi bi-people"></i>
-                    <span>Group Recipient</span>
+                    <span>Recipient Groups</span>
                     </a>
                 </li>
 
@@ -52,20 +52,20 @@ const Sidebar = ({}) => {
                 <li className="nav-item">
                 <a className={`nav-link ${location.pathname === '/schedule-message' ? '' : 'collapsed'}`} href="/schedule-message">
                     <i className="bi bi-envelope-plus"></i>
-                    <span>Schedule Message</span>
+                    <span>Schedules</span>
                     </a>
                 </li>
 
                 <li className="nav-item">
                 <a className={`nav-link ${location.pathname === '/aktivitas' ? '' : 'collapsed'}`} href="/aktivitas">
                     <i className="bi bi-layout-text-window-reverse"></i>
-                    <span>List Aktivitas</span>
+                    <span>Activities</span>
                     </a>
                 </li>
                 <li className="nav-item">
                 <a className={`nav-link ${location.pathname === '/template' ? '' : 'collapsed'}`} href="/template">
                     <i className="bi bi-chat-text"></i>
-                    <span>Template Message</span>
+                    <span>Message Templates</span>
                     </a>
                 </li>
             </ul>

@@ -175,11 +175,11 @@ const Activity = () => {
   return (
     <main id="main" className="main">
       <div className="pagetitle">
-        <h1>Activity</h1>
+        <h1>Activities</h1>
         <nav>
           <ol className="breadcrumb">
             <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
-            <li className="breadcrumb-item">Activity</li>
+            <li className="breadcrumb-item">Activities</li>
           </ol>
         </nav>
       </div>
@@ -189,7 +189,7 @@ const Activity = () => {
             <div className="card-body">
               <div className='row'>
                 <div className='col-md-6'>
-                  <h5 className="card-title">Activity</h5>
+                  <h5 className="card-title">Activities</h5>
                   <p>Here is the list of activities.</p>
                 </div>
                 <div className='col-md-6'>
@@ -204,7 +204,7 @@ const Activity = () => {
                 <table className="table datatable">
                   <thead>
                     <tr>
-                      <th>No</th>
+                      <th>#</th>
                       <th>Activity Name</th>
                       <th>Activity Date</th>
                       <th>Activity Description</th>
@@ -291,11 +291,11 @@ const Activity = () => {
             </Button>
             {formData.id_activity ? (
               <button onClick={() => handleSubmit(formData)} className="btn btn-primary">
-                Edit
+                Save
               </button>
             ) : (
               <button onClick={handleSubmit} className="btn btn-primary">
-                Add
+                Save
               </button>
             )}
           </Modal.Footer>

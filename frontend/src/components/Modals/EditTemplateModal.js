@@ -75,24 +75,24 @@ const EditTemplateModal = ({ template, handleClose, reloadData, reloadDataActivi
           <div className="modal-body">
             <form>
               <div className="mb-3">
-                <label htmlFor="jenisTemplate" className="form-label">Jenis Template</label>
+                <label htmlFor="jenisTemplate" className="form-label">Type</label>
                 <select
                   className="form-select"
                   value={jenisTemplate}
                   onChange={handleJenisTemplateChange}
                 >
-                  <option value="" disabled>Pilih jenis template</option>
+                  <option value="" disabled>Choose template type</option>
                   <option value="general">General</option>
                   <option value="activity">Activity</option>
                   {/* Add more options based on your jenis template values */}
                 </select>
               </div>
               <div className="mb-3">
-                <label htmlFor="pembuka" className="form-label">Masukkan Pesan Template</label>
+                <label htmlFor="pembuka" className="form-label">Add template message</label>
                 <textarea
                   className="form-control"
                   type="text"
-                  placeholder="Masukkan template pesan"
+                  placeholder="Add template message"
                   style={{ height: '100px' }}
                   value={message}
                   onChange={handleMessageChange}
@@ -101,8 +101,8 @@ const EditTemplateModal = ({ template, handleClose, reloadData, reloadDataActivi
             </form>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Tutup</button>
-            <button type="button" className="btn btn-primary" onClick={handleSave}>Simpan</button>
+            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Cancel</button>
+            <button type="button" className="btn btn-primary" onClick={handleSave}>Save</button>
           </div>
         </div>
       </div>
