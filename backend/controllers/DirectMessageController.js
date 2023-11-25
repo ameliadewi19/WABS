@@ -15,9 +15,9 @@ const directMessagesGeneral = async (req, res) => {
   console.log("directMessagesGeneral");
 
   const whatsappClient = new Client({
-    // puppeteer: {
-    //   headless: false
-    // },
+    puppeteer: {
+      headless: true
+    },
     authStrategy: new LocalAuth({
         clientId: "YOUR_CLIENT_ID",
     }),
@@ -100,7 +100,9 @@ const directMessagesGeneral = async (req, res) => {
   
       sendNextContact();
 
+      console.log("initialize");
       await whatsappClient.initialize();
+      console.log("initialize done");
 
       // Add a delay (e.g., 5 seconds) before destroying the client
       setTimeout(async () => {
@@ -117,7 +119,7 @@ const directMessagesGeneral = async (req, res) => {
 const directMessagesActivity = async (req, res) => {
   const whatsappClient = new Client({
     puppeteer: {
-      headless: false
+      headless: true
     },
     authStrategy: new LocalAuth({
       clientId: "YOUR_CLIENT_ID",

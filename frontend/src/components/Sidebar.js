@@ -23,8 +23,8 @@ const Sidebar = ({}) => {
 
                 <li className="nav-item">
                     <a className={`nav-link ${location.pathname === '/autentikasi-wbm' ? '' : 'collapsed'}`} href="/autentikasi-wbm">
-                    <i className="bi bi-box-arrow-in-right"></i>
-                    <span>Whatsapp Authecation</span>
+                    <i className="bi bi-whatsapp"></i>
+                    <span>WhatsApp Authecation</span>
                     </a>
                 </li>
 

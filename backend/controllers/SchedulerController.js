@@ -13,7 +13,7 @@ const MINUTE_INTERVAL = 1; // Adjust as needed
 async function sendMessageGeneral(id_message, listContacts) {
     const whatsappClient = new Client({
         puppeteer: {
-          headless: false
+          headless: true
         },
         authStrategy: new LocalAuth({
             clientId: "YOUR_CLIENT_ID",
@@ -104,7 +104,7 @@ async function sendMessageGeneral(id_message, listContacts) {
 async function sendMessageActivity(id_message, id_activity, listContacts) {
     const whatsappClient = new Client({
         puppeteer: {
-          headless: false
+          headless: true
         },
         authStrategy: new LocalAuth({
             clientId: "YOUR_CLIENT_ID",
