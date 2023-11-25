@@ -83,7 +83,7 @@ const Autentikasi = ({}) => {
                 // timer: 1500,
             });
           }
-        //   getLoginStatus();
+          getLoginStatus();
           setLoadingLogout(false);
         } catch (error) {
           console.error(error);
