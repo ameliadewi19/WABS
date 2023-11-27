@@ -124,21 +124,21 @@ const EditGroupModal = ({ reloadData, groupId }) => {
           <div className="modal-body">
             <form>
               <div className="mb-3">
-                <label htmlFor="namagroup" className="form-label">Nama Grup</label>
+                <label htmlFor="namagroup" className="form-label">Group Name</label>
                 <input
                   className="form-control"
                   type="text"
-                  placeholder="Masukkan nama grup"
+                  placeholder="Add group name"
                   value={groupData.nama_grup}
                   onChange={handleGroupChange}
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="pembuka" className="form-label">Deskripsi</label>
+                <label htmlFor="pembuka" className="form-label">Description</label>
                 <textarea
                   className="form-control"
                   type="text"
-                  placeholder="Masukkan deskripsi grup"
+                  placeholder="Add description group"
                   style={{ height: '100px' }}
                   value={groupData.deskripsi}
                   onChange={handleDeskripsiChange}
@@ -156,7 +156,7 @@ const EditGroupModal = ({ reloadData, groupId }) => {
                       required
                     >
                       <option value="" disabled selected>
-                        Pilih kontak
+                        Choose Recipient
                       </option>
                       {recipientOptions.map((option) => (
                         <option key={option.id} value={option.id}>
@@ -176,8 +176,8 @@ const EditGroupModal = ({ reloadData, groupId }) => {
             </form>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Tutup</button>
-            <button type="button" className="btn btn-primary" onClick={handleSave}>Simpan</button>
+            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Close</button>
+            <button type="button" className="btn btn-primary" onClick={handleSave}>Save</button>
           </div>
         </div>
       </div>

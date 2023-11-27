@@ -19,10 +19,15 @@ const GroupRecipient = ({ }) => {
     fetchData();
   }, []);
 
+  const tableOptions = {
+    paging: false, // Disable pagination
+    // Other DataTable options if needed
+  };
+
   useEffect(() => {
     // Initialize the datatable here
     if (groups.length > 0) {
-      const table = new DataTable('.datatable');
+      const table = new DataTable('.datatable', tableOptions);
     }
   }, [groups]);
 
@@ -74,11 +79,11 @@ const GroupRecipient = ({ }) => {
   return (
     <main id="main" className="main">
       <div className="pagetitle">
-        <h1>Group Recipient</h1>
+        <h1>Recipient Groups</h1>
         <nav>
           <ol className="breadcrumb">
             <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
-            <li className="breadcrumb-item active">Group Recipient</li>
+            <li className="breadcrumb-item active">Recipient Groups</li>
           </ol>
         </nav>
       </div>
@@ -91,58 +96,58 @@ const GroupRecipient = ({ }) => {
               <div className="card-body">
                 <div className='row'>
                   <div className='col-md-6'>
-                    <h5 className="card-title">Group Recipient</h5>
-                    <p>Group yang berisikan list recipient</p>
+                    <h5 className="card-title">Recipient Groups</h5>
+                    <p>Here is list of recipient groups</p>
                   </div>
                   <div className='col-md-6'>
                     <div className='d-flex justify-content-end'>
-                      <button type="button" className="btn btn-primary me-2 mt-3" data-bs-toggle="modal" data-bs-target="#addGroupModal"><i className='bi bi-plus'></i>Tambah Group</button>
+                      <button type="button" className="btn btn-primary me-2 mt-3" data-bs-toggle="modal" data-bs-target="#addGroupModal"><i className='bi bi-plus'></i>Add Group</button>
                       <AddGroupModal reloadData={fetchData} />
                     </div>
                   </div>
                 </div>
 
-
-                <table className="table datatable">
-                  <thead>
-                    <tr>
-                      <th >No</th>
-                      <th >Nama Grup</th>
-                      <th >Deskripsi</th>
-                      <th >Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {groups.map((group, index) => (
-                      <tr key={index}>
-                        <th scope="row">{index + 1}</th>
-                        <td>{group.nama_grup}</td>
-                        <td>{group.deskripsi}</td>
-                        <td>
-                          <div style={{ display: 'flex', gap: '5px' }}>
-                            <button
-                              type="button"
-                              className="btn btn-primary"
-                              onClick={() => handleEdit(group.id)}
-                              data-bs-toggle="modal"
-                              data-bs-target="#editGroupModal"
-                            >
-                              <i className="bi bi-pencil-fill"></i>
-                            </button>
-                            <EditGroupModal
-                              reloadData={fetchData}
-                              groupId={selectedGroup}
-                            />
-                            <button type="button" className="btn btn-danger" onClick={() => handleDelete(group.id)}>
-                              <i className="bi bi-trash-fill"></i>
-                            </button>
-                          </div>
-                        </td>
+                <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                  <table className="table datatable">
+                    <thead>
+                      <tr>
+                        <th >#</th>
+                        <th >Group Name</th>
+                        <th >Description</th>
+                        <th >Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-
+                    </thead>
+                    <tbody>
+                      {groups.map((group, index) => (
+                        <tr key={index}>
+                          <th scope="row">{index + 1}</th>
+                          <td>{group.nama_grup}</td>
+                          <td>{group.deskripsi}</td>
+                          <td>
+                            <div style={{ display: 'flex', gap: '5px' }}>
+                              <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={() => handleEdit(group.id)}
+                                data-bs-toggle="modal"
+                                data-bs-target="#editGroupModal"
+                              >
+                                <i className="bi bi-pencil-fill"></i>
+                              </button>
+                              <EditGroupModal
+                                reloadData={fetchData}
+                                groupId={selectedGroup}
+                              />
+                              <button type="button" className="btn btn-danger" onClick={() => handleDelete(group.id)}>
+                                <i className="bi bi-trash-fill"></i>
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
 

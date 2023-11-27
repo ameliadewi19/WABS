@@ -177,7 +177,7 @@ const AddDirectMessageActivityModal = ({ reloadData, idTemplate }) => {
           <div className="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="addDirectMessageActivityModalLabel">Tambah Data Konfirmasi</h5>
+                <h5 className="modal-title" id="addDirectMessageActivityModalLabel">Direct Message</h5>
                 <button type="button" className="d-none" ref={modalRef} data-bs-dismiss="modal"></button>
               </div>
               <div className="modal-body">
@@ -191,7 +191,7 @@ const AddDirectMessageActivityModal = ({ reloadData, idTemplate }) => {
                         value={formData.id_grup}
                         required
                       >
-                        <option value="">Pilih Group</option>
+                        <option value="">Choose Group</option>
                         {groupData.map((group, index) => (
                             <option key={index} value={group.id}>
                               {group.nama_grup}
@@ -209,7 +209,7 @@ const AddDirectMessageActivityModal = ({ reloadData, idTemplate }) => {
                           value={formData.id_activity}
                           required
                         >
-                          <option value="">Activity</option>
+                          <option value="" disabled selected>Choose Activity</option>
                           {activityData.map((activity, index) => (
                               <option key={index} value={activity.id_activity}>
                                 {activity.activity_name} - {activity.activity_date}
@@ -223,9 +223,9 @@ const AddDirectMessageActivityModal = ({ reloadData, idTemplate }) => {
                       <thead>
                         <tr>
                           <th></th>
-                          <th>No</th>
-                          <th>Nama</th>
-                          <th>No Whatsapp</th>
+                          <th>#</th>
+                          <th>Name</th>
+                          <th>Phone Number</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -250,8 +250,8 @@ const AddDirectMessageActivityModal = ({ reloadData, idTemplate }) => {
     
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Tutup</button>
-                <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={()=>handleSubmit()}>Simpan</button>
+                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Close</button>
+                <button type="button" className="btn btn-primary" data-bs-dismiss="modal" onClick={()=>handleSubmit()}>Send</button>
               </div>
             </div>
           </div>

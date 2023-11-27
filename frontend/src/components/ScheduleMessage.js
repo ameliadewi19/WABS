@@ -52,6 +52,11 @@ const ScheduleMessage = ({}) => {
         fetchSchedule();
     }, []);
 
+    const tableOptions = {
+        paging: false, // Disable pagination
+        // Other DataTable options if needed
+    };
+
     useEffect(() => {
         // Initialize the datatable here
         if (scheduleMessage.length > 0) {
@@ -63,6 +68,7 @@ const ScheduleMessage = ({}) => {
                     { select : 6, sortable : false }
                 ],
                 responsive: true,
+                paging: false,
             });
         };
     }, [scheduleMessage]);
@@ -87,14 +93,14 @@ const ScheduleMessage = ({}) => {
 
     const handleDelete = (id) => {
         Swal.fire({
-            title: 'Apakah anda yakin?',
-            text: "Anda tidak akan dapat mengembalikan ini!",
+            title: 'Are you sure?',
+            text: "You will not be able to recover this schedule!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Ya, hapus!',
-            cancelButtonText: 'Batal'
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!'
           }).then((result) => {
             if (result.isConfirmed) {
                 axios.delete(`http://localhost:5005/schedule/${id}`)
@@ -102,7 +108,7 @@ const ScheduleMessage = ({}) => {
                         console.log(response);
                         Swal.fire({
                             icon: 'success',
-                            title: 'Berhasil menghapus schedule',
+                            title: 'Schedule deleted successfully.',
                             showConfirmButton: false,
                             timer: 1500,
                         }).then(() => {
@@ -129,7 +135,7 @@ const ScheduleMessage = ({}) => {
             <nav>
                 <ol className="breadcrumb">
                 <li className="breadcrumb-item"><a href="/dashboard">Home</a></li>
-                <li className="breadcrumb-item">Schedule Message</li>
+                <li className="breadcrumb-item">Schedules</li>
                 </ol>
             </nav>
             </div>
@@ -142,53 +148,56 @@ const ScheduleMessage = ({}) => {
                     <div className="card-body">
                         <div className='row'>
                             <div className='col-md-6'>
-                                <h5 className="card-title">Schedule Message</h5>    
+                                <h5 className="card-title">Schedules</h5>  
+                                <p>Here is the list of schedules for sending messages.</p>  
                             </div>
                             <div className='col-md-6'>
                                 <div className='d-flex justify-content-end'>
-                                    <button type="button" className="btn btn-primary mb-3 mt-3 me-2" data-bs-toggle="modal" data-bs-target="#addScheduleModal"><i className='bi-plus'></i>Tambah Schedule</button>
+                                    <button type="button" className="btn btn-primary mb-3 mt-3 me-2" data-bs-toggle="modal" data-bs-target="#addScheduleModal"><i className='bi-plus'></i>Add Schedule</button>
                                     <AddScheduleModal reloadData={fetchSchedule} />
                                 </div>
                             </div>
                         </div>
                         <div className="table-responsive">
-                            <table className="table datatable">
-                                <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Jenis Message</th>
-                                    <th scope="col">Aktivitas</th>
-                                    <th scope="col">Jenis Schedule</th>
-                                    <th scope="col">Rentang Tanggal</th>
-                                    <th scope="col">Waktu</th>
-                                    <th scope="col">Recipient</th>
-                                    <th scope="col">Aksi</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    {scheduleMessage.map((schedule, index) => (
-                                        <tr key={schedule.id}>
-                                            <td>{index + 1}</td>
-                                            <td><p className='text-capitalize'>{schedule.jenis_message}</p></td>
-                                            <td>{schedule.activity_name || '-'}</td>
-                                            <td><p className='text-capitalize'>{schedule.jenis_schedule}</p></td>
-                                            <td>{formatDate(schedule.tanggal_mulai) + ' - ' + formatDate(schedule.tanggal_akhir)}</td>
-                                            <td>{schedule.waktu}</td>
-                                            <td>
-                                                <button type="button" className="btn btn-success btn-sm ms-1" onClick={()=>handleDetailrecipient(schedule.id)} data-bs-toggle="modal" data-bs-target="#recipientListModal"><i className='bi-people-fill'></i></button>
-                                                <RecipientListModal reloadData={fetchSchedule} selectedScheduleId={selectedId}/>
-                                            </td>
-                                            <td>
-                                                <div className='d-flex flex-column flex-sm-row'>
-                                                    <button type="button" className="btn btn-primary btn-sm" onClick={()=>handleEdit(schedule.id)} data-bs-toggle="modal" data-bs-target="#editScheduleModal"><i className='bi-pencil-fill'></i></button>
-                                                    <button type="button" className="btn btn-danger btn-sm ms-1" onClick={()=>handleDelete(schedule.id)}><i className='bi-trash-fill'></i></button>
-                                                </div>
-                                                <EditScheduleModal reloadData={fetchSchedule} selectedScheduleId={selectedId}/>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                            <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
+                                <table className="table datatable">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Message Type</th>
+                                        <th scope="col">Activities</th>
+                                        <th scope="col">Schedule Type</th>
+                                        <th scope="col">Date Range</th>
+                                        <th scope="col">Time</th>
+                                        <th scope="col">Details</th>
+                                        <th scope="col">Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        {scheduleMessage.map((schedule, index) => (
+                                            <tr key={schedule.id}>
+                                                <td>{index + 1}</td>
+                                                <td><p className='text-capitalize'>{schedule.jenis_message}</p></td>
+                                                <td>{schedule.activity_name || '-'}</td>
+                                                <td><p className='text-capitalize'>{schedule.jenis_schedule}</p></td>
+                                                <td>{formatDate(schedule.tanggal_mulai) + ' - ' + formatDate(schedule.tanggal_akhir)}</td>
+                                                <td>{schedule.waktu}</td>
+                                                <td>
+                                                    <button type="button" className="btn btn-success btn-sm ms-1" onClick={()=>handleDetailrecipient(schedule.id)} data-bs-toggle="modal" data-bs-target="#recipientListModal"><i className='bi-info-circle'></i></button>
+                                                    <RecipientListModal reloadData={fetchSchedule} selectedScheduleId={selectedId}/>
+                                                </td>
+                                                <td>
+                                                    <div className='d-flex flex-column flex-sm-row'>
+                                                        <button type="button" className="btn btn-primary btn-sm" onClick={()=>handleEdit(schedule.id)} data-bs-toggle="modal" data-bs-target="#editScheduleModal"><i className='bi-pencil-fill'></i></button>
+                                                        <button type="button" className="btn btn-danger btn-sm ms-1" onClick={()=>handleDelete(schedule.id)}><i className='bi-trash-fill'></i></button>
+                                                    </div>
+                                                    <EditScheduleModal reloadData={fetchSchedule} selectedScheduleId={selectedId}/>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

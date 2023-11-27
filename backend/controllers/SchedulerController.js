@@ -3,6 +3,7 @@ const axios = require('axios');
 const moment = require('moment');
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const TemplateMessage = require("../models/TemplateMessageModel.js"); // Sesuaikan dengan path yang benar
+const { fi } = require('date-fns/locale');
 
 const allSessionsObject = {};
 
@@ -11,9 +12,9 @@ const MINUTE_INTERVAL = 1; // Adjust as needed
 
 async function sendMessageGeneral(id_message, listContacts) {
     const whatsappClient = new Client({
-        // puppeteer: {
-        //   headless: false
-        // },
+        puppeteer: {
+          headless: true
+        },
         authStrategy: new LocalAuth({
             clientId: "YOUR_CLIENT_ID",
         }),
@@ -58,7 +59,21 @@ async function sendMessageGeneral(id_message, listContacts) {
                 const chatId = number.substring(1) + "@c.us";
         
                 // Sending message.
-                whatsappClient.sendMessage(chatId, text);
+                whatsappClient.sendMessage(chatId, text, { quotedMessageId: null })
+                    .then(() => {
+                        console.log('Message sent successfully!');
+                        // Send the response only if it hasn't been sent yet
+                        // if (!res.headersSent) {
+                        // res.status(200).json({ success: true, message: 'Message sent successfully' });
+                        // }
+                    })
+                    .catch((err) => {
+                        console.error('Error sending message:', err);
+                        // Send the response only if it hasn't been sent yet
+                        // if (!res.headersSent) {
+                        // res.status(500).json({ error: 'Error sending message' });
+                        // }
+                    })
         
                 // res.status(200).json({ success: true, message: 'Messages sent successfully' });
               });
@@ -74,8 +89,13 @@ async function sendMessageGeneral(id_message, listContacts) {
           };
       
           sendNextContact();
-    
-          whatsappClient.initialize();
+
+          await whatsappClient.initialize();
+      
+            // Add a delay (e.g., 5 seconds) before destroying the client
+            setTimeout(async () => {
+              await whatsappClient.destroy();
+            }, 5000);
       } catch (error) {
         console.error('Error handling direct message submission:', error);
       }
@@ -83,9 +103,9 @@ async function sendMessageGeneral(id_message, listContacts) {
 
 async function sendMessageActivity(id_message, id_activity, listContacts) {
     const whatsappClient = new Client({
-        // puppeteer: {
-        //   headless: false
-        // },
+        puppeteer: {
+          headless: true
+        },
         authStrategy: new LocalAuth({
             clientId: "YOUR_CLIENT_ID",
         }),
@@ -115,7 +135,7 @@ async function sendMessageActivity(id_message, id_activity, listContacts) {
             if (contactCounter < contacts.length) {
               const contact = contacts[contactCounter];
               const message = template.message
-                        .replace('{{nama}}', contacts.nama)
+                        .replace('{{nama}}', contact.nama)
                         .replace('{{nama_kegiatan}}', activity.activity_name)
                         .replace('{{tanggal}}', activity.activity_date)
                         .replace('{{keterangan}}', activity.activity_description);
@@ -136,9 +156,21 @@ async function sendMessageActivity(id_message, id_activity, listContacts) {
                 const chatId = number.substring(1) + "@c.us";
         
                 // Sending message.
-                whatsappClient.sendMessage(chatId, text);
-        
-                // res.status(200).json({ success: true, message: 'Messages sent successfully' });
+                whatsappClient.sendMessage(chatId, text, { quotedMessageId: null })
+                    .then(() => {
+                        console.log('Message sent successfully!');
+                        // Send the response only if it hasn't been sent yet
+                        // if (!res.headersSent) {
+                        // res.status(200).json({ success: true, message: 'Message sent successfully' });
+                        // }
+                    })
+                    .catch((err) => {
+                        console.error('Error sending message:', err);
+                        // Send the response only if it hasn't been sent yet
+                        // if (!res.headersSent) {
+                        // res.status(500).json({ error: 'Error sending message' });
+                        // }
+                    })
               });
     
               contactCounter++;
@@ -148,15 +180,20 @@ async function sendMessageActivity(id_message, id_activity, listContacts) {
               } else {
                 sendNextContact();
               }
-            } 
+            }
           };
       
           sendNextContact();
-    
-          whatsappClient.initialize();
+
+          await whatsappClient.initialize();
+      
+            // Add a delay (e.g., 5 seconds) before destroying the client
+            setTimeout(async () => {
+              await whatsappClient.destroy();
+            }, 5000);
       } catch (error) {
         console.error('Error handling direct message submission:', error);
-      }
+      } 
 }
 
 async function fetchSchedule() {
@@ -255,8 +292,34 @@ async function setupCronJobs() {
                 const job = cron.schedule(cronSchedule, () => {
                     console.log(`Scheduled job for date ${date} and ID ${item.id}`);
                     if(item.jenis_message === 'general'){
+                        // const recipientList = []
+                        // item.recipient_list.forEach((recipient) => {
+                        //     recipientList.push(recipient.id_recipient);
+                        // });
+                        // console.log("id_template", item.id_message);
+                        // console.log("recipientList", recipientList);
+                        // axios.post('http://localhost:5005/direct-message', {
+                        //     id_template: item.id_message,
+                        //     recipientList: recipientList,
+                        // }, {
+                        //     timeout: 5000  // Set the timeout in milliseconds (adjust as needed)
+                        // });
                         sendMessageGeneral(item.id_message, item.recipient_list);
                     } else if(item.jenis_message === 'activity'){
+                        // const recipientList = []
+                        // item.recipient_list.forEach((recipient) => {
+                        //     recipientList.push(recipient.id_recipient);
+                        // });
+                        // console.log("id_template", item.id_message);
+                        // console.log("recipientList", recipientList);
+                        // console.log("id_activity", item.id_activity);
+                        // axios.post('http://localhost:5005/direct-message-activity', {
+                        //     id_template: item.id_message,
+                        //     recipientList: recipientList,
+                        //     id_activity: item.id_activity
+                        // }, {
+                        //     timeout: 5000  // Set the timeout in milliseconds (adjust as needed)
+                        // });
                         sendMessageActivity(item.id_message, item.id_activity, item.recipient_list)
                     }
                 }, {

@@ -58,19 +58,19 @@ const AddTemplateModal = ({ reloadData, reloadDataActivity }) => {
       <div className="modal-dialog modal-dialog-centered">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title" id="addTemplateModalLabel">Tambah Template Message</h5>
+            <h5 className="modal-title" id="addTemplateModalLabel">Add Template</h5>
             <button type="button" className="d-none" ref={modalRef} data-bs-dismiss="modal"></button>
           </div>
           <div className="modal-body">
             <form>
               <div className="mb-3">
-                <label htmlFor="jenisTemplate" className="form-label">Jenis Template</label>
+                <label htmlFor="jenisTemplate" className="form-label">Type</label>
                 <select
                   className="form-select"
                   value={jenisTemplate}
                   onChange={handleJenisTemplateChange}
                 >
-                  <option value="" disabled>Pilih jenis template</option>
+                  <option value="" disabled>Choose templates type</option>
                   <option value="general">General</option>
                   <option value="activity">Activity</option>
                   {/* Add more options based on your jenis template values */}
@@ -78,11 +78,11 @@ const AddTemplateModal = ({ reloadData, reloadDataActivity }) => {
 
               </div>
               <div className="mb-3">
-                <label htmlFor="pembuka" className="form-label">Masukkan Pesan Template</label>
+                <label htmlFor="pembuka" className="form-label">Add Message Template</label>
                 <textarea
                   className="form-control"
                   type="text"
-                  placeholder="Masukkan template pesan"
+                  placeholder="Add message template"
                   style={{ height: '100px' }}
                   value={message}
                   onChange={handleMessageChange}
@@ -91,8 +91,8 @@ const AddTemplateModal = ({ reloadData, reloadDataActivity }) => {
             </form>
           </div>
           <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Tutup</button>
-            <button type="button" className="btn btn-primary" onClick={handleSave}>Simpan</button>
+            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" onClick={() => setShowModal(false)}>Close</button>
+            <button type="button" className="btn btn-primary" onClick={handleSave}>Save</button>
           </div>
         </div>
       </div>
