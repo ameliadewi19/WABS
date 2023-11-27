@@ -241,7 +241,10 @@ const scheduledJobs = {}; // Objek untuk menyimpan referensi pekerjaan cron yang
 async function setupCronJobs() {
     const data = await fetchSchedule();
     const today = moment().format('YYYY-MM-DD');
-
+    //check if data is null
+    if(!data){
+        return;
+    }
     data.forEach((item) => {
         const schedule = calculateSchedule(item);
         schedule.forEach((date) => {
